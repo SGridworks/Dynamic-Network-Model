@@ -1,4 +1,4 @@
-# Saguaro Power & Light — Dataset User's Guide
+# Sisyphean Power & Light — Dataset User's Guide
 
 A comprehensive guide for power engineers exploring machine learning,
 AI-enabled tools, and modern data science with realistic distribution
@@ -6,7 +6,7 @@ system data.
 
 > **SYNTHETIC DATA NOTICE**
 >
-> Saguaro Power & Light (SP&L) is an entirely fictional utility. Every
+> Sisyphean Power & Light (SP&L) is an entirely fictional utility. Every
 > record in this dataset — customer accounts, network topology, load
 > measurements, DER installations, geographic coordinates, and outage
 > events — is computationally generated. No real customer, infrastructure,
@@ -60,31 +60,31 @@ the same hierarchy, the same key relationships, the same GIS conventions
 
 ## The Utility at a Glance
 
-**Saguaro Power & Light (SP&L)** is a fictional mid-size electric utility
+**Sisyphean Power & Light (SP&L)** is a fictional mid-size electric utility
 serving a suburban/rural territory in the Phoenix, Arizona metropolitan
 area.
 
 | Characteristic | Value |
 |----------------|-------|
-| Service territory | Phoenix, AZ metro (~30 mi x 30 mi) |
-| Customers | 166,641 |
-| Substations | 15 |
-| Distribution feeders | 70 |
-| Distribution transformers | 25,682 |
-| Solar PV installations | 20,031 (~12% adoption) |
-| EV chargers | 13,398 (~8% adoption) |
-| Battery storage | ~5,000 (~3% adoption) |
-| Climate | Hot desert (summer peaks, heatwave events) |
+| Service territory | Phoenix, AZ metro (~20 mi x 20 mi) |
+| Customers | ~141,000 |
+| Substations | 15 (at named Phoenix intersections) |
+| Distribution feeders | 65 (follow N/S/E/W streets) |
+| Distribution transformers | ~21,500 |
+| Solar PV installations | ~17,000 (~12% adoption) |
+| EV chargers | ~11,300 (~8% adoption) |
+| Battery storage | ~4,200 (~3% adoption) |
+| Climate | Hot desert (summer peaks, heatwave events, monsoon storms) |
 | Voltage levels | 69/115/230 kV transmission; 12.47/13.8/24.9 kV distribution |
 
 ### Customer Mix
 
-| Type | Count | Share |
-|------|-------|-------|
-| Residential | ~137,000 | 82% |
-| Commercial | ~21,600 | 13% |
-| Industrial | ~5,000 | 3% |
-| Municipal | ~3,300 | 2% |
+| Type | Share |
+|------|-------|
+| Residential | ~82% |
+| Commercial | ~13% |
+| Industrial | ~3% |
+| Municipal | ~2% |
 
 ---
 
@@ -111,6 +111,7 @@ from demo_data.load_demo_data import (
     load_substations,
     load_feeders,
     load_customers,
+    load_customer_interval_data,
     load_network_nodes,
     load_network_edges,
 )
@@ -118,6 +119,7 @@ from demo_data.load_demo_data import (
 subs = load_substations()
 feeders = load_feeders()
 customers = load_customers()
+ami = load_customer_interval_data()
 ```
 
 ### Regenerate from Scratch
@@ -139,27 +141,28 @@ reproducible.
 
 | File | Rows | Description |
 |------|------|-------------|
-| `substations.csv` | 15 | Substations with capacity (MVA), high/low voltage, coordinates |
-| `feeders.csv` | 70 | Feeders with head/tail coordinates, conductor type, capacity |
-| `transformers.csv` | 25,682 | Distribution transformers with kVA rating, phase, manufacturer |
-| `customers.csv` | 166,641 | Customers with type, rate class, demand, DER adoption flags |
+| `substations.csv` | 15 | Substations at real Phoenix intersections with capacity (MVA), voltage |
+| `feeders.csv` | 65 | Feeders with head/tail coords, direction (N/S/E/W), conductor type, capacity |
+| `transformers.csv` | 21,545 | Distribution transformers with kVA rating, phase, manufacturer |
+| `customers.csv` | 140,905 | Customers with type, rate class, demand, DER adoption flags |
 
 ### DER Assets
 
 | File | Rows | Description |
 |------|------|-------------|
-| `solar_installations.csv` | 20,031 | PV systems with capacity, panel type, inverter, install date |
+| `solar_installations.csv` | 16,911 | PV systems with capacity, panel type, inverter, install date |
 | `solar_profiles.csv` | 288 | Hourly generation curves per month (clear-sky, GHI, temperature) |
-| `ev_chargers.csv` | 13,398 | Chargers with type (L1/L2/DCFC), power rating, network operator |
+| `ev_chargers.csv` | 11,321 | Chargers with type (L1/L2/DCFC), power rating, network operator |
 | `ev_charging_profiles.csv` | 48 | Typical hourly load shapes by charger type and day type |
 
 ### Operations
 
 | File | Rows | Description |
 |------|------|-------------|
-| `load_profiles.csv` | 47,040 | Hourly feeder load with MW, MVAR, voltage, power factor |
-| `weather_data.csv` | 8,760 | Full-year hourly: temperature, humidity, wind, GHI, heatwave flags |
-| `outage_history.csv` | 364 | Outage events with cause, duration, customers affected |
+| `load_profiles.csv` | 174,720 | 15-minute feeder load with MW, MVAR, voltage, power factor |
+| `customer_interval_data.csv` | 336,000 | 15-minute AMI metering for ~500 sampled customers (summer week) |
+| `weather_data.csv` | 8,760 | Full-year hourly: temperature, humidity, wind, GHI, heatwave + storm flags |
+| `outage_history.csv` | 415 | Outage events clustered during storms and heatwaves |
 
 ### Planning
 
@@ -171,8 +174,8 @@ reproducible.
 
 | File | Rows | Description |
 |------|------|-------------|
-| `network_nodes.csv` | 26,457 | Point features: every network location with attributes |
-| `network_edges.csv` | 26,442 | Polyline features: every conductor segment with impedance |
+| `network_nodes.csv` | 43,827 | Point features: every network location with switching devices |
+| `network_edges.csv` | 43,826 | Polyline features: every conductor segment including tie connections |
 
 ---
 
@@ -181,14 +184,17 @@ reproducible.
 The data follows the standard utility asset hierarchy:
 
 ```
-Substation (15)
-  └── Feeder (70)
-       └── Junction (620 trunk tap points)
-            └── Transformer (25,682)
-                 └── Customer (166,641)
-                      ├── Solar Installation (20,031)
-                      ├── EV Charger (13,398)
-                      └── Battery (~5,000)
+Substation (15)  — at named Phoenix intersections
+  └── Feeder (65)  — follow N/S/E/W streets
+       ├── Recloser  — every ~1/3 of feeder length
+       ├── Sectionalizer  — at selected junctions
+       └── Junction (trunk tap points)
+            └── Fuse → Transformer (21,545)
+                 └── Customer (140,905)
+                      ├── Solar Installation (16,911)
+                      ├── EV Charger (11,321)
+                      └── Battery (~4,200)
+  Tie Switch  — normally-open connection to adjacent feeder tail
 ```
 
 ### Entity-Relationship Summary
@@ -199,7 +205,8 @@ feeders      1───N  transformers
 transformers 1───N  customers
 customers    1───1  solar_installations  (where has_solar=True)
 customers    1───1  ev_chargers          (where has_ev=True)
-feeders      1───N  load_profiles        (time-series)
+feeders      1───N  load_profiles        (15-min time-series)
+customers    N───N  customer_interval_data (15-min AMI, sampled)
 feeders      1───N  outage_history
 feeders      1───N  network_nodes
 feeders      1───N  network_edges
@@ -215,10 +222,10 @@ can join across any combination without intermediate lookups.
 
 | Key | Present On |
 |-----|-----------|
-| `substation_id` | All infrastructure tables, nodes, edges, load profiles, outage history |
-| `feeder_id` | Feeders, transformers, customers, solar, EV, load profiles, outages, nodes, edges |
-| `transformer_id` | Transformers, customers, solar, EV chargers |
-| `customer_id` | Customers, solar installations, EV chargers |
+| `substation_id` | All infrastructure tables, nodes, edges, load profiles, outage history, customer interval data |
+| `feeder_id` | Feeders, transformers, customers, solar, EV, load profiles, outages, customer interval data, nodes, edges |
+| `transformer_id` | Transformers, customers, solar, EV chargers, customer interval data |
+| `customer_id` | Customers, solar installations, EV chargers, customer interval data |
 | `node_id` | Network nodes (referenced by edges as `from_node_id` / `to_node_id`) |
 
 ### Join Examples
@@ -243,21 +250,32 @@ data["outage_history"].groupby("feeder_id").size().sort_values(ascending=False)
 
 ## Spatial Model
 
-All coordinates use **WGS 84 (EPSG:4326)** and are spatially rational —
-they cascade through the hierarchy so that network elements are
-geographically where you would expect them.
+All coordinates use **WGS 84 (EPSG:4326)** and are aligned to the
+**Phoenix, AZ street grid** so assets render correctly on a map.
+
+### Street Grid Reference
+
+The coordinate system is based on the Phoenix grid:
+- **Origin**: Central Ave & Washington St (33.4484°N, 112.0740°W)
+- **Scale**: 1 mile ≈ 0.01449° latitude, 0.01737° longitude (at 33.45°N)
+- **E-W streets**: Baseline Rd, Broadway Rd, McDowell Rd, Thomas Rd,
+  Indian School Rd, Camelback Rd, Northern Ave, Dunlap Ave, etc.
+- **N-S streets**: 59th Ave through 56th St
+
+### Placement Rules
 
 | Element | Placement Rule |
 |---------|---------------|
-| Substations | Distributed across a ~30 mi grid covering the Phoenix metro area |
-| Feeders | Radiate outward from their parent substation at evenly spaced angles |
-| Transformers | Placed along the feeder route from head to tail |
-| Customers | Clustered within ~150 m of their service transformer |
+| Substations | At named intersections (e.g., "Camelback Rd & 35th Ave") |
+| Feeders | Follow cardinal directions (N/S/E/W) along streets, 2-8 miles long |
+| Transformers | At intervals along the feeder route with ~30 ft perpendicular offset |
+| Customers | Offset 40-120 ft perpendicular to the street (like house lots) |
 | Solar/EV | Co-located with their parent customer |
-| Junctions | Positioned along the feeder trunk line |
+| Junctions | Along the feeder trunk line |
 
 This means you can:
 - Plot the entire network on a map and it looks like a real distribution system
+- See feeders following actual Phoenix streets
 - Compute geographic distances that are physically meaningful
 - Build spatial queries (e.g., "all transformers within 1 mile of this substation")
 - Feed coordinates directly into GIS tools (QGIS, ArcGIS, Leaflet, Folium)
@@ -275,33 +293,47 @@ GIS systems like ArcGIS Utility Network, GE Smallworld, and Schneider ArcFM.
 Every distinct location in the network. Think of these as the **point
 feature class** in a geodatabase.
 
-| Node Type | Count | Description |
-|-----------|-------|-------------|
-| `substation_bus` | 15 | High-side bus at each substation |
-| `feeder_breaker` | 70 | Feeder head breaker/recloser |
-| `junction` | 620 | Trunk-line tap points |
-| `transformer` | 25,682 | Distribution transformers |
-| `feeder_endpoint` | 70 | Normally-open feeder tail |
+| Node Type | Description |
+|-----------|-------------|
+| `substation_bus` | High-side bus at each substation |
+| `feeder_breaker` | Feeder head breaker |
+| `junction` | Trunk-line tap point (may host recloser or sectionalizer) |
+| `protective_device` | Fuse on each lateral serving a transformer |
+| `transformer` | Distribution transformer |
+| `tie_switch` | Normally-open tie between adjacent feeder tails |
+| `feeder_endpoint` | Normally-open feeder tail |
 
 Key attributes: `node_id`, `node_type`, `latitude`, `longitude`,
-`nominal_voltage_kv`, `equipment_class`, `rated_capacity`, `phase`, `status`.
+`nominal_voltage_kv`, `equipment_class`, `rated_capacity`, `phase`,
+`installation_year`, `status`.
 
 ### Edges (`network_edges.csv`)
 
 Every conductor segment connecting two nodes. Think of these as the
 **polyline feature class** in a geodatabase.
 
-| Edge Type | Count | Description |
-|-----------|-------|-------------|
-| `bus_tie` | 70 | Substation bus to feeder breaker |
-| `primary_overhead` | ~600 | Overhead trunk conductor |
-| `primary_underground` | ~90 | Underground trunk conductor |
-| `lateral_overhead` | ~19,000 | Overhead service lateral |
-| `lateral_underground` | ~6,500 | Underground service lateral |
+| Edge Type | Description |
+|-----------|-------------|
+| `bus_tie` | Substation bus to feeder breaker |
+| `primary_overhead` | Overhead trunk conductor |
+| `primary_underground` | Underground trunk conductor |
+| `lateral_overhead` | Overhead service lateral (junction → fuse → transformer) |
+| `lateral_underground` | Underground service lateral |
+| `tie` | Normally-open tie between feeder tails (via tie switch) |
 
 Key attributes: `edge_id`, `from_node_id`, `to_node_id`, `conductor_type`,
 `impedance_r_ohm_per_mile`, `impedance_x_ohm_per_mile`,
-`impedance_z0_ohm_per_mile`, `rated_amps`, `num_phases`, `is_overhead`.
+`impedance_z0_ohm_per_mile`, `rated_amps`, `num_phases`, `is_overhead`,
+`installation_year`.
+
+### Switching Devices
+
+The network includes realistic switching configurations:
+- **Reclosers** at every ~1/3 of the feeder length
+- **Sectionalizers** at every 4th junction
+- **Fuses** on every lateral (junction → fuse → transformer)
+- **Tie switches** (normally open) connecting adjacent feeder tails
+  at the same voltage — used for load transfer during outages
 
 ### Building a Graph
 
@@ -336,6 +368,10 @@ F = nx.from_pandas_edgelist(
     create_using=nx.DiGraph,
 )
 print(f"Nodes: {F.number_of_nodes()}, Edges: {F.number_of_edges()}")
+
+# Find all tie switches (normally-open connections between feeders)
+ties = nodes[nodes["node_type"] == "tie_switch"]
+print(f"Tie switches: {len(ties)}")
 ```
 
 ---
@@ -365,20 +401,43 @@ fdr_nodes = nodes[nodes["feeder_id"] == fdr]
 fdr_edges = edges[edges["feeder_id"] == fdr]
 ```
 
-### Time-Series Data
+### 15-Minute Interval Data
 
-Load profiles cover one representative week per season (672 hours per
-feeder, 47,040 rows total). Weather data covers a full year (8,760 hours).
+Load profiles use 15-minute intervals (4 per hour). The feeder-level
+profiles cover one representative week per season (2,688 intervals per
+feeder). Customer-level AMI data covers a summer week for ~500 sampled
+customers.
 
 ```python
-# Summer peak analysis
+# Feeder-level 15-min load
 load = data["load_profiles"]
 summer = load[load["timestamp"].dt.month == 7]
 summer_peaks = summer.groupby("feeder_id")["load_mw"].max()
 
-# Correlate load with temperature
+# Customer AMI data — 15-min demand by customer type
+ami = data["customer_interval_data"]
+residential = ami[ami["customer_type"] == "residential"]
+daily_shape = residential.groupby(residential["timestamp"].dt.hour)["demand_kw"].mean()
+```
+
+### Weather and Outage Correlation
+
+Weather data includes both `is_heatwave` and `is_storm` flags. Outage
+events cluster during these weather events.
+
+```python
 weather = data["weather_data"]
-weather.set_index("timestamp", inplace=True)
+outages = data["outage_history"]
+
+# Storm and heatwave days
+storm_days = weather[weather["is_storm"]]["timestamp"].dt.date.unique()
+heat_days = weather[weather["is_heatwave"]]["timestamp"].dt.date.unique()
+
+# Outage distribution by weather type
+outages["date"] = outages["start_time"].dt.date
+outages["weather_type"] = "normal"
+outages.loc[outages["weather_related"], "weather_type"] = "weather"
+outages.groupby("weather_type").size()
 ```
 
 ### Growth Scenarios
@@ -419,8 +478,8 @@ Datasets: `transformers`, `customers`, `solar_installations`
 
 ### 2. Feeder Load Forecasting
 
-> "Build a random forest model that predicts hourly feeder load from
-> hour of day, day of week, season, and temperature. Train on summer
+> "Build a random forest model that predicts 15-minute feeder load from
+> time of day, day of week, season, and temperature. Train on summer
 > and winter weeks, test on spring and fall."
 
 Datasets: `load_profiles`, `weather_data`
@@ -437,8 +496,9 @@ Datasets: `feeders`, `ev_chargers`, `ev_charging_profiles`, `growth_scenarios`
 ### 4. Outage Prediction Model
 
 > "Train a classifier that predicts whether a feeder will experience
-> an outage on a given day based on weather conditions, feeder age,
-> length, and historical outage rate."
+> an outage on a given day based on weather conditions (temperature,
+> wind, heatwave/storm flags), feeder age, length, and historical
+> outage rate."
 
 Datasets: `outage_history`, `weather_data`, `feeders`
 
@@ -454,15 +514,16 @@ Datasets: `transformers`, `solar_installations`, `customers`
 
 > "Find the longest path from any substation to a feeder endpoint.
 > Calculate total impedance along that path. Identify the most critical
-> junction nodes (highest betweenness centrality)."
+> junction nodes (highest betweenness centrality). Identify all tie
+> switches and which feeders they connect."
 
 Datasets: `network_nodes`, `network_edges`
 
 ### 7. Reliability Dashboard
 
 > "Build an interactive dashboard showing SAIDI, SAIFI, and CAIDI
-> metrics by feeder and substation. Include cause breakdowns and
-> weather correlation."
+> metrics by feeder and substation. Include cause breakdowns, weather
+> correlation (storm vs heatwave vs normal), and seasonal trends."
 
 Datasets: `outage_history`, `feeders`, `weather_data`
 
@@ -473,6 +534,23 @@ Datasets: `outage_history`, `feeders`, `weather_data`
 > first under each scenario."
 
 Datasets: `growth_scenarios`, `feeders`, `load_profiles`
+
+### 9. AMI Load Shape Clustering
+
+> "Cluster the ~500 customers in the AMI interval data by their weekly
+> load shape. Identify typical residential, commercial, and industrial
+> profiles. Look for HVAC cycling patterns in the residential data."
+
+Datasets: `customer_interval_data`
+
+### 10. Switching Analysis
+
+> "For each feeder, identify all protective devices (reclosers,
+> sectionalizers, fuses) and their positions along the trunk. Calculate
+> the number of customers downstream of each device. Find all tie
+> switches and determine which feeders could accept load transfer."
+
+Datasets: `network_nodes`, `network_edges`, `customers`
 
 ---
 
@@ -495,17 +573,18 @@ are some effective prompts:
   What's the R-squared?"*
 - *"Find transformers that serve more than 10 customers with solar.
   What's the total solar capacity vs transformer rating?"*
-- *"Build a heatmap of outage frequency by month and cause."*
+- *"Build a heatmap of outage frequency by month and cause. Show how
+  outages cluster during storms and heatwaves."*
 
 ### Building Tools
 
 - *"Create a Python function that takes a feeder ID and returns a
   complete profile: load summary, customer count, DER penetration,
-  reliability metrics, and a one-line network diagram."*
-- *"Build a Folium map showing all substations and feeders, color-coded
-  by loading percentage."*
+  reliability metrics, switching devices, and a one-line network diagram."*
+- *"Build a Folium map showing all substations and feeders aligned to
+  the Phoenix street grid, color-coded by loading percentage."*
 - *"Write a script that exports a single feeder's node/edge data as a
-  NetworkX graph and computes basic graph metrics."*
+  NetworkX graph and computes basic graph metrics including tie switches."*
 
 ### Tips
 
@@ -514,8 +593,12 @@ are some effective prompts:
    analysis for most distribution engineering questions
 3. **The node/edge model is graph-ready** — `from_node_id`/`to_node_id`
    map directly to NetworkX, igraph, or any graph library
-4. **All coordinates are mappable** — drop them into Folium, Plotly,
-   or any mapping library immediately
+4. **All coordinates are mappable** — they follow the Phoenix street
+   grid and render correctly in Folium, Plotly, or any mapping library
+5. **15-min data for detailed analysis** — `load_profiles` has feeder-level
+   15-min data; `customer_interval_data` has AMI-level customer data
+6. **Outages correlate with weather** — use `is_heatwave` and `is_storm`
+   from weather data to explain outage patterns
 
 ---
 
@@ -528,11 +611,11 @@ Running the generator always produces identical output.
 
 Want a bigger or smaller utility? Edit the generator:
 
-- Change the number of substations in the `names` list
-- Adjust `n_feeders = random.randint(2, 6)` for more or fewer feeders
+- Change the number of substations in `SUBSTATION_DEFS`
+- Adjust `n_feeders = random.randint(3, 6)` for more or fewer feeders
 - Change `n_cust = random.randint(1, 12)` for customer density
 - Modify DER adoption rates (currently 12% solar, 8% EV, 3% battery)
-- Edit the `grid_positions` list to reshape the service territory
+- Edit the Phoenix grid coordinates to reshape the service territory
 
 After editing, run `python demo_data/generate_demo_data.py` to regenerate
 all CSVs.
@@ -547,13 +630,11 @@ simplifications are intentional:
 | Area | Simplification | Real-World Difference |
 |------|---------------|----------------------|
 | Load shapes | Smooth diurnal curves with random noise | Real loads have sharper peaks, weather spikes, and demand response events |
-| Network topology | Radial feeders from substations | Real systems have ties, loops, and switching configurations |
 | Solar generation | Clear-sky model with random cloud factor | Real generation depends on panel orientation, shading, inverter clipping |
-| Customer load | Single contracted demand value | Real customers have interval meters with 15-min or hourly data |
-| Outages | Uniform random distribution | Real outages cluster during storms and heat events |
 | Impedance | Per-mile values with random variation | Real impedance depends on exact conductor geometry and spacing |
 | Phasing | Random phase assignment | Real phase balancing follows engineering rules |
-| Geographic coordinates | Centered on Phoenix, AZ | Realistic spread but not mapped to actual street addresses |
+| Customer interval data | ~500 sampled customers, summer week only | Real AMI covers all customers for a full year |
+| Tie switches | Based on geographic proximity of feeder tails | Real tie placement considers load transfer capacity and switching studies |
 
 These simplifications are fine for learning, prototyping, and
 experimentation. If you need production-grade accuracy for any of these
@@ -563,5 +644,5 @@ scaffolding.
 
 ---
 
-*Saguaro Power & Light is a fictional utility. This dataset is synthetic
+*Sisyphean Power & Light is a fictional utility. This dataset is synthetic
 and provided for educational and experimental purposes only.*
