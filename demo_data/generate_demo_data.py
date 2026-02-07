@@ -2,9 +2,14 @@
 """
 Generate synthetic demo datasets for the Dynamic Network Model.
 
-Creates realistic utility distribution system data modeled after a mid-size
-electric utility serving ~50,000 customers across a mixed suburban/rural
-service territory (Phoenix, AZ area).
+SYNTHETIC DATA NOTICE
+    Saguaro Power & Light (SP&L) is an entirely fictional utility.
+    All data produced by this script is computationally generated.
+    No real customer, infrastructure, or operational data is included.
+
+Creates realistic utility distribution system data modeled after SP&L,
+a fictional mid-size electric utility serving ~166,000 customers across
+a mixed suburban/rural service territory (Phoenix, AZ area).
 
 Coordinates cascade through the network hierarchy:
   Substation -> Feeder head -> Transformer -> Customer -> DER

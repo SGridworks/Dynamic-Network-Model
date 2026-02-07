@@ -1,8 +1,15 @@
-# Demo Datasets
+# Saguaro Power & Light — Demo Datasets
 
-Synthetic datasets representing a mid-size electric utility serving ~166,000
-customers in a Phoenix, AZ-area service territory. All data is generated
-deterministically (seed=42) by `generate_demo_data.py`.
+> **SYNTHETIC DATA** — Saguaro Power & Light is a fictional utility.
+> All data is computationally generated. No real customer, infrastructure,
+> or operational data is included.
+
+Synthetic datasets representing SP&L, a fictional mid-size electric utility
+serving ~166,000 customers in a Phoenix, AZ-area service territory. All
+data is generated deterministically (seed=42) by `generate_demo_data.py`.
+
+For the full walkthrough, example projects, and tips for using with Claude
+Code and other AI tools, see **[USERS_GUIDE.md](USERS_GUIDE.md)**.
 
 ## Common Keys
 
