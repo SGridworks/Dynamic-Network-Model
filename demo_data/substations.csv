@@ -1,0 +1,16 @@
+substation_id,name,latitude,longitude,voltage_high_kv,voltage_low_kv,rated_capacity_mva,peak_load_mva,num_transformers,age_years,status
+SUB-001,Riverside,33.519713,-112.307495,115,12.47,30,18.0,1,48,active
+SUB-002,Mesa Grande,33.472683,-112.024754,69,12.47,20,12.6,3,43,planned
+SUB-003,Copper Hills,33.299419,-111.995058,230,13.8,30,21.5,2,5,active
+SUB-004,Ironwood,33.27983,-112.108693,115,12.47,30,27.1,2,11,active
+SUB-005,Desert View,33.248358,-111.896253,230,13.8,20,16.4,3,12,active
+SUB-006,Palo Verde,33.389267,-112.04398,230,24.9,40,30.5,3,9,planned
+SUB-007,Saguaro,33.313949,-112.175306,69,12.47,20,13.8,2,45,active
+SUB-008,Sunridge,33.281327,-112.142365,230,13.8,80,71.7,3,9,active
+SUB-009,Cottonwood,33.285569,-111.955437,69,13.8,50,32.5,3,49,active
+SUB-010,Red Mountain,33.542307,-111.898574,69,12.47,20,17.0,2,22,active
+SUB-011,Baseline,33.656568,-112.03641,230,13.8,30,23.8,2,46,active
+SUB-012,Tempe Junction,33.33244,-112.196686,230,24.9,40,33.1,2,42,active
+SUB-013,Gilbert Road,33.30966,-111.821231,230,13.8,20,16.6,1,14,active
+SUB-014,Chandler Heights,33.59604,-112.10892,69,13.8,50,38.5,2,38,active
+SUB-015,Ocotillo,33.476613,-111.848785,230,24.9,20,16.0,3,53,active

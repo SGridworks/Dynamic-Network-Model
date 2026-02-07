@@ -1,0 +1,54 @@
+feeder_id,substation_id,name,voltage_kv,length_miles,conductor_type,rated_capacity_mw,peak_load_mw,num_customers,status
+FDR-0001,SUB-001,Riverside Fdr 1,12.47,3.8,1/0 AL,9.9,4.0,2557,active
+FDR-0002,SUB-001,Riverside Fdr 2,12.47,17.6,477 ACSR,14.1,6.4,2844,active
+FDR-0003,SUB-001,Riverside Fdr 3,12.47,15.5,4/0 AL,15.3,7.2,1723,active
+FDR-0004,SUB-001,Riverside Fdr 4,12.47,10.6,4/0 AL,19.0,13.1,4402,active
+FDR-0005,SUB-002,Mesa Grande Fdr 1,12.47,3.8,795 ACSR,18.5,14.8,2919,active
+FDR-0006,SUB-002,Mesa Grande Fdr 2,12.47,5.8,477 ACSR,18.5,15.8,1101,active
+FDR-0007,SUB-003,Copper Hills Fdr 1,13.8,15.1,4/0 AL,17.2,7.9,4293,active
+FDR-0008,SUB-003,Copper Hills Fdr 2,13.8,17.1,477 ACSR,11.2,9.2,3866,active
+FDR-0009,SUB-003,Copper Hills Fdr 3,13.8,17.4,4/0 AL,17.1,12.5,2953,active
+FDR-0010,SUB-003,Copper Hills Fdr 4,13.8,8.4,397.5 AAC,15.8,9.6,4098,active
+FDR-0011,SUB-003,Copper Hills Fdr 5,13.8,3.9,477 ACSR,8.8,3.6,2285,active
+FDR-0012,SUB-004,Ironwood Fdr 1,12.47,5.5,336 ACSR,16.5,7.1,952,active
+FDR-0013,SUB-004,Ironwood Fdr 2,12.47,16.5,795 ACSR,8.9,4.6,4376,active
+FDR-0014,SUB-004,Ironwood Fdr 3,12.47,5.4,477 ACSR,16.7,13.8,4272,active
+FDR-0015,SUB-004,Ironwood Fdr 4,12.47,5.9,1/0 AL,17.7,8.7,1194,active
+FDR-0016,SUB-004,Ironwood Fdr 5,12.47,12.5,795 ACSR,13.1,8.2,843,active
+FDR-0017,SUB-004,Ironwood Fdr 6,12.47,12.8,397.5 AAC,9.2,5.5,3179,active
+FDR-0018,SUB-005,Desert View Fdr 1,13.8,6.0,477 ACSR,14.4,6.7,1903,active
+FDR-0019,SUB-005,Desert View Fdr 2,13.8,6.5,477 ACSR,18.5,8.1,1202,active
+FDR-0020,SUB-006,Palo Verde Fdr 1,24.9,12.4,4/0 AL,18.0,15.6,2336,active
+FDR-0021,SUB-006,Palo Verde Fdr 2,24.9,4.7,1/0 AL,13.8,11.2,880,active
+FDR-0022,SUB-007,Saguaro Fdr 1,12.47,8.1,1/0 AL,11.2,8.7,4127,active
+FDR-0023,SUB-007,Saguaro Fdr 2,12.47,6.6,397.5 AAC,19.5,17.1,4386,active
+FDR-0024,SUB-007,Saguaro Fdr 3,12.47,4.5,795 ACSR,10.6,4.5,899,active
+FDR-0025,SUB-008,Sunridge Fdr 1,13.8,2.9,4/0 AL,13.7,11.5,1689,active
+FDR-0026,SUB-008,Sunridge Fdr 2,13.8,2.9,4/0 AL,9.0,4.4,956,active
+FDR-0027,SUB-008,Sunridge Fdr 3,13.8,12.8,477 ACSR,12.8,10.9,2416,active
+FDR-0028,SUB-008,Sunridge Fdr 4,13.8,11.3,336 ACSR,15.4,9.3,2991,active
+FDR-0029,SUB-009,Cottonwood Fdr 1,13.8,5.3,397.5 AAC,11.8,6.2,1472,active
+FDR-0030,SUB-009,Cottonwood Fdr 2,13.8,12.7,795 ACSR,13.5,11.4,994,active
+FDR-0031,SUB-009,Cottonwood Fdr 3,13.8,2.1,4/0 AL,20.0,17.6,1000,active
+FDR-0032,SUB-009,Cottonwood Fdr 4,13.8,10.6,4/0 AL,11.2,9.5,963,active
+FDR-0033,SUB-010,Red Mountain Fdr 1,12.47,7.9,477 ACSR,13.3,8.8,2878,active
+FDR-0034,SUB-010,Red Mountain Fdr 2,12.47,11.8,397.5 AAC,14.3,10.3,2852,active
+FDR-0035,SUB-010,Red Mountain Fdr 3,12.47,16.9,336 ACSR,19.3,9.0,1345,active
+FDR-0036,SUB-011,Baseline Fdr 1,13.8,13.9,477 ACSR,11.3,7.8,3208,active
+FDR-0037,SUB-011,Baseline Fdr 2,13.8,5.3,397.5 AAC,18.2,11.7,2457,active
+FDR-0038,SUB-012,Tempe Junction Fdr 1,24.9,3.5,1/0 AL,18.0,7.6,3132,active
+FDR-0039,SUB-012,Tempe Junction Fdr 2,24.9,14.3,397.5 AAC,19.8,9.5,4019,active
+FDR-0040,SUB-013,Gilbert Road Fdr 1,13.8,13.3,4/0 AL,8.1,3.5,1621,active
+FDR-0041,SUB-013,Gilbert Road Fdr 2,13.8,10.7,795 ACSR,15.0,7.1,1444,active
+FDR-0042,SUB-013,Gilbert Road Fdr 3,13.8,2.7,795 ACSR,18.8,14.7,726,active
+FDR-0043,SUB-013,Gilbert Road Fdr 4,13.8,16.4,477 ACSR,16.2,11.7,3297,active
+FDR-0044,SUB-013,Gilbert Road Fdr 5,13.8,14.5,1/0 AL,19.7,15.0,2339,active
+FDR-0045,SUB-013,Gilbert Road Fdr 6,13.8,15.8,477 ACSR,18.6,7.7,3121,active
+FDR-0046,SUB-014,Chandler Heights Fdr 1,13.8,14.8,397.5 AAC,17.7,9.3,1285,active
+FDR-0047,SUB-014,Chandler Heights Fdr 2,13.8,8.1,336 ACSR,18.3,9.3,4170,active
+FDR-0048,SUB-014,Chandler Heights Fdr 3,13.8,7.6,477 ACSR,10.7,7.7,3664,active
+FDR-0049,SUB-014,Chandler Heights Fdr 4,13.8,7.3,336 ACSR,19.6,10.5,3674,active
+FDR-0050,SUB-014,Chandler Heights Fdr 5,13.8,12.9,4/0 AL,12.0,5.0,2539,active
+FDR-0051,SUB-015,Ocotillo Fdr 1,24.9,11.3,795 ACSR,8.5,5.8,3231,active
+FDR-0052,SUB-015,Ocotillo Fdr 2,24.9,13.7,795 ACSR,13.2,11.5,1347,active
+FDR-0053,SUB-015,Ocotillo Fdr 3,24.9,8.2,4/0 AL,10.3,4.3,3972,active
