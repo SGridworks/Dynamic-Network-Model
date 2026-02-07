@@ -56,6 +56,7 @@ def load_substations() -> pd.DataFrame:
     """Load the substations dataset.
 
     Contains 15 substations with capacity, voltage levels, and location data.
+    Coordinates are placed at real Phoenix, AZ street intersections.
     """
     df = pd.read_csv(_csv_path("substations.csv"))
     df.set_index("substation_id", inplace=True)
@@ -65,8 +66,9 @@ def load_substations() -> pd.DataFrame:
 def load_feeders() -> pd.DataFrame:
     """Load the feeders (distribution lines) dataset.
 
-    Contains ~70 feeders linked to substations with head/tail coordinates,
-    conductor specs, capacity, and customer counts.
+    Contains ~65 feeders linked to substations with head/tail coordinates,
+    direction (N/S/E/W along the Phoenix street grid), conductor specs,
+    capacity, and customer counts.
     """
     df = pd.read_csv(_csv_path("feeders.csv"))
     df.set_index("feeder_id", inplace=True)
@@ -76,8 +78,8 @@ def load_feeders() -> pd.DataFrame:
 def load_transformers() -> pd.DataFrame:
     """Load the distribution transformers dataset.
 
-    Contains ~25,000 transformers linked to feeders and substations with
-    ratings, phase configuration, and manufacturer info.
+    Contains ~21,000 transformers placed at intervals along feeder routes
+    with ratings, phase configuration, and manufacturer info.
     """
     df = pd.read_csv(_csv_path("transformers.csv"))
     df.set_index("transformer_id", inplace=True)
@@ -87,8 +89,8 @@ def load_transformers() -> pd.DataFrame:
 def load_customers() -> pd.DataFrame:
     """Load the customers dataset.
 
-    Contains ~166,000 customers linked to transformers, feeders, and
-    substations with type classifications and DER adoption flags.
+    Contains ~141,000 customers clustered around their service transformers
+    with type classifications and DER adoption flags.
     """
     df = pd.read_csv(_csv_path("customers.csv"))
     df.set_index("customer_id", inplace=True)
@@ -99,19 +101,33 @@ def load_customers() -> pd.DataFrame:
 
 
 def load_load_profiles() -> pd.DataFrame:
-    """Load the feeder-level hourly load profiles.
+    """Load the feeder-level 15-minute load profiles.
 
     Contains representative weeks for each season (winter, spring,
-    summer, fall) for every feeder — 672 hours per feeder.
+    summer, fall) for every feeder — 2,688 intervals per feeder
+    (168 hours x 4 intervals/hour x 4 seasons).
     """
     df = pd.read_csv(_csv_path("load_profiles.csv"), parse_dates=["timestamp"])
+    return df
+
+
+def load_customer_interval_data() -> pd.DataFrame:
+    """Load the 15-minute AMI customer interval data.
+
+    Contains a representative summer week (7 days x 96 intervals/day)
+    for ~500 sampled customers stratified by type (residential,
+    commercial, industrial, municipal).  Each record includes demand_kw,
+    energy_kwh, voltage, and power factor.
+    """
+    df = pd.read_csv(_csv_path("customer_interval_data.csv"),
+                      parse_dates=["timestamp"])
     return df
 
 
 def load_solar_installations() -> pd.DataFrame:
     """Load the solar PV installation registry.
 
-    Contains ~20,000 solar installations linked through the full hierarchy:
+    Contains ~17,000 solar installations linked through the full hierarchy:
     customer -> transformer -> feeder -> substation.
     """
     df = pd.read_csv(_csv_path("solar_installations.csv"),
@@ -133,7 +149,7 @@ def load_solar_profiles() -> pd.DataFrame:
 def load_ev_chargers() -> pd.DataFrame:
     """Load the EV charger registry.
 
-    Contains ~13,000 EV chargers linked through the full hierarchy:
+    Contains ~11,000 EV chargers linked through the full hierarchy:
     customer -> transformer -> feeder -> substation.
     """
     df = pd.read_csv(_csv_path("ev_chargers.csv"),
@@ -156,10 +172,13 @@ def load_weather_data() -> pd.DataFrame:
     """Load the hourly weather dataset (full year).
 
     Contains 8,760 hourly records with temperature, humidity, wind,
-    solar irradiance, and heatwave flags for a Phoenix-like climate.
+    solar irradiance, heatwave flags, and storm flags for a Phoenix-like
+    climate.  Storm events cluster during monsoon season (Jul-Sep) and
+    winter months.
     """
     df = pd.read_csv(_csv_path("weather_data.csv"), parse_dates=["timestamp"])
     df["is_heatwave"] = df["is_heatwave"].astype(bool)
+    df["is_storm"] = df["is_storm"].astype(bool)
     return df
 
 
@@ -180,6 +199,7 @@ def load_outage_history() -> pd.DataFrame:
 
     Contains outage events for 2024 linked to feeders and substations,
     with cause, duration, customers affected, and equipment involved.
+    Outages cluster during heatwave and storm events.
     """
     df = pd.read_csv(_csv_path("outage_history.csv"),
                       parse_dates=["start_time", "end_time"])
@@ -191,8 +211,9 @@ def load_outage_history() -> pd.DataFrame:
 def load_network_nodes() -> pd.DataFrame:
     """Load the network nodes (point features) table.
 
-    Contains ~26,000 nodes representing every distinct network location:
-    substation buses, feeder breakers, junction/tap points, transformers,
+    Contains ~44,000 nodes representing every distinct network location:
+    substation buses, feeder breakers, junctions, protective devices
+    (fuses, reclosers, sectionalizers), transformers, tie switches,
     and feeder endpoints.  Each node has a geometry (lat/lon), equipment
     class, rated capacity, and the common feeder_id/substation_id keys.
 
@@ -207,11 +228,11 @@ def load_network_nodes() -> pd.DataFrame:
 def load_network_edges() -> pd.DataFrame:
     """Load the network edges (polyline features) table.
 
-    Contains ~26,000 edges representing every conductor segment:
-    bus ties, primary trunk (overhead/underground), laterals, etc.
-    References from_node_id / to_node_id (foreign keys into the
-    nodes table).  Carries impedance (R, X, Z0), conductor type,
-    phase, length, and rated amps.
+    Contains ~44,000 edges representing every conductor segment:
+    bus ties, primary trunk (overhead/underground), laterals, and
+    tie connections between feeders.  References from_node_id /
+    to_node_id (foreign keys into the nodes table).  Carries
+    impedance (R, X, Z0), conductor type, phase, length, and rated amps.
 
     Follows ESRI geodatabase / GIS conventions — pair with
     load_network_nodes() for the full topology.
@@ -233,9 +254,9 @@ def load_all(datasets: Optional[list] = None) -> Dict[str, pd.DataFrame]:
     Args:
         datasets: Optional list of dataset names to load. If None, loads all.
             Valid names: substations, feeders, transformers, customers,
-            load_profiles, solar_installations, solar_profiles, ev_chargers,
-            ev_charging_profiles, weather_data, growth_scenarios,
-            outage_history, network_nodes, network_edges
+            load_profiles, customer_interval_data, solar_installations,
+            solar_profiles, ev_chargers, ev_charging_profiles, weather_data,
+            growth_scenarios, outage_history, network_nodes, network_edges
 
     Returns:
         Dictionary mapping dataset name to DataFrame.
@@ -251,6 +272,7 @@ def load_all(datasets: Optional[list] = None) -> Dict[str, pd.DataFrame]:
         "transformers": load_transformers,
         "customers": load_customers,
         "load_profiles": load_load_profiles,
+        "customer_interval_data": load_customer_interval_data,
         "solar_installations": load_solar_installations,
         "solar_profiles": load_solar_profiles,
         "ev_chargers": load_ev_chargers,

@@ -5,7 +5,7 @@
 > or operational data is included.
 
 Synthetic datasets representing SP&L, a fictional mid-size electric utility
-serving ~166,000 customers in a Phoenix, AZ-area service territory. All
+serving ~141,000 customers in a Phoenix, AZ-area service territory. All
 data is generated deterministically (seed=42) by `generate_demo_data.py`.
 
 For the full walkthrough, example projects, and tips for using with Claude
@@ -19,9 +19,12 @@ can join across any combination of tables without intermediate lookups:
 ```
 substation_id  ->  present on ALL datasets (except weather/solar profiles)
 feeder_id      ->  feeders, transformers, customers, solar, EV, load profiles,
-                   outage history, network nodes, network edges
-transformer_id ->  transformers, customers, solar, EV chargers
-customer_id    ->  customers, solar installations, EV chargers
+                   customer interval data, outage history, network nodes,
+                   network edges
+transformer_id ->  transformers, customers, solar, EV chargers,
+                   customer interval data
+customer_id    ->  customers, solar installations, EV chargers,
+                   customer interval data
 node_id        ->  network_nodes (referenced by network_edges via from/to)
 ```
 
@@ -29,43 +32,47 @@ node_id        ->  network_nodes (referenced by network_edges via from/to)
 
 | File | Rows | Description |
 |------|------|-------------|
-| `substations.csv` | 15 | Substations with capacity, voltage levels, and coordinates |
-| `feeders.csv` | 70 | Distribution feeders with head/tail coordinates radiating from substations |
-| `transformers.csv` | 25,682 | Distribution transformers placed along feeder routes |
-| `customers.csv` | 166,641 | Customers clustered around their service transformer |
-| `load_profiles.csv` | 47,040 | Hourly feeder load (representative week per season) |
-| `solar_installations.csv` | 20,031 | Solar PV systems co-located with customers |
+| `substations.csv` | 15 | Substations at real Phoenix intersections with capacity and voltage levels |
+| `feeders.csv` | 65 | Distribution feeders following N/S/E/W streets from substations |
+| `transformers.csv` | 21,545 | Distribution transformers placed along feeder routes |
+| `customers.csv` | 140,905 | Customers clustered around their service transformer |
+| `load_profiles.csv` | 174,720 | 15-minute feeder load (representative week per season) |
+| `customer_interval_data.csv` | 336,000 | 15-minute AMI metering for ~500 sampled customers |
+| `solar_installations.csv` | 16,911 | Solar PV systems co-located with customers |
 | `solar_profiles.csv` | 288 | Monthly representative hourly generation curves |
-| `ev_chargers.csv` | 13,398 | EV chargers co-located with customers |
+| `ev_chargers.csv` | 11,321 | EV chargers co-located with customers |
 | `ev_charging_profiles.csv` | 48 | Typical hourly charging load shapes |
-| `weather_data.csv` | 8,760 | Hourly weather for a full year with heatwave flags |
+| `weather_data.csv` | 8,760 | Hourly weather with heatwave and storm flags |
 | `growth_scenarios.csv` | 85 | 5 scenarios projected 2024-2040 |
-| `outage_history.csv` | 364 | Feeder outage events for reliability analysis |
-| `network_nodes.csv` | 26,457 | GIS point features — every network location |
-| `network_edges.csv` | 26,442 | GIS polyline features — every conductor segment |
+| `outage_history.csv` | 415 | Feeder outage events clustered during storms and heatwaves |
+| `network_nodes.csv` | 43,827 | GIS point features — every network location including switches |
+| `network_edges.csv` | 43,826 | GIS polyline features — every conductor segment and tie |
 
 ## Network Hierarchy
 
 ```
-Substation (15)
-  └── Feeder (70)  — head/tail coords radiate from substation
+Substation (15)  — placed at real Phoenix street intersections
+  └── Feeder (65)  — follow N/S/E/W streets from substation
+       ├── Recloser (every ~1/3 of feeder length)
+       ├── Sectionalizer (at selected junctions)
        └── Junction (trunk nodes along feeder route)
-            └── Transformer (25,682)  — placed along feeder path
-                 └── Customer (166,641)  — clustered within ~150 m
-                      ├── Solar Installation (20,031)
-                      ├── EV Charger (13,398)
-                      └── Battery (~5,000)
+            └── Fuse → Transformer (21,545)  — placed along feeder path
+                 └── Customer (140,905)  — clustered within ~150 m
+                      ├── Solar Installation (16,911)
+                      ├── EV Charger (11,321)
+                      └── Battery (~4,200)
+  Tie Switches — normally-open connections between adjacent feeder tails
 ```
 
 ## Spatial Model
 
-Coordinates cascade through the hierarchy so all lat/long values are
-spatially rational:
+Coordinates are aligned to the **Phoenix, AZ street grid** so assets render
+correctly on a map.  The grid origin is Central Ave & Washington St.
 
-- **Substations** are placed on a grid across the Phoenix metro area
-- **Feeders** radiate outward from their parent substation at evenly spaced angles
-- **Transformers** are distributed along the feeder route (head to tail)
-- **Customers** are clustered within ~150 m of their service transformer
+- **Substations** are placed at named intersections (e.g., Camelback Rd & 35th Ave)
+- **Feeders** follow cardinal directions along streets (N/S along avenues, E/W along roads)
+- **Transformers** are distributed at intervals along the feeder route
+- **Customers** are offset perpendicular to the street (~40-120 ft from centerline)
 - **Solar/EV** assets inherit their customer's coordinates
 
 ## GIS Network Model (Node/Edge Database)
@@ -82,15 +89,16 @@ Every distinct network location. Nodes are the join target for edges via
 | Column | Description |
 |--------|-------------|
 | `node_id` | Unique identifier (PK) |
-| `node_type` | `substation_bus`, `feeder_breaker`, `junction`, `transformer`, `feeder_endpoint` |
+| `node_type` | `substation_bus`, `feeder_breaker`, `junction`, `transformer`, `protective_device`, `tie_switch`, `feeder_endpoint` |
 | `substation_id` | FK to substations |
 | `feeder_id` | FK to feeders |
 | `latitude`, `longitude` | WGS 84 point geometry |
 | `nominal_voltage_kv` | Operating voltage |
-| `equipment_class` | `substation`, `breaker`, `pole_top`, `padmount`, `distribution_transformer`, `open_point` |
+| `equipment_class` | `substation`, `breaker`, `pole_top`, `padmount`, `recloser`, `sectionalizer`, `fuse`, `distribution_transformer`, `tie_switch`, `open_point` |
 | `rated_capacity` | Rating value |
 | `rated_capacity_units` | `MVA`, `MW`, `kVA` |
 | `phase` | Phase designation (`A`, `AB`, `ABC`, etc.) |
+| `installation_year` | Year installed |
 | `status` | `active`, `closed`, `open`, `failed` |
 
 ### `network_edges.csv` — Polyline Feature Class
@@ -105,7 +113,7 @@ from/to node coordinates (or can be drawn as straight lines between them).
 | `to_node_id` | FK to network_nodes |
 | `feeder_id` | FK to feeders |
 | `substation_id` | FK to substations |
-| `edge_type` | `bus_tie`, `primary_overhead`, `primary_underground`, `lateral_overhead`, `lateral_underground` |
+| `edge_type` | `bus_tie`, `primary_overhead`, `primary_underground`, `lateral_overhead`, `lateral_underground`, `tie` |
 | `conductor_type` | Wire spec (`477 ACSR`, `4/0 AL`, `#2 ACSR`, etc.) |
 | `phase` | Phase designation |
 | `length_miles`, `length_ft` | Segment length in both units |
@@ -116,6 +124,7 @@ from/to node coordinates (or can be drawn as straight lines between them).
 | `nominal_voltage_kv` | Operating voltage |
 | `num_phases` | 1, 2, or 3 |
 | `is_overhead` | Boolean — overhead vs underground |
+| `installation_year` | Year installed |
 | `status` | `closed` (energized) or `open` (de-energized) |
 
 ### Topology Example
@@ -127,14 +136,17 @@ SUB-001 (substation_bus)
 FDR-0001-HEAD (feeder_breaker)
   │  primary_overhead
   ▼
-JCT-FDR-0001-001 (junction)
+JCT-FDR-0001-001 (junction, recloser)
   ├── primary_overhead ──▶ JCT-FDR-0001-002 (junction) ──▶ ...
-  ├── lateral_overhead ──▶ XFMR-000001 (transformer)
-  ├── lateral_underground ──▶ XFMR-000002 (transformer)
-  └── lateral_overhead ──▶ XFMR-000003 (transformer)
+  ├── lateral ──▶ FUSE-XFMR-000001 (fuse) ──▶ XFMR-000001 (transformer)
+  ├── lateral ──▶ FUSE-XFMR-000002 (fuse) ──▶ XFMR-000002 (transformer)
+  └── lateral ──▶ FUSE-XFMR-000003 (fuse) ──▶ XFMR-000003 (transformer)
   ...
   ▼
 FDR-0001-TAIL (feeder_endpoint, normally open)
+  │  tie (normally open)
+  ▼
+TIE-0001 (tie_switch) ──▶ FDR-0002-TAIL
 ```
 
 ## Quick Start
@@ -162,9 +174,8 @@ G = nx.from_pandas_edgelist(
 fdr_nodes = nodes[nodes["feeder_id"] == "FDR-0001"]
 fdr_edges = edges[edges["feeder_id"] == "FDR-0001"]
 
-# Cross-dataset join example (all solar on a specific feeder)
-solar = data["solar_installations"]
-fdr_solar = solar[solar["feeder_id"] == "FDR-0001"]
+# Load 15-minute AMI interval data
+ami = data["customer_interval_data"]
 ```
 
 ## Regenerating Data
