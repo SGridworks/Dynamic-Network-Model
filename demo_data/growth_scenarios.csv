@@ -33,23 +33,23 @@ SCN-002,High EV Adoption,2037,73.0,38.0,18.6,5.4,7.2,1.8,13.4,Aggressive EV adop
 SCN-002,High EV Adoption,2038,78.0,40.0,19.8,5.7,7.6,1.9,14.2,Aggressive EV adoption driven by policy incentives
 SCN-002,High EV Adoption,2039,83.0,42.0,21.0,6.0,8.0,2.0,15.0,Aggressive EV adoption driven by policy incentives
 SCN-002,High EV Adoption,2040,88.0,44.0,22.2,6.3,8.4,2.1,15.8,Aggressive EV adoption driven by policy incentives
-SCN-003,High Solar Growth,2024,8.0,12.0,3.0,0.5,0.8,1.0,2.0,Rapid DER expansion with net metering 2.0
-SCN-003,High Solar Growth,2025,10.0,16.5,5.5,0.55,0.9,1.2,2.3,Rapid DER expansion with net metering 2.0
-SCN-003,High Solar Growth,2026,12.0,21.0,8.0,0.6,1.0,1.4,2.6,Rapid DER expansion with net metering 2.0
-SCN-003,High Solar Growth,2027,14.0,25.5,10.5,0.65,1.1,1.6,2.9,Rapid DER expansion with net metering 2.0
-SCN-003,High Solar Growth,2028,16.0,30.0,13.0,0.7,1.2,1.8,3.2,Rapid DER expansion with net metering 2.0
-SCN-003,High Solar Growth,2029,18.0,34.5,15.5,0.75,1.3,2.0,3.5,Rapid DER expansion with net metering 2.0
-SCN-003,High Solar Growth,2030,20.0,39.0,18.0,0.8,1.4,2.2,3.8,Rapid DER expansion with net metering 2.0
-SCN-003,High Solar Growth,2031,22.0,43.5,20.5,0.85,1.5,2.4,4.1,Rapid DER expansion with net metering 2.0
-SCN-003,High Solar Growth,2032,24.0,48.0,23.0,0.9,1.6,2.6,4.4,Rapid DER expansion with net metering 2.0
-SCN-003,High Solar Growth,2033,26.0,52.5,25.5,0.95,1.7,2.8,4.7,Rapid DER expansion with net metering 2.0
-SCN-003,High Solar Growth,2034,28.0,57.0,28.0,1.0,1.8,3.0,5.0,Rapid DER expansion with net metering 2.0
-SCN-003,High Solar Growth,2035,30.0,61.5,30.5,1.05,1.9,3.2,5.3,Rapid DER expansion with net metering 2.0
-SCN-003,High Solar Growth,2036,32.0,66.0,33.0,1.1,2.0,3.4,5.6,Rapid DER expansion with net metering 2.0
-SCN-003,High Solar Growth,2037,34.0,70.5,35.5,1.15,2.1,3.6,5.9,Rapid DER expansion with net metering 2.0
-SCN-003,High Solar Growth,2038,36.0,75.0,38.0,1.2,2.2,3.8,6.2,Rapid DER expansion with net metering 2.0
-SCN-003,High Solar Growth,2039,38.0,79.5,40.5,1.25,2.3,4.0,6.5,Rapid DER expansion with net metering 2.0
-SCN-003,High Solar Growth,2040,40.0,84.0,43.0,1.3,2.4,4.2,6.8,Rapid DER expansion with net metering 2.0
+SCN-003,High Solar Growth,2024,8.0,12.0,3.0,0.5,0.8,0.5,2.0,Rapid DER expansion with net metering 2.0
+SCN-003,High Solar Growth,2025,10.0,16.5,5.5,0.55,0.9,0.7,2.3,Rapid DER expansion with net metering 2.0
+SCN-003,High Solar Growth,2026,12.0,21.0,8.0,0.6,1.0,0.9,2.6,Rapid DER expansion with net metering 2.0
+SCN-003,High Solar Growth,2027,14.0,25.5,10.5,0.65,1.1,1.1,2.9,Rapid DER expansion with net metering 2.0
+SCN-003,High Solar Growth,2028,16.0,30.0,13.0,0.7,1.2,1.3,3.2,Rapid DER expansion with net metering 2.0
+SCN-003,High Solar Growth,2029,18.0,34.5,15.5,0.75,1.3,1.5,3.5,Rapid DER expansion with net metering 2.0
+SCN-003,High Solar Growth,2030,20.0,39.0,18.0,0.8,1.4,1.7,3.8,Rapid DER expansion with net metering 2.0
+SCN-003,High Solar Growth,2031,22.0,43.5,20.5,0.85,1.5,1.9,4.1,Rapid DER expansion with net metering 2.0
+SCN-003,High Solar Growth,2032,24.0,48.0,23.0,0.9,1.6,2.1,4.4,Rapid DER expansion with net metering 2.0
+SCN-003,High Solar Growth,2033,26.0,52.5,25.5,0.95,1.7,2.3,4.7,Rapid DER expansion with net metering 2.0
+SCN-003,High Solar Growth,2034,28.0,57.0,28.0,1.0,1.8,2.5,5.0,Rapid DER expansion with net metering 2.0
+SCN-003,High Solar Growth,2035,30.0,61.5,30.5,1.05,1.9,2.7,5.3,Rapid DER expansion with net metering 2.0
+SCN-003,High Solar Growth,2036,32.0,66.0,33.0,1.1,2.0,2.9,5.6,Rapid DER expansion with net metering 2.0
+SCN-003,High Solar Growth,2037,34.0,70.5,35.5,1.15,2.1,3.1,5.9,Rapid DER expansion with net metering 2.0
+SCN-003,High Solar Growth,2038,36.0,75.0,38.0,1.2,2.2,3.3,6.2,Rapid DER expansion with net metering 2.0
+SCN-003,High Solar Growth,2039,38.0,79.5,40.5,1.25,2.3,3.5,6.5,Rapid DER expansion with net metering 2.0
+SCN-003,High Solar Growth,2040,40.0,84.0,43.0,1.3,2.4,3.7,6.8,Rapid DER expansion with net metering 2.0
 SCN-004,Extreme Heat,2024,8.0,12.0,3.0,2.0,3.0,0.5,2.0,Climate-driven load growth from increased cooling demand
 SCN-004,Extreme Heat,2025,10.5,14.0,4.0,2.4,3.6,0.6,2.4,Climate-driven load growth from increased cooling demand
 SCN-004,Extreme Heat,2026,13.0,16.0,5.0,2.8,4.2,0.7,2.8,Climate-driven load growth from increased cooling demand
@@ -67,20 +67,20 @@ SCN-004,Extreme Heat,2037,40.5,38.0,16.0,7.2,10.8,1.8,7.2,Climate-driven load gr
 SCN-004,Extreme Heat,2038,43.0,40.0,17.0,7.6,11.4,1.9,7.6,Climate-driven load growth from increased cooling demand
 SCN-004,Extreme Heat,2039,45.5,42.0,18.0,8.0,12.0,2.0,8.0,Climate-driven load growth from increased cooling demand
 SCN-004,Extreme Heat,2040,48.0,44.0,19.0,8.4,12.6,2.1,8.4,Climate-driven load growth from increased cooling demand
-SCN-005,Full Electrification,2024,8.0,12.0,3.0,2.5,3.0,1.0,5.0,Building and transportation electrification mandate
-SCN-005,Full Electrification,2025,12.0,15.0,5.0,3.0,3.55,1.15,7.0,Building and transportation electrification mandate
-SCN-005,Full Electrification,2026,16.0,18.0,7.0,3.5,4.1,1.3,9.0,Building and transportation electrification mandate
-SCN-005,Full Electrification,2027,20.0,21.0,9.0,4.0,4.65,1.45,11.0,Building and transportation electrification mandate
-SCN-005,Full Electrification,2028,24.0,24.0,11.0,4.5,5.2,1.6,13.0,Building and transportation electrification mandate
-SCN-005,Full Electrification,2029,28.0,27.0,13.0,5.0,5.75,1.75,15.0,Building and transportation electrification mandate
-SCN-005,Full Electrification,2030,32.0,30.0,15.0,5.5,6.3,1.9,17.0,Building and transportation electrification mandate
-SCN-005,Full Electrification,2031,36.0,33.0,17.0,6.0,6.85,2.05,19.0,Building and transportation electrification mandate
-SCN-005,Full Electrification,2032,40.0,36.0,19.0,6.5,7.4,2.2,21.0,Building and transportation electrification mandate
-SCN-005,Full Electrification,2033,44.0,39.0,21.0,7.0,7.95,2.35,23.0,Building and transportation electrification mandate
-SCN-005,Full Electrification,2034,48.0,42.0,23.0,7.5,8.5,2.5,25.0,Building and transportation electrification mandate
-SCN-005,Full Electrification,2035,52.0,45.0,25.0,8.0,9.05,2.65,27.0,Building and transportation electrification mandate
-SCN-005,Full Electrification,2036,56.0,48.0,27.0,8.5,9.6,2.8,29.0,Building and transportation electrification mandate
-SCN-005,Full Electrification,2037,60.0,51.0,29.0,9.0,10.15,2.95,31.0,Building and transportation electrification mandate
-SCN-005,Full Electrification,2038,64.0,54.0,31.0,9.5,10.7,3.1,33.0,Building and transportation electrification mandate
-SCN-005,Full Electrification,2039,68.0,57.0,33.0,10.0,11.25,3.25,35.0,Building and transportation electrification mandate
-SCN-005,Full Electrification,2040,72.0,60.0,35.0,10.5,11.8,3.4,37.0,Building and transportation electrification mandate
+SCN-005,Full Electrification,2024,8.0,12.0,3.0,2.5,3.0,0.5,5.0,Building and transportation electrification mandate
+SCN-005,Full Electrification,2025,12.0,15.0,5.0,3.0,3.55,0.65,7.0,Building and transportation electrification mandate
+SCN-005,Full Electrification,2026,16.0,18.0,7.0,3.5,4.1,0.8,9.0,Building and transportation electrification mandate
+SCN-005,Full Electrification,2027,20.0,21.0,9.0,4.0,4.65,0.95,11.0,Building and transportation electrification mandate
+SCN-005,Full Electrification,2028,24.0,24.0,11.0,4.5,5.2,1.1,13.0,Building and transportation electrification mandate
+SCN-005,Full Electrification,2029,28.0,27.0,13.0,5.0,5.75,1.25,15.0,Building and transportation electrification mandate
+SCN-005,Full Electrification,2030,32.0,30.0,15.0,5.5,6.3,1.4,17.0,Building and transportation electrification mandate
+SCN-005,Full Electrification,2031,36.0,33.0,17.0,6.0,6.85,1.55,19.0,Building and transportation electrification mandate
+SCN-005,Full Electrification,2032,40.0,36.0,19.0,6.5,7.4,1.7,21.0,Building and transportation electrification mandate
+SCN-005,Full Electrification,2033,44.0,39.0,21.0,7.0,7.95,1.85,23.0,Building and transportation electrification mandate
+SCN-005,Full Electrification,2034,48.0,42.0,23.0,7.5,8.5,2.0,25.0,Building and transportation electrification mandate
+SCN-005,Full Electrification,2035,52.0,45.0,25.0,8.0,9.05,2.15,27.0,Building and transportation electrification mandate
+SCN-005,Full Electrification,2036,56.0,48.0,27.0,8.5,9.6,2.3,29.0,Building and transportation electrification mandate
+SCN-005,Full Electrification,2037,60.0,51.0,29.0,9.0,10.15,2.45,31.0,Building and transportation electrification mandate
+SCN-005,Full Electrification,2038,64.0,54.0,31.0,9.5,10.7,2.6,33.0,Building and transportation electrification mandate
+SCN-005,Full Electrification,2039,68.0,57.0,33.0,10.0,11.25,2.75,35.0,Building and transportation electrification mandate
+SCN-005,Full Electrification,2040,72.0,60.0,35.0,10.5,11.8,2.9,37.0,Building and transportation electrification mandate

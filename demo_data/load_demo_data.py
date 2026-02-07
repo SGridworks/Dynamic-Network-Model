@@ -5,6 +5,12 @@ Combined data loader for the Dynamic Network Model demo datasets.
 Provides functions to load each dataset individually or all at once.
 Returns pandas DataFrames with appropriate dtypes and indices.
 
+Common keys across all infrastructure datasets:
+  - substation_id  (present on every table)
+  - feeder_id      (present on feeders and all downstream tables)
+  - transformer_id (present on transformers and all downstream tables)
+  - customer_id    (present on customers, solar, and EV chargers)
+
 Usage:
     from demo_data.load_demo_data import load_all, load_substations, ...
 
@@ -54,8 +60,8 @@ def load_substations() -> pd.DataFrame:
 def load_feeders() -> pd.DataFrame:
     """Load the feeders (distribution lines) dataset.
 
-    Contains ~50 feeders linked to substations with conductor specs,
-    capacity, and customer counts.
+    Contains ~70 feeders linked to substations with head/tail coordinates,
+    conductor specs, capacity, and customer counts.
     """
     df = pd.read_csv(_csv_path("feeders.csv"))
     df.set_index("feeder_id", inplace=True)
@@ -65,8 +71,8 @@ def load_feeders() -> pd.DataFrame:
 def load_transformers() -> pd.DataFrame:
     """Load the distribution transformers dataset.
 
-    Contains ~17,000 transformers linked to feeders with ratings,
-    phase configuration, and manufacturer info.
+    Contains ~25,000 transformers linked to feeders and substations with
+    ratings, phase configuration, and manufacturer info.
     """
     df = pd.read_csv(_csv_path("transformers.csv"))
     df.set_index("transformer_id", inplace=True)
@@ -76,8 +82,8 @@ def load_transformers() -> pd.DataFrame:
 def load_customers() -> pd.DataFrame:
     """Load the customers dataset.
 
-    Contains ~110,000 customers linked to transformers, with type
-    classifications and DER adoption flags.
+    Contains ~166,000 customers linked to transformers, feeders, and
+    substations with type classifications and DER adoption flags.
     """
     df = pd.read_csv(_csv_path("customers.csv"))
     df.set_index("customer_id", inplace=True)
@@ -100,8 +106,8 @@ def load_load_profiles() -> pd.DataFrame:
 def load_solar_installations() -> pd.DataFrame:
     """Load the solar PV installation registry.
 
-    Contains ~13,000 solar installations linked to customers with
-    capacity, panel type, and inverter details.
+    Contains ~20,000 solar installations linked through the full hierarchy:
+    customer -> transformer -> feeder -> substation.
     """
     df = pd.read_csv(_csv_path("solar_installations.csv"),
                       parse_dates=["install_date"])
@@ -122,8 +128,8 @@ def load_solar_profiles() -> pd.DataFrame:
 def load_ev_chargers() -> pd.DataFrame:
     """Load the EV charger registry.
 
-    Contains ~8,800 EV chargers linked to customers with power rating,
-    connector type, and network operator.
+    Contains ~13,000 EV chargers linked through the full hierarchy:
+    customer -> transformer -> feeder -> substation.
     """
     df = pd.read_csv(_csv_path("ev_chargers.csv"),
                       parse_dates=["install_date"])
@@ -167,13 +173,26 @@ def load_growth_scenarios() -> pd.DataFrame:
 def load_outage_history() -> pd.DataFrame:
     """Load the feeder-level outage/reliability history.
 
-    Contains ~270 outage events for 2024 with cause, duration,
-    customers affected, and equipment involved.
+    Contains outage events for 2024 linked to feeders and substations,
+    with cause, duration, customers affected, and equipment involved.
     """
     df = pd.read_csv(_csv_path("outage_history.csv"),
                       parse_dates=["start_time", "end_time"])
     df["weather_related"] = df["weather_related"].astype(bool)
     df.set_index("outage_id", inplace=True)
+    return df
+
+
+def load_network_connectivity() -> pd.DataFrame:
+    """Load the network connectivity (topology) model.
+
+    Contains ~26,000 edges representing the physical network:
+    substation -> feeder trunk -> lateral taps -> transformers.
+    Each edge carries impedance, coordinates, and the common
+    feeder_id/substation_id keys.
+    """
+    df = pd.read_csv(_csv_path("network_connectivity.csv"))
+    df.set_index("edge_id", inplace=True)
     return df
 
 
@@ -190,7 +209,7 @@ def load_all(datasets: Optional[list] = None) -> Dict[str, pd.DataFrame]:
             Valid names: substations, feeders, transformers, customers,
             load_profiles, solar_installations, solar_profiles, ev_chargers,
             ev_charging_profiles, weather_data, growth_scenarios,
-            outage_history
+            outage_history, network_connectivity
 
     Returns:
         Dictionary mapping dataset name to DataFrame.
@@ -198,7 +217,7 @@ def load_all(datasets: Optional[list] = None) -> Dict[str, pd.DataFrame]:
     Example:
         >>> data = load_all()
         >>> data["substations"].head()
-        >>> data = load_all(["substations", "feeders"])
+        >>> data = load_all(["substations", "feeders", "network_connectivity"])
     """
     loaders = {
         "substations": load_substations,
@@ -213,6 +232,7 @@ def load_all(datasets: Optional[list] = None) -> Dict[str, pd.DataFrame]:
         "weather_data": load_weather_data,
         "growth_scenarios": load_growth_scenarios,
         "outage_history": load_outage_history,
+        "network_connectivity": load_network_connectivity,
     }
 
     if datasets is not None:
