@@ -183,16 +183,37 @@ def load_outage_history() -> pd.DataFrame:
     return df
 
 
-def load_network_connectivity() -> pd.DataFrame:
-    """Load the network connectivity (topology) model.
+def load_network_nodes() -> pd.DataFrame:
+    """Load the network nodes (point features) table.
 
-    Contains ~26,000 edges representing the physical network:
-    substation -> feeder trunk -> lateral taps -> transformers.
-    Each edge carries impedance, coordinates, and the common
-    feeder_id/substation_id keys.
+    Contains ~26,000 nodes representing every distinct network location:
+    substation buses, feeder breakers, junction/tap points, transformers,
+    and feeder endpoints.  Each node has a geometry (lat/lon), equipment
+    class, rated capacity, and the common feeder_id/substation_id keys.
+
+    Follows ESRI geodatabase / GIS conventions — pair with
+    load_network_edges() for the full topology.
     """
-    df = pd.read_csv(_csv_path("network_connectivity.csv"))
+    df = pd.read_csv(_csv_path("network_nodes.csv"))
+    df.set_index("node_id", inplace=True)
+    return df
+
+
+def load_network_edges() -> pd.DataFrame:
+    """Load the network edges (polyline features) table.
+
+    Contains ~26,000 edges representing every conductor segment:
+    bus ties, primary trunk (overhead/underground), laterals, etc.
+    References from_node_id / to_node_id (foreign keys into the
+    nodes table).  Carries impedance (R, X, Z0), conductor type,
+    phase, length, and rated amps.
+
+    Follows ESRI geodatabase / GIS conventions — pair with
+    load_network_nodes() for the full topology.
+    """
+    df = pd.read_csv(_csv_path("network_edges.csv"))
     df.set_index("edge_id", inplace=True)
+    df["is_overhead"] = df["is_overhead"].astype(bool)
     return df
 
 
@@ -209,7 +230,7 @@ def load_all(datasets: Optional[list] = None) -> Dict[str, pd.DataFrame]:
             Valid names: substations, feeders, transformers, customers,
             load_profiles, solar_installations, solar_profiles, ev_chargers,
             ev_charging_profiles, weather_data, growth_scenarios,
-            outage_history, network_connectivity
+            outage_history, network_nodes, network_edges
 
     Returns:
         Dictionary mapping dataset name to DataFrame.
@@ -217,7 +238,7 @@ def load_all(datasets: Optional[list] = None) -> Dict[str, pd.DataFrame]:
     Example:
         >>> data = load_all()
         >>> data["substations"].head()
-        >>> data = load_all(["substations", "feeders", "network_connectivity"])
+        >>> data = load_all(["network_nodes", "network_edges"])
     """
     loaders = {
         "substations": load_substations,
@@ -232,7 +253,8 @@ def load_all(datasets: Optional[list] = None) -> Dict[str, pd.DataFrame]:
         "weather_data": load_weather_data,
         "growth_scenarios": load_growth_scenarios,
         "outage_history": load_outage_history,
-        "network_connectivity": load_network_connectivity,
+        "network_nodes": load_network_nodes,
+        "network_edges": load_network_edges,
     }
 
     if datasets is not None:

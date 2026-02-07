@@ -690,77 +690,178 @@ def generate_outage_history(feeders):
 
 
 # ---------------------------------------------------------------------------
-# 13. Network connectivity model
+# 13. Network connectivity — GIS-style node/edge model
 # ---------------------------------------------------------------------------
 
-def generate_network_connectivity(substations, feeders, transformers):
-    """Build an explicit edge-list representing the physical network topology.
+def generate_network_nodes_and_edges(substations, feeders, transformers):
+    """Build a normalized node/edge database for the distribution network.
 
-    Nodes: substations, feeder heads, lateral taps, transformers
-    Edges: high-voltage ties, feeder trunks, laterals, service drops
+    Produces two tables following GIS conventions (ESRI geodatabase style):
 
-    Each edge carries the upstream substation_id and feeder_id so the
-    connectivity table shares the same common keys as every other dataset.
+    network_nodes.csv — Point feature class
+        Every distinct network location: substations, feeder breakers,
+        junction/tap points along trunk lines, transformers, and feeder
+        endpoints.  Each node has a unique ID, a geometry (lat/lon),
+        and attributes like voltage, equipment type, and the common
+        feeder_id / substation_id keys.
+
+    network_edges.csv — Polyline feature class
+        Every conductor segment connecting two nodes.  References
+        from_node_id and to_node_id (foreign keys into the nodes table).
+        Carries line attributes: impedance, conductor type, length,
+        rated capacity, and operating status.
     """
-    print("Generating network connectivity model...")
-    headers = [
-        "edge_id", "from_node_id", "from_node_type",
-        "to_node_id", "to_node_type",
-        "feeder_id", "substation_id",
-        "edge_type", "length_miles",
-        "from_latitude", "from_longitude",
-        "to_latitude", "to_longitude",
-        "impedance_r_ohm_per_mile", "impedance_x_ohm_per_mile",
-        "rated_amps", "status",
+    print("Generating network nodes...")
+
+    # ------------------------------------------------------------------
+    # Nodes
+    # ------------------------------------------------------------------
+    node_headers = [
+        "node_id", "node_type", "substation_id", "feeder_id",
+        "latitude", "longitude",
+        "nominal_voltage_kv", "equipment_class",
+        "rated_capacity", "rated_capacity_units",
+        "phase", "installation_year", "status",
     ]
 
-    rows = []
-    edge_num = 0
+    nodes = []  # list of row-lists
+    node_set = set()  # track IDs to avoid duplicates
 
-    # --- Edges from substation bus to each feeder head -----------------------
-    for fdr in feeders:
-        edge_num += 1
-        fdr_id = fdr[0]
-        sub_id = fdr[1]
-        sub = next(s for s in substations if s[0] == sub_id)
-        sub_lat, sub_lon = float(sub[2]), float(sub[3])
-        head_lat, head_lon = float(fdr[4]), float(fdr[5])
-        rows.append([
-            f"EDGE-{edge_num:06d}",
-            sub_id, "substation",
-            fdr_id, "feeder_head",
-            fdr_id, sub_id,
-            "feeder_trunk", 0.1,
-            sub_lat, sub_lon, head_lat, head_lon,
-            round(random.uniform(0.05, 0.15), 4),
-            round(random.uniform(0.10, 0.30), 4),
-            random.choice([400, 600, 800]),
-            "closed",
+    def add_node(row):
+        nid = row[0]
+        if nid not in node_set:
+            node_set.add(nid)
+            nodes.append(row)
+
+    # --- Substation bus nodes ---
+    for sub in substations:
+        sub_id = sub[0]
+        add_node([
+            sub_id, "substation_bus", sub_id, "",
+            float(sub[2]), float(sub[3]),
+            sub[4],  # voltage_high_kv
+            "substation",
+            sub[6], "MVA",  # rated_capacity_mva
+            "ABC", "",
+            sub[10],  # status
         ])
 
-    # Build a lookup: feeder_id -> list of transformers (sorted by position)
+    # --- Feeder head (breaker) and tail (open point) nodes ---
+    for fdr in feeders:
+        fdr_id = fdr[0]
+        sub_id = fdr[1]
+        v_kv = fdr[3]
+        head_lat, head_lon = float(fdr[4]), float(fdr[5])
+        tail_lat, tail_lon = float(fdr[6]), float(fdr[7])
+
+        add_node([
+            f"{fdr_id}-HEAD", "feeder_breaker", sub_id, fdr_id,
+            head_lat, head_lon,
+            v_kv, "breaker",
+            fdr[10], "MW",  # rated_capacity_mw
+            "ABC", "", "closed",
+        ])
+        add_node([
+            f"{fdr_id}-TAIL", "feeder_endpoint", sub_id, fdr_id,
+            tail_lat, tail_lon,
+            v_kv, "open_point",
+            "", "", "ABC", "", "open",
+        ])
+
+    # --- Transformer nodes (from the existing transformers table) ---
+    for xfmr in transformers:
+        add_node([
+            xfmr[0],  # transformer_id
+            "transformer", xfmr[2], xfmr[1],  # sub_id, fdr_id
+            float(xfmr[3]), float(xfmr[4]),
+            xfmr[7],  # primary_voltage_kv
+            "distribution_transformer",
+            xfmr[5], "kVA",  # rated_kva
+            xfmr[6],  # phase
+            "", xfmr[11],  # status
+        ])
+
+    # --- Junction / tap nodes along feeder trunks ---
+    # Built during edge generation below; we collect them first, then
+    # write the nodes file after both passes.
+
+    # ------------------------------------------------------------------
+    # Edges
+    # ------------------------------------------------------------------
+    edge_headers = [
+        "edge_id", "from_node_id", "to_node_id",
+        "feeder_id", "substation_id",
+        "edge_type", "conductor_type", "phase",
+        "length_miles", "length_ft",
+        "impedance_r_ohm_per_mile", "impedance_x_ohm_per_mile",
+        "impedance_z0_ohm_per_mile",
+        "rated_amps", "nominal_voltage_kv",
+        "num_phases", "is_overhead",
+        "installation_year", "status",
+    ]
+
+    edges = []
+    edge_num = 0
+
+    conductor_specs = {
+        "336 ACSR":  (0.306, 0.444, 400),
+        "477 ACSR":  (0.216, 0.420, 530),
+        "795 ACSR":  (0.130, 0.390, 700),
+        "1/0 AL":    (0.592, 0.477, 230),
+        "4/0 AL":    (0.297, 0.434, 340),
+        "397.5 AAC": (0.240, 0.430, 480),
+    }
+    lateral_conductors = ["1/0 AL", "4/0 AL", "#2 ACSR", "#4 CU"]
+    lateral_specs = {
+        "1/0 AL":   (0.592, 0.477, 230),
+        "4/0 AL":   (0.297, 0.434, 340),
+        "#2 ACSR":  (0.895, 0.502, 150),
+        "#4 CU":    (1.503, 0.511, 100),
+    }
+
+    # Build feeder lookup
     fdr_xfmrs = {}
     for xfmr in transformers:
-        fdr_id = xfmr[1]
-        fdr_xfmrs.setdefault(fdr_id, []).append(xfmr)
+        fdr_xfmrs.setdefault(xfmr[1], []).append(xfmr)
 
     for fdr in feeders:
         fdr_id = fdr[0]
         sub_id = fdr[1]
+        v_kv = fdr[3]
         head_lat, head_lon = float(fdr[4]), float(fdr[5])
         tail_lat, tail_lon = float(fdr[6]), float(fdr[7])
         length = float(fdr[8])
+        trunk_conductor = fdr[9]
+        trunk_r, trunk_x, trunk_amps = conductor_specs.get(
+            trunk_conductor, (0.25, 0.43, 400),
+        )
+
+        # -- Substation bus -> feeder breaker --
+        edge_num += 1
+        edges.append([
+            f"EDGE-{edge_num:06d}",
+            sub_id, f"{fdr_id}-HEAD",
+            fdr_id, sub_id,
+            "bus_tie", trunk_conductor, "ABC",
+            0.01, round(0.01 * 5280, 1),
+            round(trunk_r * random.uniform(0.9, 1.1), 4),
+            round(trunk_x * random.uniform(0.9, 1.1), 4),
+            round((trunk_r + trunk_x) * 0.5 * random.uniform(0.9, 1.1), 4),
+            trunk_amps, v_kv,
+            3, 1,
+            "", "closed",
+        ])
 
         xfmrs = fdr_xfmrs.get(fdr_id, [])
         if not xfmrs:
             continue
 
-        # Sort transformers by distance from feeder head
-        def dist_from_head(x):
-            return (float(x[3]) - head_lat) ** 2 + (float(x[4]) - head_lon) ** 2
+        # Sort transformers by distance from head
+        def dist_from_head(x, _hlat=head_lat, _hlon=head_lon):
+            return (float(x[3]) - _hlat) ** 2 + (float(x[4]) - _hlon) ** 2
         xfmrs_sorted = sorted(xfmrs, key=dist_from_head)
 
-        # Create trunk nodes at roughly every 5th transformer for laterals
+        # Create junction/tap nodes along the trunk
         trunk_spacing = max(1, len(xfmrs_sorted) // 8)
         trunk_nodes = []  # (node_id, lat, lon, mile_marker)
 
@@ -770,82 +871,108 @@ def generate_network_connectivity(substations, feeders, transformers):
             mile_marker = round(frac * length, 2)
 
             if idx % trunk_spacing == 0:
-                # This transformer is on the trunk line
-                tap_id = f"TAP-{fdr_id}-{len(trunk_nodes) + 1:03d}"
+                tap_id = f"JCT-{fdr_id}-{len(trunk_nodes) + 1:03d}"
                 tap_lat, tap_lon = point_along_line(
                     head_lat, head_lon, tail_lat, tail_lon, frac,
                 )
                 trunk_nodes.append((tap_id, tap_lat, tap_lon, mile_marker))
 
-                # Edge: previous trunk node (or feeder head) -> this tap
+                # Add junction node
+                add_node([
+                    tap_id, "junction", sub_id, fdr_id,
+                    tap_lat, tap_lon,
+                    v_kv, "pole_top" if random.random() > 0.2 else "padmount",
+                    "", "",
+                    "ABC", "", "active",
+                ])
+
+                # Trunk edge: previous node -> this junction
                 if len(trunk_nodes) == 1:
-                    prev_id, prev_type = fdr_id, "feeder_head"
-                    prev_lat, prev_lon = head_lat, head_lon
+                    prev_id = f"{fdr_id}-HEAD"
                     prev_mile = 0.0
                 else:
                     prev = trunk_nodes[-2]
-                    prev_id, prev_type = prev[0], "lateral_tap"
-                    prev_lat, prev_lon = prev[1], prev[2]
+                    prev_id = prev[0]
                     prev_mile = prev[3]
 
-                seg_len = round(mile_marker - prev_mile, 2)
+                seg_len = round(max(mile_marker - prev_mile, 0.01), 3)
+                seg_ft = round(seg_len * 5280, 1)
+                is_oh = 1 if random.random() > 0.15 else 0
                 edge_num += 1
-                rows.append([
+                edges.append([
                     f"EDGE-{edge_num:06d}",
-                    prev_id, prev_type,
-                    tap_id, "lateral_tap",
+                    prev_id, tap_id,
                     fdr_id, sub_id,
-                    "feeder_trunk", max(seg_len, 0.01),
-                    prev_lat, prev_lon, tap_lat, tap_lon,
-                    round(random.uniform(0.08, 0.25), 4),
-                    round(random.uniform(0.15, 0.40), 4),
-                    random.choice([400, 600]),
-                    "closed",
+                    "primary_overhead" if is_oh else "primary_underground",
+                    trunk_conductor, "ABC",
+                    seg_len, seg_ft,
+                    round(trunk_r * random.uniform(0.9, 1.1), 4),
+                    round(trunk_x * random.uniform(0.9, 1.1), 4),
+                    round((trunk_r + trunk_x) * 0.5 * random.uniform(0.9, 1.1), 4),
+                    trunk_amps, v_kv,
+                    3, is_oh,
+                    "", "closed",
                 ])
 
-            # Edge: nearest trunk tap -> this transformer (lateral/service)
-            nearest_tap = trunk_nodes[-1]
-            lateral_len = round(
-                math.sqrt(
-                    (xfmr_lat - nearest_tap[1]) ** 2
-                    + (xfmr_lon - nearest_tap[2]) ** 2
-                ) * 69, 3,
+            # Lateral edge: nearest junction -> transformer
+            nearest = trunk_nodes[-1]
+            lat_len = round(
+                max(
+                    math.sqrt(
+                        (xfmr_lat - nearest[1]) ** 2
+                        + (xfmr_lon - nearest[2]) ** 2
+                    ) * 69,
+                    0.001,
+                ), 3,
             )
+            lat_ft = round(lat_len * 5280, 1)
+            lat_cond = random.choice(lateral_conductors)
+            lat_r, lat_x, lat_amps = lateral_specs[lat_cond]
+            xfmr_phase = xfmr[6]
+            n_phases = len(xfmr_phase) if len(xfmr_phase) <= 3 else 3
+            is_oh = 1 if random.random() > 0.25 else 0
             edge_num += 1
-            rows.append([
+            edges.append([
                 f"EDGE-{edge_num:06d}",
-                nearest_tap[0], "lateral_tap",
-                xfmr[0], "transformer",
+                nearest[0], xfmr[0],
                 fdr_id, sub_id,
-                "lateral", max(round(lateral_len, 3), 0.001),
-                nearest_tap[1], nearest_tap[2], xfmr_lat, xfmr_lon,
-                round(random.uniform(0.15, 0.50), 4),
-                round(random.uniform(0.20, 0.55), 4),
-                random.choice([200, 300, 400]),
-                "closed",
+                "lateral_overhead" if is_oh else "lateral_underground",
+                lat_cond, xfmr_phase,
+                lat_len, lat_ft,
+                round(lat_r * random.uniform(0.9, 1.1), 4),
+                round(lat_x * random.uniform(0.9, 1.1), 4),
+                round((lat_r + lat_x) * 0.5 * random.uniform(0.9, 1.1), 4),
+                lat_amps, v_kv,
+                n_phases, is_oh,
+                "", "closed",
             ])
 
-        # Final trunk segment to feeder tail
+        # Final trunk segment: last junction -> feeder tail
         if trunk_nodes:
             last = trunk_nodes[-1]
-            seg_len = round(length - last[3], 2)
-            if seg_len > 0.01:
-                edge_num += 1
-                rows.append([
-                    f"EDGE-{edge_num:06d}",
-                    last[0], "lateral_tap",
-                    f"{fdr_id}-TAIL", "feeder_tail",
-                    fdr_id, sub_id,
-                    "feeder_trunk", seg_len,
-                    last[1], last[2], tail_lat, tail_lon,
-                    round(random.uniform(0.08, 0.25), 4),
-                    round(random.uniform(0.15, 0.40), 4),
-                    random.choice([400, 600]),
-                    "closed",
-                ])
+            seg_len = round(max(length - last[3], 0.01), 3)
+            seg_ft = round(seg_len * 5280, 1)
+            is_oh = 1 if random.random() > 0.15 else 0
+            edge_num += 1
+            edges.append([
+                f"EDGE-{edge_num:06d}",
+                last[0], f"{fdr_id}-TAIL",
+                fdr_id, sub_id,
+                "primary_overhead" if is_oh else "primary_underground",
+                trunk_conductor, "ABC",
+                seg_len, seg_ft,
+                round(trunk_r * random.uniform(0.9, 1.1), 4),
+                round(trunk_x * random.uniform(0.9, 1.1), 4),
+                round((trunk_r + trunk_x) * 0.5 * random.uniform(0.9, 1.1), 4),
+                trunk_amps, v_kv,
+                3, is_oh,
+                "", "open",
+            ])
 
-    write_csv("network_connectivity.csv", headers, rows)
-    return rows
+    write_csv("network_nodes.csv", node_headers, nodes)
+    print("Generating network edges...")
+    write_csv("network_edges.csv", edge_headers, edges)
+    return nodes, edges
 
 
 # ---------------------------------------------------------------------------
@@ -869,7 +996,7 @@ def main():
     generate_weather_data()
     generate_growth_scenarios()
     generate_outage_history(feeders)
-    generate_network_connectivity(substations, feeders, transformers)
+    generate_network_nodes_and_edges(substations, feeders, transformers)
     print()
     print("All demo datasets generated successfully.")
     print(f"Output directory: {OUTPUT_DIR}")
