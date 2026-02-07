@@ -3,7 +3,7 @@
 Generate synthetic demo datasets for the Dynamic Network Model.
 
 SYNTHETIC DATA NOTICE
-    Saguaro Power & Light (SP&L) is an entirely fictional utility.
+    Sisyphean Power & Light (SP&L) is an entirely fictional utility.
     All data produced by this script is computationally generated.
     No real customer, infrastructure, or operational data is included.
 

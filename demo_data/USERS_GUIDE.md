@@ -1,4 +1,4 @@
-# Saguaro Power & Light — Dataset User's Guide
+# Sisyphean Power & Light — Dataset User's Guide
 
 A comprehensive guide for power engineers exploring machine learning,
 AI-enabled tools, and modern data science with realistic distribution
@@ -6,7 +6,7 @@ system data.
 
 > **SYNTHETIC DATA NOTICE**
 >
-> Saguaro Power & Light (SP&L) is an entirely fictional utility. Every
+> Sisyphean Power & Light (SP&L) is an entirely fictional utility. Every
 > record in this dataset — customer accounts, network topology, load
 > measurements, DER installations, geographic coordinates, and outage
 > events — is computationally generated. No real customer, infrastructure,
@@ -60,7 +60,7 @@ the same hierarchy, the same key relationships, the same GIS conventions
 
 ## The Utility at a Glance
 
-**Saguaro Power & Light (SP&L)** is a fictional mid-size electric utility
+**Sisyphean Power & Light (SP&L)** is a fictional mid-size electric utility
 serving a suburban/rural territory in the Phoenix, Arizona metropolitan
 area.
 
@@ -563,5 +563,5 @@ scaffolding.
 
 ---
 
-*Saguaro Power & Light is a fictional utility. This dataset is synthetic
+*Sisyphean Power & Light is a fictional utility. This dataset is synthetic
 and provided for educational and experimental purposes only.*

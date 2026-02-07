@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Combined data loader for the Saguaro Power & Light demo datasets.
+Combined data loader for the Sisyphean Power & Light demo datasets.
 
 SYNTHETIC DATA NOTICE
-    Saguaro Power & Light (SP&L) is an entirely fictional utility.
+    Sisyphean Power & Light (SP&L) is an entirely fictional utility.
     All data loaded by this module is computationally generated.
     No real customer, infrastructure, or operational data is included.
 
@@ -276,7 +276,7 @@ def load_all(datasets: Optional[list] = None) -> Dict[str, pd.DataFrame]:
 
 def summary() -> None:
     """Print a summary of all available demo datasets."""
-    print("Saguaro Power & Light — Synthetic Demo Datasets")
+    print("Sisyphean Power & Light — Synthetic Demo Datasets")
     print("(Fictional utility — all data is computationally generated)")
     print("=" * 55)
     data = load_all()

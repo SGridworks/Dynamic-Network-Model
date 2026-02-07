@@ -4,16 +4,16 @@
 stress-testing against EV adoption, solar growth, heatwave scenarios, and
 policy changes.
 
-## Saguaro Power & Light — Synthetic Utility Dataset
+## Sisyphean Power & Light — Synthetic Utility Dataset
 
 This repository includes a complete synthetic dataset modeled after
-**Saguaro Power & Light (SP&L)**, a fictional mid-size electric utility
+**Sisyphean Power & Light (SP&L)**, a fictional mid-size electric utility
 serving approximately 166,000 customers across a Phoenix, AZ-area service
 territory.
 
 > **SYNTHETIC DATA NOTICE**
 >
-> Saguaro Power & Light is an entirely fictional utility. All data in this
+> Sisyphean Power & Light is an entirely fictional utility. All data in this
 > repository — including customer records, network topology, load profiles,
 > DER installations, and geographic coordinates — is computationally
 > generated. No real customer, infrastructure, or operational data is
@@ -105,5 +105,5 @@ Dynamic-Network-Model/
 ## License
 
 This synthetic dataset is provided for educational and experimental use.
-Saguaro Power & Light is a fictional entity. No real utility data is
+Sisyphean Power & Light is a fictional entity. No real utility data is
 included.

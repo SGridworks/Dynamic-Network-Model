@@ -1,6 +1,6 @@
-# Saguaro Power & Light — Demo Datasets
+# Sisyphean Power & Light — Demo Datasets
 
-> **SYNTHETIC DATA** — Saguaro Power & Light is a fictional utility.
+> **SYNTHETIC DATA** — Sisyphean Power & Light is a fictional utility.
 > All data is computationally generated. No real customer, infrastructure,
 > or operational data is included.
 
