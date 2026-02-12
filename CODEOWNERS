@@ -1,0 +1,38 @@
+# CODEOWNERS file for Dynamic Network Model
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner for everything in the repo
+* @SGridworks
+
+# Network topology and OpenDSS models
+/network/ @SGridworks
+*.dss @SGridworks
+
+# Time-series datasets
+/timeseries/ @SGridworks
+*.parquet @SGridworks
+
+# Outage and reliability data
+/outages/ @SGridworks
+
+# Asset registry and condition data
+/assets/ @SGridworks
+
+# Weather and environmental data
+/weather/ @SGridworks
+
+# Analysis notebooks - require review for quality
+/notebooks/ @SGridworks
+*.ipynb @SGridworks
+
+# Scenario configurations
+/scenarios/ @SGridworks
+
+# Documentation - important for accuracy
+README.md @SGridworks
+CONTRIBUTING.md @SGridworks
+SECURITY.md @SGridworks
+LICENSE @SGridworks
+
+# GitHub configuration
+/.github/ @SGridworks
