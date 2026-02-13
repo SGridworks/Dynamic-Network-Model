@@ -1,0 +1,7 @@
+! Capacitor Banks
+
+New Capacitor.cap_FDR-0001 bus1=bus_50 phases=3 kvar=1200 kv=12.47
+New Capacitor.cap_FDR-0002 bus1=bus_150 phases=3 kvar=1200 kv=12.47
+New Capacitor.cap_FDR-0003 bus1=bus_250 phases=3 kvar=300 kv=12.47
+New Capacitor.cap_FDR-0004 bus1=bus_350 phases=3 kvar=1200 kv=12.47
+New Capacitor.cap_FDR-0005 bus1=bus_450 phases=3 kvar=1200 kv=12.47

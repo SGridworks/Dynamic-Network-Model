@@ -1,0 +1,24 @@
+! Sisyphean Power & Light Distribution System Model
+! Generated from Dynamic Network Model dataset
+! Date: 2026-02-12
+
+Clear
+
+! Define the circuit
+New Circuit.SP&L bus1=sourcebus basekV=69 pu=1.00 phases=3 MVAsc3=2000 MVAsc1=2100
+
+! Load auxiliary model files
+Redirect lines.dss
+Redirect transformers.dss
+Redirect loads.dss
+Redirect capacitors.dss
+Redirect coordinates.dss
+
+! Set solution parameters
+Set voltagebases=[69, 12.47, 0.48]
+Calcvoltagebases
+Set tolerance=0.0001
+Set maxiterations=100
+
+! Solve initial power flow
+Solve

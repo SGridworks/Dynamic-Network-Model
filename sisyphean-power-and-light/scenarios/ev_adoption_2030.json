@@ -1,0 +1,8 @@
+{
+  "name": "EV Adoption 2030",
+  "year": 2030,
+  "solar_penetration_pct": 0.18,
+  "ev_penetration_pct": 0.25,
+  "battery_storage_pct": 0.05,
+  "description": "Accelerated EV adoption scenario"
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Baseline 2025",
+  "year": 2025,
+  "solar_penetration_pct": 0.14,
+  "ev_penetration_pct": 0.03,
+  "battery_storage_pct": 0.01,
+  "description": "Current state projection for 2025"
+}

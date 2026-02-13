@@ -1,0 +1,8 @@
+{
+  "name": "High DER 2030",
+  "year": 2030,
+  "solar_penetration_pct": 0.35,
+  "ev_penetration_pct": 0.2,
+  "battery_storage_pct": 0.08,
+  "description": "High distributed energy resource adoption"
+}
