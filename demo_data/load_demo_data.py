@@ -43,8 +43,17 @@ DATA_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def _csv_path(filename: str) -> str:
-    """Return the full path to a CSV file in the demo data directory."""
-    return os.path.join(DATA_DIR, filename)
+    """Return the full path to a CSV file in the demo data directory.
+
+    If the uncompressed CSV is not found but a .csv.gz version exists,
+    returns the gzipped path (pandas reads gzip transparently).
+    """
+    path = os.path.join(DATA_DIR, filename)
+    if not os.path.exists(path):
+        gz_path = path + ".gz"
+        if os.path.exists(gz_path):
+            return gz_path
+    return path
 
 
 # ---------------------------------------------------------------------------
@@ -104,8 +113,9 @@ def load_load_profiles() -> pd.DataFrame:
     """Load the feeder-level 15-minute load profiles.
 
     Contains representative weeks for each season (winter, spring,
-    summer, fall) for every feeder — 2,688 intervals per feeder
-    (168 hours x 4 intervals/hour x 4 seasons).
+    summer, fall) for every feeder across 5 years (2020–2024) —
+    13,440 intervals per feeder (168 hours x 4 intervals/hour x 4
+    seasons x 5 years) with 1.5% year-over-year load growth.
     """
     df = pd.read_csv(_csv_path("load_profiles.csv"), parse_dates=["timestamp"])
     return df
@@ -114,10 +124,10 @@ def load_load_profiles() -> pd.DataFrame:
 def load_customer_interval_data() -> pd.DataFrame:
     """Load the 15-minute AMI customer interval data.
 
-    Contains a representative summer week (7 days x 96 intervals/day)
+    Contains one representative week per season per year (2020–2024)
     for ~500 sampled customers stratified by type (residential,
-    commercial, industrial, municipal).  Each record includes demand_kw,
-    energy_kwh, voltage, and power factor.
+    commercial, industrial, municipal) — 20 weeks per customer.
+    Each record includes demand_kw, energy_kwh, voltage, and power factor.
     """
     df = pd.read_csv(_csv_path("customer_interval_data.csv"),
                       parse_dates=["timestamp"])
@@ -158,6 +168,18 @@ def load_ev_chargers() -> pd.DataFrame:
     return df
 
 
+def load_battery_installations() -> pd.DataFrame:
+    """Load the battery storage installation registry.
+
+    Contains battery installations linked through the full hierarchy:
+    customer -> transformer -> feeder -> substation.
+    """
+    df = pd.read_csv(_csv_path("battery_installations.csv"),
+                      parse_dates=["install_date"])
+    df.set_index("battery_id", inplace=True)
+    return df
+
+
 def load_ev_charging_profiles() -> pd.DataFrame:
     """Load the typical EV charging load shape profiles.
 
@@ -171,10 +193,11 @@ def load_ev_charging_profiles() -> pd.DataFrame:
 def load_weather_data() -> pd.DataFrame:
     """Load the hourly weather dataset (full year).
 
-    Contains 8,760 hourly records with temperature, humidity, wind,
-    solar irradiance, heatwave flags, and storm flags for a Phoenix-like
-    climate.  Storm events cluster during monsoon season (Jul-Sep) and
-    winter months.
+    Contains 5 years (2020–2024) of hourly records (~43,800 rows) with
+    temperature, humidity, wind, solar irradiance, heatwave flags, and
+    storm flags for a Phoenix-like climate.  Storm events cluster during
+    monsoon season (Jul-Sep) and winter months.  Includes slight per-year
+    temperature offsets and storm frequency variation for realism.
     """
     df = pd.read_csv(_csv_path("weather_data.csv"), parse_dates=["timestamp"])
     df["is_heatwave"] = df["is_heatwave"].astype(bool)
@@ -197,9 +220,10 @@ def load_growth_scenarios() -> pd.DataFrame:
 def load_outage_history() -> pd.DataFrame:
     """Load the feeder-level outage/reliability history.
 
-    Contains outage events for 2024 linked to feeders and substations,
-    with cause, duration, customers affected, and equipment involved.
-    Outages cluster during heatwave and storm events.
+    Contains 5 years (2020–2024) of outage events linked to feeders and
+    substations, with cause, duration, customers affected, and equipment
+    involved.  Outages cluster during heatwave and storm events, with
+    slight frequency increase over time (aging infrastructure).
     """
     df = pd.read_csv(_csv_path("outage_history.csv"),
                       parse_dates=["start_time", "end_time"])
@@ -277,6 +301,7 @@ def load_all(datasets: Optional[list] = None) -> Dict[str, pd.DataFrame]:
         "solar_profiles": load_solar_profiles,
         "ev_chargers": load_ev_chargers,
         "ev_charging_profiles": load_ev_charging_profiles,
+        "battery_installations": load_battery_installations,
         "weather_data": load_weather_data,
         "growth_scenarios": load_growth_scenarios,
         "outage_history": load_outage_history,

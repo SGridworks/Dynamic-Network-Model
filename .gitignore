@@ -1,2 +1,7 @@
 __pycache__/
 *.pyc
+
+# Large generated CSVs — use the .csv.gz versions instead.
+# Regenerate with: python demo_data/generate_demo_data.py
+demo_data/customer_interval_data.csv
+demo_data/load_profiles.csv

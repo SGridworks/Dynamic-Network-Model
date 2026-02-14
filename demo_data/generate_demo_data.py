@@ -27,6 +27,7 @@ Each dataset is written to a separate CSV file in the demo_data/ directory.
 """
 
 import csv
+import gzip
 import math
 import os
 import random
@@ -105,13 +106,19 @@ def perpendicular_offset(lat, lon, direction, feet=80):
 # Helper utilities
 # ---------------------------------------------------------------------------
 
-def write_csv(filename, headers, rows):
+def write_csv(filename, headers, rows, compress=False):
     path = os.path.join(OUTPUT_DIR, filename)
     with open(path, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(headers)
         writer.writerows(rows)
-    print(f"  wrote {len(rows):>6,} rows -> {filename}")
+    if compress:
+        gz_path = path + ".gz"
+        with open(path, "rb") as f_in, gzip.open(gz_path, "wb") as f_out:
+            f_out.writelines(f_in)
+        print(f"  wrote {len(rows):>10,} rows -> {filename} + .gz")
+    else:
+        print(f"  wrote {len(rows):>10,} rows -> {filename}")
 
 
 def point_along_route(lat1, lon1, lat2, lon2, fraction):
@@ -295,6 +302,11 @@ def generate_customers(transformers, feeders):
         "industrial": ["I-1", "I-DEMAND"],
         "municipal": ["M-1"],
     }
+    # Maximum ratio of total contracted demand to transformer kVA.
+    # A ratio of 1.5 means total contracted demand can be up to 150% of
+    # the transformer's rated kVA — realistic given that customers don't
+    # all peak simultaneously (typical diversity factor ~0.4-0.6).
+    MAX_DEMAND_KVA_RATIO = 1.5
     # Build direction lookup by feeder
     fdr_dir = {f[0]: f[8] for f in feeders}
     rows = []
@@ -304,8 +316,12 @@ def generate_customers(transformers, feeders):
         fdr_id = xfmr[1]
         sub_id = xfmr[2]
         xfmr_lat, xfmr_lon = float(xfmr[3]), float(xfmr[4])
+        xfmr_kva = float(xfmr[5])
         direction = fdr_dir.get(fdr_id, "N")
         n_cust = random.randint(1, 12)
+        # Capacity budget: total contracted demand capped at ratio * kVA
+        demand_budget_kw = xfmr_kva * MAX_DEMAND_KVA_RATIO
+        total_demand = 0.0
         for _ in range(n_cust):
             cust_num += 1
             r = random.random()
@@ -325,6 +341,14 @@ def generate_customers(transformers, feeders):
                 demand = round(random.uniform(200, 5000), 1)
             else:
                 demand = round(random.uniform(10, 200), 1)
+            # Cap demand so aggregate stays within transformer budget
+            remaining = demand_budget_kw - total_demand
+            if remaining <= 0:
+                # Assign minimum demand
+                demand = round(random.uniform(1, 3), 1)
+            elif demand > remaining:
+                demand = round(min(demand, remaining), 1)
+            total_demand += demand
             # Customer lot: offset from transformer along and perpendicular to street
             along_ft = random.uniform(-150, 150)
             along_deg = along_ft / 5280
@@ -370,40 +394,47 @@ def _diurnal(hour_frac, dow):
 
 
 def generate_load_profiles(feeders):
-    print("Generating load profiles (15-min intervals)...")
+    print("Generating load profiles (15-min intervals, 5 years)...")
     headers = [
         "feeder_id", "substation_id", "timestamp",
         "load_mw", "load_mvar", "voltage_pu", "power_factor",
     ]
-    seasons = {
-        "winter": (datetime(2024, 1, 15), 0.70),
-        "spring": (datetime(2024, 4, 15), 0.60),
-        "summer": (datetime(2024, 7, 15), 1.00),
-        "fall":   (datetime(2024, 10, 15), 0.65),
-    }
+    # One representative week per season for each year 2020–2024
+    # with ~1.5% year-over-year load growth (compounding from 2020 base)
+    LOAD_GROWTH_RATE = 0.015  # 1.5% per year
+    BASE_YEAR = 2020
     rows = []
     for fdr in feeders:
         fdr_id = fdr[0]
         sub_id = fdr[1]
         peak_mw = float(fdr[12])
-        for _, (start_dt, season_mult) in seasons.items():
-            # 168 hours * 4 = 672 intervals per week
-            for interval in range(168 * 4):
-                ts = start_dt + timedelta(minutes=15 * interval)
-                hour_frac = ts.hour + ts.minute / 60.0
-                dow = ts.weekday()
-                d = _diurnal(hour_frac, dow)
-                load_mw = round(
-                    peak_mw * season_mult * d * random.uniform(0.93, 1.07), 3,
-                )
-                pf = round(random.uniform(0.88, 0.98), 3)
-                load_mvar = round(load_mw * math.tan(math.acos(pf)), 3)
-                voltage_pu = round(random.uniform(0.95, 1.05), 4)
-                rows.append([
-                    fdr_id, sub_id, ts.strftime("%Y-%m-%d %H:%M"),
-                    load_mw, load_mvar, voltage_pu, pf,
-                ])
-    write_csv("load_profiles.csv", headers, rows)
+        for year in range(2020, 2025):
+            growth_factor = (1 + LOAD_GROWTH_RATE) ** (year - BASE_YEAR)
+            seasons = {
+                "winter": (datetime(year, 1, 15), 0.70),
+                "spring": (datetime(year, 4, 15), 0.60),
+                "summer": (datetime(year, 7, 15), 1.00),
+                "fall":   (datetime(year, 10, 15), 0.65),
+            }
+            for _, (start_dt, season_mult) in seasons.items():
+                # 168 hours * 4 = 672 intervals per week
+                for interval in range(168 * 4):
+                    ts = start_dt + timedelta(minutes=15 * interval)
+                    hour_frac = ts.hour + ts.minute / 60.0
+                    dow = ts.weekday()
+                    d = _diurnal(hour_frac, dow)
+                    load_mw = round(
+                        peak_mw * season_mult * d * growth_factor
+                        * random.uniform(0.93, 1.07), 3,
+                    )
+                    pf = round(random.uniform(0.88, 0.98), 3)
+                    load_mvar = round(load_mw * math.tan(math.acos(pf)), 3)
+                    voltage_pu = round(random.uniform(0.95, 1.05), 4)
+                    rows.append([
+                        fdr_id, sub_id, ts.strftime("%Y-%m-%d %H:%M"),
+                        load_mw, load_mvar, voltage_pu, pf,
+                    ])
+    write_csv("load_profiles.csv", headers, rows, compress=True)
     return rows
 
 
@@ -413,9 +444,10 @@ def generate_load_profiles(feeders):
 
 def generate_customer_interval_data(customers):
     """Generate 15-min AMI interval data for a sample of ~500 customers
-    covering one representative summer week (the peak season).
+    covering one representative week per season for each year 2020–2024
+    (4 seasons × 5 years = 20 weeks per customer).
     """
-    print("Generating customer interval data (15-min AMI)...")
+    print("Generating customer interval data (15-min AMI, 5 years)...")
     headers = [
         "customer_id", "transformer_id", "feeder_id", "substation_id",
         "customer_type", "timestamp",
@@ -437,7 +469,16 @@ def generate_customer_interval_data(customers):
             n = min(10, len(pool))
         sample.extend(random.sample(pool, n))
 
-    start_dt = datetime(2024, 7, 15)  # Summer week
+    # Seasonal multipliers for demand patterns
+    season_demand_mult = {
+        "winter": 0.75, "spring": 0.65, "summer": 1.00, "fall": 0.70,
+    }
+    # HVAC cycling intensity by season
+    season_hvac_mult = {
+        "winter": 0.08, "spring": 0.03, "summer": 0.15, "fall": 0.05,
+    }
+    LOAD_GROWTH_RATE = 0.015  # 1.5% per year, matching load profiles
+
     rows = []
     for cust in sample:
         cust_id = cust[0]
@@ -446,61 +487,69 @@ def generate_customer_interval_data(customers):
         sub_id = cust[3]
         ctype = cust[4]
         contracted_kw = float(cust[6])
-        for interval in range(7 * 96):  # 7 days x 96 intervals
-            ts = start_dt + timedelta(minutes=15 * interval)
-            hour_frac = ts.hour + ts.minute / 60.0
-            dow = ts.weekday()
-            if ctype == "residential":
-                # Morning bump, afternoon dip, evening peak + HVAC cycling
-                if 0 <= hour_frac < 6:
-                    base = 0.25
-                elif 6 <= hour_frac < 9:
-                    base = 0.35 + 0.15 * ((hour_frac - 6) / 3)
-                elif 9 <= hour_frac < 15:
-                    base = 0.30  # away from home
-                elif 15 <= hour_frac < 21:
-                    base = 0.50 + 0.40 * math.sin(math.pi * (hour_frac - 15) / 6)
-                else:
-                    base = 0.40 - 0.10 * ((hour_frac - 21) / 3)
-                # HVAC cycling: adds spiky 15-min variation in summer
-                hvac = 0.15 * abs(math.sin(math.pi * interval / 3))
-                noise = random.uniform(-0.10, 0.10)
-                demand = contracted_kw * max(0.05, base + hvac + noise)
-            elif ctype == "commercial":
-                if 7 <= hour_frac < 20 and dow < 5:
-                    base = 0.55 + 0.30 * math.sin(math.pi * (hour_frac - 7) / 13)
-                elif 8 <= hour_frac < 17 and dow >= 5:
-                    base = 0.30
-                else:
-                    base = 0.15
-                noise = random.uniform(-0.08, 0.08)
-                demand = contracted_kw * max(0.05, base + noise)
-            elif ctype == "industrial":
-                # Three shifts with transition dips
-                shift_hour = hour_frac % 8
-                base = 0.70 + 0.10 * math.sin(math.pi * shift_hour / 8)
-                if 5.5 < shift_hour < 6.5:
-                    base -= 0.15  # shift change
-                noise = random.uniform(-0.05, 0.05)
-                demand = contracted_kw * max(0.10, base + noise)
-            else:  # municipal
-                if 7 <= hour_frac < 18 and dow < 5:
-                    base = 0.60
-                else:
-                    base = 0.20
-                noise = random.uniform(-0.08, 0.08)
-                demand = contracted_kw * max(0.05, base + noise)
+        for year in range(2020, 2025):
+            growth_factor = (1 + LOAD_GROWTH_RATE) ** (year - 2020)
+            seasons = {
+                "winter": datetime(year, 1, 15),
+                "spring": datetime(year, 4, 15),
+                "summer": datetime(year, 7, 15),
+                "fall":   datetime(year, 10, 15),
+            }
+            for season_name, start_dt in seasons.items():
+                s_mult = season_demand_mult[season_name]
+                hvac_mult = season_hvac_mult[season_name]
+                for interval in range(7 * 96):  # 7 days x 96 intervals
+                    ts = start_dt + timedelta(minutes=15 * interval)
+                    hour_frac = ts.hour + ts.minute / 60.0
+                    dow = ts.weekday()
+                    if ctype == "residential":
+                        if 0 <= hour_frac < 6:
+                            base = 0.25
+                        elif 6 <= hour_frac < 9:
+                            base = 0.35 + 0.15 * ((hour_frac - 6) / 3)
+                        elif 9 <= hour_frac < 15:
+                            base = 0.30
+                        elif 15 <= hour_frac < 21:
+                            base = 0.50 + 0.40 * math.sin(math.pi * (hour_frac - 15) / 6)
+                        else:
+                            base = 0.40 - 0.10 * ((hour_frac - 21) / 3)
+                        hvac = hvac_mult * abs(math.sin(math.pi * interval / 3))
+                        noise = random.uniform(-0.10, 0.10)
+                        demand = contracted_kw * s_mult * growth_factor * max(0.05, base + hvac + noise)
+                    elif ctype == "commercial":
+                        if 7 <= hour_frac < 20 and dow < 5:
+                            base = 0.55 + 0.30 * math.sin(math.pi * (hour_frac - 7) / 13)
+                        elif 8 <= hour_frac < 17 and dow >= 5:
+                            base = 0.30
+                        else:
+                            base = 0.15
+                        noise = random.uniform(-0.08, 0.08)
+                        demand = contracted_kw * s_mult * growth_factor * max(0.05, base + noise)
+                    elif ctype == "industrial":
+                        shift_hour = hour_frac % 8
+                        base = 0.70 + 0.10 * math.sin(math.pi * shift_hour / 8)
+                        if 5.5 < shift_hour < 6.5:
+                            base -= 0.15
+                        noise = random.uniform(-0.05, 0.05)
+                        demand = contracted_kw * s_mult * growth_factor * max(0.10, base + noise)
+                    else:
+                        if 7 <= hour_frac < 18 and dow < 5:
+                            base = 0.60
+                        else:
+                            base = 0.20
+                        noise = random.uniform(-0.08, 0.08)
+                        demand = contracted_kw * s_mult * growth_factor * max(0.05, base + noise)
 
-            demand = round(demand, 2)
-            energy = round(demand * 0.25, 3)  # kWh for 15-min interval
-            voltage = round(random.uniform(228, 244), 1) if ctype != "industrial" else round(random.uniform(470, 490), 1)
-            pf = round(random.uniform(0.85, 0.99), 3)
-            rows.append([
-                cust_id, xfmr_id, fdr_id, sub_id, ctype,
-                ts.strftime("%Y-%m-%d %H:%M"),
-                demand, energy, voltage, pf,
-            ])
-    write_csv("customer_interval_data.csv", headers, rows)
+                    demand = round(demand, 2)
+                    energy = round(demand * 0.25, 3)
+                    voltage = round(random.uniform(228, 244), 1) if ctype != "industrial" else round(random.uniform(470, 490), 1)
+                    pf = round(random.uniform(0.85, 0.99), 3)
+                    rows.append([
+                        cust_id, xfmr_id, fdr_id, sub_id, ctype,
+                        ts.strftime("%Y-%m-%d %H:%M"),
+                        demand, energy, voltage, pf,
+                    ])
+    write_csv("customer_interval_data.csv", headers, rows, compress=True)
     return rows
 
 
@@ -659,55 +708,108 @@ def generate_ev_profiles():
 # ---------------------------------------------------------------------------
 
 def generate_weather_data():
-    print("Generating weather data...")
+    print("Generating weather data (5 years)...")
     headers = [
         "timestamp", "temperature_f", "humidity_pct", "wind_speed_mph",
         "ghi_w_per_m2", "cloud_cover_pct", "is_heatwave", "is_storm",
     ]
     rows = []
-    start = datetime(2024, 1, 1)
     base_temps = {
         1: 55, 2: 58, 3: 65, 4: 75, 5: 85, 6: 100,
         7: 105, 8: 103, 9: 97, 10: 82, 11: 66, 12: 55,
     }
-    for day_offset in range(365):
-        dt = start + timedelta(days=day_offset)
-        month = dt.month
-        base_t = base_temps[month]
-        is_heatwave = 0
-        is_storm = 0
-        # Heatwave events: multi-day stretches in summer
-        if month in (6, 7, 8) and day_offset % 30 < 5 and random.random() < 0.6:
-            is_heatwave = 1
-            base_t += random.uniform(5, 15)
-        # Storm events: monsoon season (Jul-Sep) and winter storms
-        if month in (7, 8, 9) and random.random() < 0.12:
-            is_storm = 1
-        elif month in (12, 1, 2) and random.random() < 0.06:
-            is_storm = 1
-        for hour in range(24):
-            ts = dt + timedelta(hours=hour)
-            diurnal = 15 * math.sin(math.pi * (hour - 5) / 14) if 5 <= hour <= 19 else -8
-            temp_f = round(base_t + diurnal + random.uniform(-3, 3), 1)
-            humidity = round(max(5, min(95, 30 - 0.3 * (temp_f - 70) + random.uniform(-10, 10))), 1)
-            wind = round(max(0, 5 + random.uniform(-4, 8)), 1)
-            if is_storm:
-                wind = round(max(wind, 15 + random.uniform(0, 25)), 1)
-                humidity = round(min(95, humidity + 30), 1)
-            if 6 <= hour <= 18:
-                solar_angle = math.pi * (hour - 6) / 12
-                cloud_mult = random.uniform(0.1, 0.4) if is_storm else random.uniform(0.6, 1.0)
-                ghi = round(max(0, 1000 * math.sin(solar_angle) * cloud_mult), 1)
-            else:
-                ghi = 0.0
-            cloud = round(min(100, max(0, 20 + random.uniform(-15, 30))), 1)
-            if is_storm:
-                cloud = round(min(100, cloud + 40), 1)
-            rows.append([
-                ts.strftime("%Y-%m-%d %H:%M"),
-                temp_f, humidity, wind, ghi, cloud, is_heatwave, is_storm,
-            ])
+    # Slight per-year offsets for realism (climate trend + natural variation)
+    year_temp_offsets = {2020: -1.0, 2021: 0.0, 2022: 0.5, 2023: 0.8, 2024: 1.2}
+    year_storm_mult = {2020: 0.9, 2021: 1.0, 2022: 1.0, 2023: 1.1, 2024: 1.15}
+
+    for year in range(2020, 2025):
+        start = datetime(year, 1, 1)
+        days_in_year = 366 if (year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)) else 365
+        temp_offset = year_temp_offsets[year]
+        storm_mult = year_storm_mult[year]
+        for day_offset in range(days_in_year):
+            dt = start + timedelta(days=day_offset)
+            month = dt.month
+            base_t = base_temps[month] + temp_offset
+            is_heatwave = 0
+            is_storm = 0
+            # Heatwave events: multi-day stretches in summer
+            if month in (6, 7, 8) and day_offset % 30 < 5 and random.random() < 0.6:
+                is_heatwave = 1
+                base_t += random.uniform(5, 15)
+            # Storm events: monsoon season (Jul-Sep) and winter storms
+            if month in (7, 8, 9) and random.random() < 0.12 * storm_mult:
+                is_storm = 1
+            elif month in (12, 1, 2) and random.random() < 0.06 * storm_mult:
+                is_storm = 1
+            for hour in range(24):
+                ts = dt + timedelta(hours=hour)
+                diurnal = 15 * math.sin(math.pi * (hour - 5) / 14) if 5 <= hour <= 19 else -8
+                temp_f = round(base_t + diurnal + random.uniform(-3, 3), 1)
+                humidity = round(max(5, min(95, 30 - 0.3 * (temp_f - 70) + random.uniform(-10, 10))), 1)
+                wind = round(max(0, 5 + random.uniform(-4, 8)), 1)
+                if is_storm:
+                    wind = round(max(wind, 15 + random.uniform(0, 25)), 1)
+                    humidity = round(min(95, humidity + 30), 1)
+                if 6 <= hour <= 18:
+                    solar_angle = math.pi * (hour - 6) / 12
+                    cloud_mult = random.uniform(0.1, 0.4) if is_storm else random.uniform(0.6, 1.0)
+                    ghi = round(max(0, 1000 * math.sin(solar_angle) * cloud_mult), 1)
+                else:
+                    ghi = 0.0
+                cloud = round(min(100, max(0, 20 + random.uniform(-15, 30))), 1)
+                if is_storm:
+                    cloud = round(min(100, cloud + 40), 1)
+                rows.append([
+                    ts.strftime("%Y-%m-%d %H:%M"),
+                    temp_f, humidity, wind, ghi, cloud, is_heatwave, is_storm,
+                ])
     write_csv("weather_data.csv", headers, rows)
+    return rows
+
+
+# ---------------------------------------------------------------------------
+# 11b. Battery installations — co-located with their customer
+# ---------------------------------------------------------------------------
+
+def generate_battery_installations(customers):
+    print("Generating battery installations...")
+    headers = [
+        "battery_id", "customer_id", "transformer_id", "feeder_id",
+        "substation_id", "latitude", "longitude",
+        "capacity_kwh", "power_kw", "chemistry",
+        "install_date", "manufacturer", "status",
+    ]
+    chemistries = ["lithium-ion", "LFP", "NMC"]
+    manufacturers = ["Tesla", "Enphase", "SolarEdge", "BYD", "Generac", "SunPower"]
+    rows = []
+    batt_num = 0
+    batt_custs = [c for c in customers if c[11] == 1]
+    for cust in batt_custs:
+        batt_num += 1
+        cust_id, xfmr_id, fdr_id, sub_id = cust[0], cust[1], cust[2], cust[3]
+        lat, lon = float(cust[7]), float(cust[8])
+        ctype = cust[4]
+        if ctype == "residential":
+            capacity_kwh = round(random.choice([10, 13.5, 16, 20]) * random.uniform(0.9, 1.1), 1)
+            power_kw = round(capacity_kwh * random.uniform(0.3, 0.5), 1)
+        elif ctype == "commercial":
+            capacity_kwh = round(random.uniform(50, 500), 1)
+            power_kw = round(capacity_kwh * random.uniform(0.25, 0.5), 1)
+        else:
+            capacity_kwh = round(random.uniform(10, 100), 1)
+            power_kw = round(capacity_kwh * random.uniform(0.3, 0.5), 1)
+        chemistry = random.choice(chemistries)
+        year = random.randint(2020, 2024)
+        month = random.randint(1, 12)
+        mfr = random.choice(manufacturers)
+        status = "active" if random.random() > 0.02 else "inactive"
+        rows.append([
+            f"BATT-{batt_num:06d}", cust_id, xfmr_id, fdr_id, sub_id,
+            lat, lon, capacity_kwh, power_kw, chemistry,
+            f"{year}-{month:02d}-01", mfr, status,
+        ])
+    write_csv("battery_installations.csv", headers, rows)
     return rows
 
 
@@ -763,31 +865,27 @@ def generate_growth_scenarios():
 # ---------------------------------------------------------------------------
 
 def generate_outage_history(feeders, weather_rows):
-    print("Generating outage history...")
+    print("Generating outage history (5 years)...")
     headers = [
         "outage_id", "feeder_id", "substation_id",
         "start_time", "end_time", "duration_hours",
         "cause", "customers_affected", "equipment_involved",
         "weather_related",
     ]
-    # Build day-level weather index: {day_offset: (is_heatwave, is_storm, max_temp)}
-    day_wx = {}
+    # Build day-level weather index keyed by (year, day_of_year)
+    day_wx = {}  # (year, doy) -> {heatwave, storm, max_temp}
     for wr in weather_rows:
         ts = datetime.strptime(wr[0], "%Y-%m-%d %H:%M")
-        doy = (ts - datetime(2024, 1, 1)).days
+        key = (ts.year, ts.timetuple().tm_yday - 1)  # 0-based day of year
         temp = float(wr[1])
         hw = int(wr[6])
         st = int(wr[7])
-        if doy not in day_wx:
-            day_wx[doy] = {"heatwave": hw, "storm": st, "max_temp": temp}
+        if key not in day_wx:
+            day_wx[key] = {"heatwave": hw, "storm": st, "max_temp": temp}
         else:
-            day_wx[doy]["max_temp"] = max(day_wx[doy]["max_temp"], temp)
-            day_wx[doy]["heatwave"] = max(day_wx[doy]["heatwave"], hw)
-            day_wx[doy]["storm"] = max(day_wx[doy]["storm"], st)
-
-    heat_days = [d for d, w in day_wx.items() if w["heatwave"] or w["max_temp"] > 110]
-    storm_days = [d for d, w in day_wx.items() if w["storm"]]
-    normal_days = [d for d in range(365) if d not in heat_days and d not in storm_days]
+            day_wx[key]["max_temp"] = max(day_wx[key]["max_temp"], temp)
+            day_wx[key]["heatwave"] = max(day_wx[key]["heatwave"], hw)
+            day_wx[key]["storm"] = max(day_wx[key]["storm"], st)
 
     heat_causes = ["equipment failure", "overload", "underground cable fault"]
     storm_causes = ["tree contact", "lightning", "storm damage", "animal contact"]
@@ -796,56 +894,73 @@ def generate_outage_history(feeders, weather_rows):
 
     rows = []
     outage_num = 0
-    start_date = datetime(2024, 1, 1)
-    for fdr in feeders:
-        fdr_id = fdr[0]
-        sub_id = fdr[1]
-        n_cust = fdr[13]
-        n_outages = random.randint(3, 10)
-        # Distribute: ~40% heat, ~30% storm, ~30% normal
-        n_heat = max(1, round(n_outages * 0.40))
-        n_storm = max(1, round(n_outages * 0.30))
-        n_normal = n_outages - n_heat - n_storm
+    # Slight increase in outage frequency over time (aging infrastructure)
+    year_outage_mult = {2020: 0.85, 2021: 0.90, 2022: 0.95, 2023: 1.05, 2024: 1.10}
 
-        for pool, causes, count in [
-            (heat_days, heat_causes, n_heat),
-            (storm_days, storm_causes, n_storm),
-            (normal_days, normal_causes, n_normal),
-        ]:
-            if not pool:
-                pool = list(range(365))
-            for _ in range(max(0, count)):
-                outage_num += 1
-                day_offset = random.choice(pool)
-                # Storm outages cluster in afternoon/evening
-                if causes is storm_causes:
-                    hour = random.choice([14, 15, 16, 17, 18, 19, 20])
-                # Heat outages cluster in late afternoon peak
-                elif causes is heat_causes:
-                    hour = random.choice([13, 14, 15, 16, 17, 18])
-                else:
-                    hour = random.randint(0, 23)
-                start_ts = start_date + timedelta(days=day_offset, hours=hour)
-                cause = random.choice(causes)
-                # Storm/heat outages tend to be longer and affect more customers
-                if causes is storm_causes:
-                    duration = round(random.uniform(1.0, 18.0), 2)
-                    affected = random.randint(50, min(n_cust, 3000))
-                elif causes is heat_causes:
-                    duration = round(random.uniform(0.5, 8.0), 2)
-                    affected = random.randint(20, min(n_cust, 1500))
-                else:
-                    duration = round(random.uniform(0.25, 6.0), 2)
-                    affected = random.randint(1, min(n_cust, 500))
-                end_ts = start_ts + timedelta(hours=duration)
-                equip = random.choice(["overhead line", "transformer", "switch", "fuse", "recloser", "cable"])
-                weather = 1 if causes in (storm_causes, heat_causes) else 0
-                rows.append([
-                    f"OUT-{outage_num:05d}", fdr_id, sub_id,
-                    start_ts.strftime("%Y-%m-%d %H:%M"),
-                    end_ts.strftime("%Y-%m-%d %H:%M"),
-                    duration, cause, affected, equip, weather,
-                ])
+    for year in range(2020, 2025):
+        days_in_year = 366 if (year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)) else 365
+        start_date = datetime(year, 1, 1)
+        mult = year_outage_mult[year]
+
+        # Classify days for this year
+        heat_days = [d for d in range(days_in_year)
+                     if (year, d) in day_wx and
+                     (day_wx[(year, d)]["heatwave"] or day_wx[(year, d)]["max_temp"] > 110)]
+        storm_days = [d for d in range(days_in_year)
+                      if (year, d) in day_wx and day_wx[(year, d)]["storm"]]
+        normal_days = [d for d in range(days_in_year)
+                       if d not in heat_days and d not in storm_days]
+
+        for fdr in feeders:
+            fdr_id = fdr[0]
+            sub_id = fdr[1]
+            n_cust = fdr[13]
+            base_outages = random.randint(4, 11)
+            n_outages = max(3, round(base_outages * mult))
+            # Distribute: ~40% heat, ~30% storm, ~30% normal
+            n_heat = max(1, round(n_outages * 0.40))
+            n_storm = max(1, round(n_outages * 0.30))
+            n_normal = n_outages - n_heat - n_storm
+
+            for pool, causes, count in [
+                (heat_days, heat_causes, n_heat),
+                (storm_days, storm_causes, n_storm),
+                (normal_days, normal_causes, n_normal),
+            ]:
+                if not pool:
+                    pool = list(range(days_in_year))
+                for _ in range(max(0, count)):
+                    outage_num += 1
+                    day_offset = random.choice(pool)
+                    # Storm outages cluster in afternoon/evening
+                    if causes is storm_causes:
+                        hour = random.choice([14, 15, 16, 17, 18, 19, 20])
+                    # Heat outages cluster in late afternoon peak
+                    elif causes is heat_causes:
+                        hour = random.choice([13, 14, 15, 16, 17, 18])
+                    else:
+                        hour = random.randint(0, 23)
+                    start_ts = start_date + timedelta(days=day_offset, hours=hour)
+                    cause = random.choice(causes)
+                    # Storm/heat outages tend to be longer and affect more customers
+                    if causes is storm_causes:
+                        duration = round(random.uniform(1.0, 18.0), 2)
+                        affected = random.randint(50, min(n_cust, 3000))
+                    elif causes is heat_causes:
+                        duration = round(random.uniform(0.5, 8.0), 2)
+                        affected = random.randint(20, min(n_cust, 1500))
+                    else:
+                        duration = round(random.uniform(0.25, 6.0), 2)
+                        affected = random.randint(1, min(n_cust, 500))
+                    end_ts = start_ts + timedelta(hours=duration)
+                    equip = random.choice(["overhead line", "transformer", "switch", "fuse", "recloser", "cable"])
+                    weather = 1 if causes in (storm_causes, heat_causes) else 0
+                    rows.append([
+                        f"OUT-{outage_num:05d}", fdr_id, sub_id,
+                        start_ts.strftime("%Y-%m-%d %H:%M"),
+                        end_ts.strftime("%Y-%m-%d %H:%M"),
+                        duration, cause, affected, equip, weather,
+                    ])
     write_csv("outage_history.csv", headers, rows)
     return rows
 
@@ -1111,7 +1226,7 @@ def generate_network_nodes_and_edges(substations, feeders, transformers):
             tie_lon = round((tail_a_lon + tail_b_lon) / 2, 6)
             tie_id = f"TIE-{tie_num:04d}"
             add_node([
-                tie_id, "tie_switch", sub_a, fdr_a,
+                tie_id, "tie_switch", sub_a, "",
                 tie_lat, tie_lon, v_a, "tie_switch",
                 "", "", "ABC", "", "open",
             ])
@@ -1157,6 +1272,24 @@ def main():
     feeders = generate_feeders(substations)
     transformers = generate_transformers(feeders)
     customers = generate_customers(transformers, feeders)
+
+    # Fix: recompute feeders.num_customers from actual customer counts
+    print("Recomputing feeder customer counts...")
+    cust_per_fdr = {}
+    for c in customers:
+        cust_per_fdr[c[2]] = cust_per_fdr.get(c[2], 0) + 1
+    for fdr in feeders:
+        fdr[13] = cust_per_fdr.get(fdr[0], 0)
+    # Rewrite feeders.csv with corrected counts
+    fdr_headers = [
+        "feeder_id", "substation_id", "name", "voltage_kv",
+        "latitude_head", "longitude_head",
+        "latitude_tail", "longitude_tail",
+        "direction", "length_miles", "conductor_type",
+        "rated_capacity_mw", "peak_load_mw", "num_customers", "status",
+    ]
+    write_csv("feeders.csv", fdr_headers, feeders)
+
     generate_load_profiles(feeders)
     generate_customer_interval_data(customers)
     generate_solar_installations(customers)
@@ -1167,6 +1300,7 @@ def main():
     generate_growth_scenarios()
     generate_outage_history(feeders, weather_rows)
     generate_network_nodes_and_edges(substations, feeders, transformers)
+    generate_battery_installations(customers)
     print()
     print("All demo datasets generated successfully.")
     print(f"Output directory: {OUTPUT_DIR}")
