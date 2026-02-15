@@ -67,12 +67,12 @@ area.
 | Characteristic | Value |
 |----------------|-------|
 | Service territory | Phoenix, AZ metro (~20 mi x 20 mi) |
-| Customers | ~141,000 |
+| Customers | ~140,500 |
 | Substations | 15 (at named Phoenix intersections) |
 | Distribution feeders | 65 (follow N/S/E/W streets) |
 | Distribution transformers | ~21,500 |
-| Solar PV installations | ~17,000 (~12% adoption) |
-| EV chargers | ~11,300 (~8% adoption) |
+| Solar PV installations | ~17,200 (~12% adoption) |
+| EV chargers | ~11,100 (~8% adoption) |
 | Battery storage | ~4,200 (~3% adoption) |
 | Climate | Hot desert (summer peaks, heatwave events, monsoon storms) |
 | Voltage levels | 69/115/230 kV transmission; 12.47/13.8/24.9 kV distribution |
@@ -144,15 +144,15 @@ reproducible.
 | `substations.csv` | 15 | Substations at real Phoenix intersections with capacity (MVA), voltage |
 | `feeders.csv` | 65 | Feeders with head/tail coords, direction (N/S/E/W), conductor type, capacity |
 | `transformers.csv` | 21,545 | Distribution transformers with kVA rating, phase, manufacturer |
-| `customers.csv` | 140,905 | Customers with type, rate class, demand, DER adoption flags |
+| `customers.csv` | 140,459 | Customers with type, rate class, demand, DER adoption flags |
 
 ### DER Assets
 
 | File | Rows | Description |
 |------|------|-------------|
-| `solar_installations.csv` | 16,911 | PV systems with capacity, panel type, inverter, install date |
+| `solar_installations.csv` | 17,242 | PV systems with capacity, panel type, inverter, install date |
 | `solar_profiles.csv` | 288 | Hourly generation curves per month (clear-sky, GHI, temperature) |
-| `ev_chargers.csv` | 11,321 | Chargers with type (L1/L2/DCFC), power rating, network operator |
+| `ev_chargers.csv` | 11,076 | Chargers with type (L1/L2/DCFC), power rating, network operator |
 | `ev_charging_profiles.csv` | 48 | Typical hourly load shapes by charger type and day type |
 
 ### Operations
@@ -161,8 +161,8 @@ reproducible.
 |------|------|-------------|
 | `load_profiles.csv` | 174,720 | 15-minute feeder load with MW, MVAR, voltage, power factor |
 | `customer_interval_data.csv` | 336,000 | 15-minute AMI metering for ~500 sampled customers (summer week) |
-| `weather_data.csv` | 8,760 | Full-year hourly: temperature, humidity, wind, GHI, heatwave + storm flags |
-| `outage_history.csv` | 415 | Outage events clustered during storms and heatwaves |
+| `weather_data.csv` | 43,848 | 5-year hourly (2020-2024): temperature, humidity, wind, GHI, heatwave + storm flags |
+| `outage_history.csv` | 2,306 | Outage events (2020-2024) clustered during storms and heatwaves |
 
 ### Planning
 
@@ -190,9 +190,9 @@ Substation (15)  — at named Phoenix intersections
        ├── Sectionalizer  — at selected junctions
        └── Junction (trunk tap points)
             └── Fuse → Transformer (21,545)
-                 └── Customer (140,905)
-                      ├── Solar Installation (16,911)
-                      ├── EV Charger (11,321)
+                 └── Customer (140,459)
+                      ├── Solar Installation (17,242)
+                      ├── EV Charger (11,076)
                       └── Battery (~4,200)
   Tie Switch  — normally-open connection to adjacent feeder tail
 ```

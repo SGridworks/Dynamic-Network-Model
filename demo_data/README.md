@@ -5,7 +5,7 @@
 > or operational data is included.
 
 Synthetic datasets representing SP&L, a fictional mid-size electric utility
-serving ~141,000 customers in a Phoenix, AZ-area service territory. All
+serving ~140,500 customers in a Phoenix, AZ-area service territory. All
 data is generated deterministically (seed=42) by `generate_demo_data.py`.
 
 For the full walkthrough, example projects, and tips for using with Claude
@@ -35,16 +35,16 @@ node_id        ->  network_nodes (referenced by network_edges via from/to)
 | `substations.csv` | 15 | Substations at real Phoenix intersections with capacity and voltage levels |
 | `feeders.csv` | 65 | Distribution feeders following N/S/E/W streets from substations |
 | `transformers.csv` | 21,545 | Distribution transformers placed along feeder routes |
-| `customers.csv` | 140,905 | Customers clustered around their service transformer |
+| `customers.csv` | 140,459 | Customers clustered around their service transformer |
 | `load_profiles.csv` | 174,720 | 15-minute feeder load (representative week per season) |
 | `customer_interval_data.csv` | 336,000 | 15-minute AMI metering for ~500 sampled customers |
-| `solar_installations.csv` | 16,911 | Solar PV systems co-located with customers |
+| `solar_installations.csv` | 17,242 | Solar PV systems co-located with customers |
 | `solar_profiles.csv` | 288 | Monthly representative hourly generation curves |
-| `ev_chargers.csv` | 11,321 | EV chargers co-located with customers |
+| `ev_chargers.csv` | 11,076 | EV chargers co-located with customers |
 | `ev_charging_profiles.csv` | 48 | Typical hourly charging load shapes |
-| `weather_data.csv` | 8,760 | Hourly weather with heatwave and storm flags |
+| `weather_data.csv` | 43,848 | 5-year hourly weather (2020-2024) with heatwave and storm flags |
 | `growth_scenarios.csv` | 85 | 5 scenarios projected 2024-2040 |
-| `outage_history.csv` | 415 | Feeder outage events clustered during storms and heatwaves |
+| `outage_history.csv` | 2,306 | Feeder outage events (2020-2024) clustered during storms and heatwaves |
 | `network_nodes.csv` | 43,827 | GIS point features — every network location including switches |
 | `network_edges.csv` | 43,826 | GIS polyline features — every conductor segment and tie |
 
@@ -57,9 +57,9 @@ Substation (15)  — placed at real Phoenix street intersections
        ├── Sectionalizer (at selected junctions)
        └── Junction (trunk nodes along feeder route)
             └── Fuse → Transformer (21,545)  — placed along feeder path
-                 └── Customer (140,905)  — clustered within ~150 m
-                      ├── Solar Installation (16,911)
-                      ├── EV Charger (11,321)
+                 └── Customer (140,459)  — clustered within ~150 m
+                      ├── Solar Installation (17,242)
+                      ├── EV Charger (11,076)
                       └── Battery (~4,200)
   Tie Switches — normally-open connections between adjacent feeder tails
 ```

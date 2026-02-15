@@ -8,7 +8,7 @@ policy changes.
 
 This repository includes a complete synthetic dataset modeled after
 **Sisyphean Power & Light (SP&L)**, a fictional mid-size electric utility
-serving approximately 141,000 customers across a Phoenix, AZ-area service
+serving approximately 140,500 customers across a Phoenix, AZ-area service
 territory.
 
 > **SYNTHETIC DATA NOTICE**
@@ -81,7 +81,13 @@ walkthrough, dataset schemas, and example analyses.
 ```
 Dynamic-Network-Model/
 ├── README.md                          # This file
-├── demo_data/
+├── LICENSE                            # MIT License
+├── CONTRIBUTING.md                    # Contribution guidelines
+├── CODE_OF_CONDUCT.md                 # Community standards
+├── SECURITY.md                        # Security policy
+├── PLAN.md                            # Product vision & roadmap
+├── COMPREHENSIVE_TEST_RESULTS.md      # ML Playground validation results
+├── demo_data/                         # V1.0 dataset (original)
 │   ├── USERS_GUIDE.md                 # Comprehensive guide for power engineers
 │   ├── README.md                      # Dataset reference card
 │   ├── generate_demo_data.py          # Deterministic data generator (seed=42)
@@ -90,19 +96,32 @@ Dynamic-Network-Model/
 │   ├── substations.csv                # 15 substations
 │   ├── feeders.csv                    # 65 feeders
 │   ├── transformers.csv               # 21,545 transformers
-│   ├── customers.csv                  # 140,905 customers
-│   ├── load_profiles.csv              # 174,720 fifteen-minute load records
-│   ├── customer_interval_data.csv     # 336,000 AMI interval records
-│   ├── solar_installations.csv        # 16,911 solar PV systems
+│   ├── customers.csv                  # 140,459 customers
+│   ├── load_profiles.csv.gz           # 174,720 fifteen-minute load records
+│   ├── customer_interval_data.csv.gz  # 336,000 AMI interval records
+│   ├── solar_installations.csv        # 17,242 solar PV systems
 │   ├── solar_profiles.csv             # 288 generation curves
-│   ├── ev_chargers.csv                # 11,321 EV chargers
+│   ├── ev_chargers.csv                # 11,076 EV chargers
 │   ├── ev_charging_profiles.csv       # 48 charging load shapes
-│   ├── weather_data.csv               # 8,760 hourly weather records
+│   ├── battery_installations.csv      # 4,180 battery storage systems
+│   ├── weather_data.csv               # 43,848 hourly weather records (5 years)
 │   ├── growth_scenarios.csv           # 85 scenario projections
-│   ├── outage_history.csv             # 415 outage events
+│   ├── outage_history.csv             # 2,306 outage events (2020-2024)
 │   ├── network_nodes.csv              # 43,827 GIS point features
 │   └── network_edges.csv              # 43,826 GIS polyline features
-└── .gitignore
+├── sisyphean-power-and-light/         # V2.0 dataset (restructured for ML Playground)
+│   ├── README.md                      # V2.0 documentation
+│   ├── assets/                        # Transformer & switching device data
+│   ├── network/                       # OpenDSS power flow model
+│   ├── outages/                       # Expanded outage & crew dispatch records
+│   ├── scenarios/                     # JSON scenario configurations
+│   ├── timeseries/                    # Parquet load & AMI data
+│   └── weather/                       # Extended weather observations
+├── validate_demo_data.py              # Dataset validation suite
+├── test_guide_*.py                    # ML Playground guide test scripts
+├── convert_*.py                       # V1.0 → V2.0 conversion scripts
+├── generate_opendss_model.py          # OpenDSS model generator
+└── .github/                           # Issue/PR templates & CI
 ```
 
 ## License
