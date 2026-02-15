@@ -1,4 +1,4 @@
-transformer_id,feeder_id,substation_id,latitude,longitude,rated_kva,phase,primary_voltage_kv,secondary_voltage_v,age_years,manufacturer,status
+transformer_id,feeder_id,substation_id,latitude,longitude,kva_rating,phase,primary_voltage_kv,secondary_voltage_v,age_years,manufacturer,status
 XFMR-000001,FDR-0001,SUB-001,33.528686,-112.143603,500,C,12.47,480,41,Eaton,active
 XFMR-000002,FDR-0001,SUB-001,33.529282,-112.143423,37.5,C,12.47,208,21,Howard Industries,active
 XFMR-000003,FDR-0001,SUB-001,33.529904,-112.143416,25,AC,12.47,240,5,Siemens,active

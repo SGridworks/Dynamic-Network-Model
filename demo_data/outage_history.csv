@@ -1,4 +1,4 @@
-outage_id,feeder_id,substation_id,start_time,end_time,duration_hours,cause,customers_affected,equipment_involved,weather_related
+outage_id,feeder_id,substation_id,fault_detected,service_restored,duration_hours,cause_code,affected_customers,equipment_involved,weather_related
 OUT-00001,FDR-0001,SUB-001,2020-07-23 18:00,2020-07-23 21:57,3.95,overload,43,recloser,1
 OUT-00002,FDR-0001,SUB-001,2020-09-20 15:00,2020-09-20 16:01,1.02,underground cable fault,560,recloser,1
 OUT-00003,FDR-0001,SUB-001,2020-08-10 16:00,2020-08-10 16:54,0.91,equipment failure,439,switch,1

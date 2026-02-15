@@ -226,7 +226,7 @@ def load_outage_history() -> pd.DataFrame:
     slight frequency increase over time (aging infrastructure).
     """
     df = pd.read_csv(_csv_path("outage_history.csv"),
-                      parse_dates=["start_time", "end_time"])
+                      parse_dates=["fault_detected", "service_restored"])
     df["weather_related"] = df["weather_related"].astype(bool)
     df.set_index("outage_id", inplace=True)
     return df
