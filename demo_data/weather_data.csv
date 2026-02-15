@@ -1,4 +1,4 @@
-timestamp,temperature_f,humidity_pct,wind_speed_mph,ghi_w_per_m2,cloud_cover_pct,is_heatwave,is_storm
+timestamp,temperature,humidity,wind_speed,ghi,cloud_cover,is_heatwave,is_storm
 2020-01-01 00:00,43.2,32.2,8.3,0.0,39.4,0,0
 2020-01-01 01:00,43.3,36.0,5.5,0.0,47.6,0,0
 2020-01-01 02:00,48.6,35.5,8.2,0.0,7.8,0,0
