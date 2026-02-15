@@ -172,5 +172,20 @@ print(f"   • Traditional restoration takes {crew_dispatch['duration_min'].mean
 print(f"   • CMI savings: {cmi_reduction:,.0f} customer-minutes")
 print(f"   • {RESTORABLE_FRACTION:.0%} of outages are restorable via switching")
 
-print("\n✅ FLISR restoration analysis validated!")
+# Sanity checks
+negative_durations = (crew_dispatch["duration_min"] < 0).sum()
+print(f"\n[SANITY CHECKS]")
+print(f"  Negative-duration events: {negative_durations}")
+all_positive = (crew_dispatch["duration_min"] > 0).all()
+cmi_positive = total_cmi_traditional > 0
+if negative_durations == 0 and all_positive and cmi_positive:
+    print("\n✅ FLISR restoration analysis validated!")
+else:
+    if negative_durations > 0:
+        print(f"  ❌ Found {negative_durations} negative-duration events")
+    if not all_positive:
+        print(f"  ❌ Not all durations are positive")
+    if not cmi_positive:
+        print(f"  ❌ Total CMI is not positive")
+    print("\n❌ FLISR restoration analysis FAILED sanity checks")
 print("="*70)

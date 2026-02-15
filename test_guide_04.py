@@ -64,8 +64,8 @@ df = transformers.merge(latest_inspection, left_on="transformer_id",
                        right_index=True, how="left")
 
 # Fill missing inspections with defaults
-df["condition_after"].fillna(3, inplace=True)  # Default to "Good" condition
-df["condition_before"].fillna(3, inplace=True)
+df["condition_after"] = df["condition_after"].fillna(3)  # Default to "Good" condition
+df["condition_before"] = df["condition_before"].fillna(3)
 
 # Encode categorical variables
 df["type_encoded"] = (df["type"] == "oil").astype(int)

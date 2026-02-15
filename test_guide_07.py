@@ -59,15 +59,17 @@ for scenario in scenarios:
     solar_pct = scenario.get("solar_penetration_pct", 0)
     ev_pct = scenario.get("ev_penetration_pct", 0)
     battery_pct = scenario.get("battery_storage_pct", 0)
+    peak_load_mult = scenario.get("peak_load_multiplier", 1.0)
+    solar_derate = scenario.get("solar_derate_factor", 1.0)
 
     # Calculate per-feeder impacts
     for _, feeder in feeders.iterrows():
-        peak_load_mw = feeder["peak_mw"]
+        peak_load_mw = feeder["peak_mw"] * peak_load_mult
         customers = feeder["customer_count"]
 
         # Solar generation (reduces net load during day)
         solar_capacity_mw = customers * solar_pct * 0.005  # 5kW avg per customer
-        solar_gen_mw = solar_capacity_mw * 0.75  # 75% capacity factor at peak
+        solar_gen_mw = solar_capacity_mw * 0.75 * solar_derate  # capacity factor at peak, derated for weather
 
         # EV load (increases load, with 25% coincidence)
         ev_count = customers * ev_pct

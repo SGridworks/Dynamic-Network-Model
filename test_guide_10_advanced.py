@@ -37,8 +37,8 @@ try:
     TF_AVAILABLE = True
 except ImportError:
     TF_AVAILABLE = False
-    print("⚠️  TensorFlow not installed. Skipping LSTM test...")
-    print("Install with: pip3 install tensorflow")
+    print("⚠️  TensorFlow not available. Skipping LSTM test.")
+    print("Install with: pip install tensorflow")
     import sys
     sys.exit(0)
 

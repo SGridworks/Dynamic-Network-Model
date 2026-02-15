@@ -51,14 +51,16 @@ you can start querying, modeling, and building against immediately.
 ## Quick Start
 
 ```bash
-# Clone and explore
-git clone <repo-url>
+git clone https://github.com/SGridworks/Dynamic-Network-Model.git
 cd Dynamic-Network-Model
+pip install -r requirements.txt
+jupyter lab
+```
 
-# Generate the datasets (or use the pre-generated CSVs)
-python demo_data/generate_demo_data.py
+Open the [quickstart notebook](notebooks/00-getting-started.ipynb) to verify
+your setup, or run the data loader directly:
 
-# Load into Python
+```bash
 python -c "from demo_data.load_demo_data import summary; summary()"
 ```
 
@@ -75,6 +77,9 @@ ami = data["customer_interval_data"]
 
 See [`demo_data/USERS_GUIDE.md`](demo_data/USERS_GUIDE.md) for the full
 walkthrough, dataset schemas, and example analyses.
+
+See [`DATASETS.md`](DATASETS.md) for documentation on the V1/V2 dataset
+versions and the adapter column mapping.
 
 ## Repository Structure
 

@@ -4,6 +4,8 @@
   "solar_penetration_pct": 0.14,
   "ev_penetration_pct": 0.03,
   "battery_storage_pct": 0.01,
+  "peak_load_multiplier": 1.18,
+  "solar_derate_factor": 0.82,
   "heatwave_days": 45,
   "storm_frequency_multiplier": 2.5,
   "peak_temperature_f": 125,
