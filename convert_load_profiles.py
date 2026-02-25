@@ -9,7 +9,7 @@ np.random.seed(42)
 
 # Read source data
 print("Reading load_profiles.csv...")
-df = pd.read_csv("demo_data/load_profiles.csv", parse_dates=["timestamp"])
+df = pd.read_csv("demo_data/load_profiles.csv.gz", parse_dates=["timestamp"])
 
 print(f"Original data: {len(df)} load profile records")
 print(f"Date range: {df['timestamp'].min()} to {df['timestamp'].max()}")
@@ -88,6 +88,28 @@ df_output = df[output_columns]
 
 # Sort by timestamp and feeder_id
 df_output = df_output.sort_values(["timestamp", "feeder_id"]).reset_index(drop=True)
+
+# Resample to hourly (source load_profiles.csv is 15-minute AMI data)
+# Aggregate: sum for MW columns, first for customer_count (static per feeder)
+print("\nResampling to hourly...")
+df_output["timestamp"] = pd.to_datetime(df_output["timestamp"])
+df_hourly = (
+    df_output
+    .set_index("timestamp")
+    .groupby("feeder_id")
+    .resample("1h")
+    .agg({
+        "feeder_id": "first",
+        "total_load_mw": "mean",
+        "residential_mw": "mean",
+        "commercial_mw": "mean",
+        "industrial_mw": "mean",
+        "customer_count": "first",
+    })
+    .drop(columns=["feeder_id"])
+    .reset_index()
+)
+df_output = df_hourly
 
 # Save as Parquet
 output_path = "sisyphean-power-and-light/timeseries/substation_load_hourly.parquet"

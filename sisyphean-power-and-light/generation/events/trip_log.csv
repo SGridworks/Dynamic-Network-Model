@@ -1,2 +1,2 @@
 timestamp,equipment,trip_code,description,trigger_tag,trigger_value
-2024-08-20 13:45,U1-BFPB,HIGH_BRG_TEMP,NDE journal bearing temperature exceeded trip setpoint (95 degC),BRG_NDE_TEMP,96.2
+2024-08-20 00:00,U1-BFPB,HIGH_BRG_TEMP,NDE journal bearing temperature exceeded trip setpoint (95 degC),BRG_NDE_TEMP,96.2

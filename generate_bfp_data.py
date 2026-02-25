@@ -709,14 +709,14 @@ def generate_event_logs(all_rows):
     operators.append(["2024-01-01 00:00", "U1-BFPA", "START", "Unit startup, BFP-A to duty"])
     operators.append(["2024-06-01 06:00", "U1-BFPB", "START", "Planned swap: start BFP-B"])
     operators.append(["2024-06-01 06:05", "U1-BFPA", "STOP", "Planned swap: stop BFP-A for seal work"])
-    operators.append(["2024-08-20 13:45", "U1-BFPA", "START", "Emergency start BFP-A (B trip)"])
+    operators.append(["2024-08-20 00:00", "U1-BFPA", "START", "Emergency start BFP-A (B trip)"])
     operators.append(["2024-09-01 00:00", "U1", "UNIT_SHUTDOWN", "Planned outage begins"])
     operators.append(["2024-09-15 06:00", "U1-BFPA", "START", "Post-outage startup, BFP-A to duty"])
     operators.append(["2024-09-15 06:00", "U1", "UNIT_START", "Post-outage unit restart"])
 
-    # BFP-B trip event
+    # BFP-B trip event (aligned with SCHEDULE boundary at midnight Aug 20)
     trips.append([
-        "2024-08-20 13:45", "U1-BFPB", "HIGH_BRG_TEMP",
+        "2024-08-20 00:00", "U1-BFPB", "HIGH_BRG_TEMP",
         "NDE journal bearing temperature exceeded trip setpoint (95 degC)",
         "BRG_NDE_TEMP", "96.2",
     ])
@@ -1002,9 +1002,9 @@ def generate_timeseries():
             if intensity > 0:
                 transients_active.append((event, intensity))
 
-        # Check for BFP-B trip at the specific minute
+        # Check for BFP-B trip (aligned with SCHEDULE boundary at midnight Aug 20)
         if (not trip_b_applied and running_pump == "B" and
-                ts >= datetime(2024, 8, 20, 13, 45)):
+                ts >= datetime(2024, 8, 20, 0, 0)):
             # Trip happens this minute: B trips, A starts
             trip_b_applied = True
 

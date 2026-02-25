@@ -2,7 +2,7 @@ timestamp,equipment,action,description
 2024-01-01 00:00,U1-BFPA,START,"Unit startup, BFP-A to duty"
 2024-06-01 06:00,U1-BFPB,START,Planned swap: start BFP-B
 2024-06-01 06:05,U1-BFPA,STOP,Planned swap: stop BFP-A for seal work
-2024-08-20 13:45,U1-BFPA,START,Emergency start BFP-A (B trip)
+2024-08-20 00:00,U1-BFPA,START,Emergency start BFP-A (B trip)
 2024-09-01 00:00,U1,UNIT_SHUTDOWN,Planned outage begins
 2024-09-15 06:00,U1-BFPA,START,"Post-outage startup, BFP-A to duty"
 2024-09-15 06:00,U1,UNIT_START,Post-outage unit restart
