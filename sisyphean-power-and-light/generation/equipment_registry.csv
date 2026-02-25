@@ -1,0 +1,7 @@
+equipment_id,name,type,oem,model,serial,install_year,rated_power_kw,rated_speed_rpm,rated_flow_tph,rated_dp_bar,parent_system
+U1-BFPA,HP BFP Pump A,barrel-casing multistage pump,KSB,CHTD 8/6,KSB-2019-44821,2019,,2985,300.0,153.0,U1-FW
+U1-BFPA-MTR,BFP A Drive Motor,squirrel-cage induction motor,ABB,AXR 500MK4,ABB-2019-77231,2019,1800,2985,,,U1-BFPA
+U1-BFPA-LO,BFP A Lube Oil System,forced-feed lube oil skid,Bijur Delimon,FLM-2200,BD-2019-1105,2019,,,,,U1-BFPA
+U1-BFPB,HP BFP Pump B,barrel-casing multistage pump,KSB,CHTD 8/6,KSB-2019-44822,2019,,2985,300.0,153.0,U1-FW
+U1-BFPB-MTR,BFP B Drive Motor,squirrel-cage induction motor,ABB,AXR 500MK4,ABB-2019-77232,2019,1800,2985,,,U1-BFPB
+U1-BFPB-LO,BFP B Lube Oil System,forced-feed lube oil skid,Bijur Delimon,FLM-2200,BD-2019-1106,2019,,,,,U1-BFPB
