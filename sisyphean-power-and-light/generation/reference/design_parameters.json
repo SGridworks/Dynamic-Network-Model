@@ -1,0 +1,140 @@
+{
+  "plant": {
+    "name": "SP&L Generating Station 1",
+    "unit_id": "U1",
+    "type": "2x1 CCGT",
+    "rated_mw": 300.0,
+    "min_load_mw": 100.0,
+    "gt_count": 2,
+    "gt_rated_mw": 105.0,
+    "st_rated_mw": 100.0,
+    "hp_drum_pressure_barg": 130.0,
+    "hp_steam_temp_c": 565.0,
+    "da_pressure_barg": 7.0,
+    "da_temperature_c": 165.0
+  },
+  "bfp": {
+    "count": 2,
+    "type": "barrel-casing multistage",
+    "stages": 8,
+    "oem": "KSB",
+    "model": "CHTD 8/6",
+    "rated_speed_rpm": 2985,
+    "rated_flow_tph": 300.0,
+    "bep_flow_tph": 260.0,
+    "min_cont_flow_tph": 75.0,
+    "rated_suction_barg": 7.0,
+    "rated_discharge_barg": 160.0,
+    "rated_dp_bar": 153.0,
+    "bep_efficiency": 0.8,
+    "shutoff_dp_bar": 180.0,
+    "motor_rated_kw": 1800,
+    "motor_voltage_kv": 6.6,
+    "motor_rated_a": 190.0,
+    "motor_pf": 0.88,
+    "motor_efficiency": 0.97,
+    "journal_normal": [
+      60.0,
+      70.0
+    ],
+    "journal_alarm": 85.0,
+    "journal_trip": 95.0,
+    "thrust_normal": [
+      65.0,
+      75.0
+    ],
+    "thrust_alarm": 95.0,
+    "thrust_trip": 105.0,
+    "motor_brg_normal": [
+      55.0,
+      68.0
+    ],
+    "motor_brg_alarm": 90.0,
+    "motor_brg_trip": 100.0,
+    "shaft_vib_normal": [
+      20.0,
+      40.0
+    ],
+    "shaft_vib_alarm": 80.0,
+    "shaft_vib_trip": 110.0,
+    "lo_press_normal": [
+      1.4,
+      1.8
+    ],
+    "lo_press_alarm": 0.9,
+    "lo_press_trip": 0.6,
+    "lo_supply_temp": [
+      42.0,
+      48.0
+    ],
+    "lo_return_temp": [
+      55.0,
+      62.0
+    ],
+    "lo_temp_alarm": 68.0,
+    "seal_temp_normal": [
+      40.0,
+      55.0
+    ],
+    "seal_temp_alarm": 70.0,
+    "seal_leak_normal": [
+      0.5,
+      3.0
+    ],
+    "seal_leak_alarm": 15.0,
+    "seal_cw_flow_normal": [
+      2.5,
+      4.5
+    ],
+    "axial_normal": [
+      -0.15,
+      0.15
+    ],
+    "axial_alarm": 0.3,
+    "axial_trip": 0.5,
+    "recirc_setpoint_tph": 75.0
+  },
+  "alarm_setpoints": {
+    "journal_bearing_high_alarm_degc": 85.0,
+    "journal_bearing_high_trip_degc": 95.0,
+    "thrust_bearing_high_alarm_degc": 95.0,
+    "thrust_bearing_high_trip_degc": 105.0,
+    "motor_bearing_high_alarm_degc": 90.0,
+    "motor_bearing_high_trip_degc": 100.0,
+    "shaft_vibration_high_alarm_um": 80.0,
+    "shaft_vibration_high_trip_um": 110.0,
+    "lo_pressure_low_alarm_barg": 0.9,
+    "lo_pressure_low_trip_barg": 0.6,
+    "lo_temperature_high_alarm_degc": 68.0,
+    "seal_leakage_high_alarm_ccmin": 15.0,
+    "seal_temperature_high_alarm_degc": 70.0,
+    "axial_displacement_high_alarm_mm": 0.3,
+    "axial_displacement_high_trip_mm": 0.5
+  },
+  "fault_scenarios_embedded": [
+    {
+      "id": "SEAL-001",
+      "name": "BFP-A DE seal degradation",
+      "pump": "A",
+      "start": "2024-04-01T00:00:00",
+      "end": "2024-06-01T00:00:00",
+      "description": "Gradual DE mechanical seal face wear"
+    },
+    {
+      "id": "BRG-001",
+      "name": "BFP-B NDE bearing wear",
+      "pump": "B",
+      "start": "2024-07-15T00:00:00",
+      "end": "2024-08-20T00:00:00",
+      "description": "Progressive NDE journal bearing babbitt wear"
+    },
+    {
+      "id": "ALIGN-001",
+      "name": "BFP-A coupling misalignment",
+      "pump": "A",
+      "start": "2024-10-15T00:00:00",
+      "end": "2024-12-31T00:00:00",
+      "description": "Post-outage thermal growth misalignment"
+    }
+  ]
+}

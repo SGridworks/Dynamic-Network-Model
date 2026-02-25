@@ -1,0 +1,88 @@
+tag_id,description,units,range_min,range_max,scan_rate_sec,pump
+U1_BFPA_SUCT_PRESS,BFP-A Suction pressure,bar(g),0,15,1,A
+U1_BFPA_DISCH_PRESS,BFP-A Discharge pressure,bar(g),0,200,1,A
+U1_BFPA_DIFF_PRESS,BFP-A Differential pressure,bar,0,185,1,A
+U1_BFPA_FW_FLOW,BFP-A Feedwater flow,t/hr,0,350,1,A
+U1_BFPA_RECIRC_FLOW,BFP-A Recirculation flow,t/hr,0,100,1,A
+U1_BFPA_SPEED,BFP-A Pump speed,RPM,0,3600,1,A
+U1_BFPA_MTR_CURRENT,BFP-A Motor current,A,0,250,1,A
+U1_BFPA_MTR_POWER,BFP-A Motor power,kW,0,2000,1,A
+U1_BFPA_MTR_WINDING_TEMP,BFP-A Motor winding temperature,degC,0,180,5,A
+U1_BFPA_BRG_DE_TEMP,BFP-A Pump DE journal bearing temp,degC,0,120,5,A
+U1_BFPA_BRG_NDE_TEMP,BFP-A Pump NDE journal bearing temp,degC,0,120,5,A
+U1_BFPA_THR_ACT_TEMP,BFP-A Thrust bearing active side temp,degC,0,120,5,A
+U1_BFPA_THR_INACT_TEMP,BFP-A Thrust bearing inactive side temp,degC,0,120,5,A
+U1_BFPA_MTR_DE_BRG_TEMP,BFP-A Motor DE bearing temp,degC,0,120,5,A
+U1_BFPA_MTR_NDE_BRG_TEMP,BFP-A Motor NDE bearing temp,degC,0,120,5,A
+U1_BFPA_VIB_DE_X,BFP-A Shaft vibration DE X-probe,um_pk-pk,0,150,1,A
+U1_BFPA_VIB_DE_Y,BFP-A Shaft vibration DE Y-probe,um_pk-pk,0,150,1,A
+U1_BFPA_VIB_NDE_X,BFP-A Shaft vibration NDE X-probe,um_pk-pk,0,150,1,A
+U1_BFPA_VIB_NDE_Y,BFP-A Shaft vibration NDE Y-probe,um_pk-pk,0,150,1,A
+U1_BFPA_AXIAL_DISP,BFP-A Axial displacement,mm,-1.0,1.0,1,A
+U1_BFPA_LO_HDR_PRESS,BFP-A Lube oil header pressure,bar(g),0,3.0,5,A
+U1_BFPA_LO_SUPPLY_TEMP,BFP-A Lube oil supply temperature,degC,0,100,5,A
+U1_BFPA_LO_RETURN_TEMP,BFP-A Lube oil return temperature,degC,0,100,5,A
+U1_BFPA_LO_TANK_LVL,BFP-A Lube oil tank level,%,0,100,5,A
+U1_BFPA_LO_FILTER_DP,BFP-A Lube oil filter diff pressure,bar,0,2.0,5,A
+U1_BFPA_SEAL_DE_TEMP,BFP-A DE seal chamber temperature,degC,0,100,5,A
+U1_BFPA_SEAL_NDE_TEMP,BFP-A NDE seal chamber temperature,degC,0,100,5,A
+U1_BFPA_SEAL_DE_LEAK,BFP-A DE seal leakage,cc/min,0,50,5,A
+U1_BFPA_SEAL_NDE_LEAK,BFP-A NDE seal leakage,cc/min,0,50,5,A
+U1_BFPA_SEAL_CW_FLOW,BFP-A Seal cooling water flow,L/min,0,10,5,A
+U1_BFPA_SUCT_VLV_POS,BFP-A Suction valve position,%,0,100,5,A
+U1_BFPA_DISCH_VLV_POS,BFP-A Discharge valve position,%,0,100,5,A
+U1_BFPA_RECIRC_VLV_POS,BFP-A Recirc valve position,%,0,100,5,A
+U1_BFPA_STRAINER_DP,BFP-A Suction strainer diff pressure,bar,0,1.0,5,A
+U1_BFPA_RUN_STATUS,BFP-A Running status,bool,0,1,0,A
+U1_BFPA_TRIP,BFP-A Trip signal,bool,0,1,0,A
+U1_BFPA_AUTO_MODE,BFP-A Auto/manual mode,bool,0,1,0,A
+U1_BFPB_SUCT_PRESS,BFP-B Suction pressure,bar(g),0,15,1,B
+U1_BFPB_DISCH_PRESS,BFP-B Discharge pressure,bar(g),0,200,1,B
+U1_BFPB_DIFF_PRESS,BFP-B Differential pressure,bar,0,185,1,B
+U1_BFPB_FW_FLOW,BFP-B Feedwater flow,t/hr,0,350,1,B
+U1_BFPB_RECIRC_FLOW,BFP-B Recirculation flow,t/hr,0,100,1,B
+U1_BFPB_SPEED,BFP-B Pump speed,RPM,0,3600,1,B
+U1_BFPB_MTR_CURRENT,BFP-B Motor current,A,0,250,1,B
+U1_BFPB_MTR_POWER,BFP-B Motor power,kW,0,2000,1,B
+U1_BFPB_MTR_WINDING_TEMP,BFP-B Motor winding temperature,degC,0,180,5,B
+U1_BFPB_BRG_DE_TEMP,BFP-B Pump DE journal bearing temp,degC,0,120,5,B
+U1_BFPB_BRG_NDE_TEMP,BFP-B Pump NDE journal bearing temp,degC,0,120,5,B
+U1_BFPB_THR_ACT_TEMP,BFP-B Thrust bearing active side temp,degC,0,120,5,B
+U1_BFPB_THR_INACT_TEMP,BFP-B Thrust bearing inactive side temp,degC,0,120,5,B
+U1_BFPB_MTR_DE_BRG_TEMP,BFP-B Motor DE bearing temp,degC,0,120,5,B
+U1_BFPB_MTR_NDE_BRG_TEMP,BFP-B Motor NDE bearing temp,degC,0,120,5,B
+U1_BFPB_VIB_DE_X,BFP-B Shaft vibration DE X-probe,um_pk-pk,0,150,1,B
+U1_BFPB_VIB_DE_Y,BFP-B Shaft vibration DE Y-probe,um_pk-pk,0,150,1,B
+U1_BFPB_VIB_NDE_X,BFP-B Shaft vibration NDE X-probe,um_pk-pk,0,150,1,B
+U1_BFPB_VIB_NDE_Y,BFP-B Shaft vibration NDE Y-probe,um_pk-pk,0,150,1,B
+U1_BFPB_AXIAL_DISP,BFP-B Axial displacement,mm,-1.0,1.0,1,B
+U1_BFPB_LO_HDR_PRESS,BFP-B Lube oil header pressure,bar(g),0,3.0,5,B
+U1_BFPB_LO_SUPPLY_TEMP,BFP-B Lube oil supply temperature,degC,0,100,5,B
+U1_BFPB_LO_RETURN_TEMP,BFP-B Lube oil return temperature,degC,0,100,5,B
+U1_BFPB_LO_TANK_LVL,BFP-B Lube oil tank level,%,0,100,5,B
+U1_BFPB_LO_FILTER_DP,BFP-B Lube oil filter diff pressure,bar,0,2.0,5,B
+U1_BFPB_SEAL_DE_TEMP,BFP-B DE seal chamber temperature,degC,0,100,5,B
+U1_BFPB_SEAL_NDE_TEMP,BFP-B NDE seal chamber temperature,degC,0,100,5,B
+U1_BFPB_SEAL_DE_LEAK,BFP-B DE seal leakage,cc/min,0,50,5,B
+U1_BFPB_SEAL_NDE_LEAK,BFP-B NDE seal leakage,cc/min,0,50,5,B
+U1_BFPB_SEAL_CW_FLOW,BFP-B Seal cooling water flow,L/min,0,10,5,B
+U1_BFPB_SUCT_VLV_POS,BFP-B Suction valve position,%,0,100,5,B
+U1_BFPB_DISCH_VLV_POS,BFP-B Discharge valve position,%,0,100,5,B
+U1_BFPB_RECIRC_VLV_POS,BFP-B Recirc valve position,%,0,100,5,B
+U1_BFPB_STRAINER_DP,BFP-B Suction strainer diff pressure,bar,0,1.0,5,B
+U1_BFPB_RUN_STATUS,BFP-B Running status,bool,0,1,0,B
+U1_BFPB_TRIP,BFP-B Trip signal,bool,0,1,0,B
+U1_BFPB_AUTO_MODE,BFP-B Auto/manual mode,bool,0,1,0,B
+U1_FW_HDR_PRESS,FW header pressure,bar(g),0,200,1,SYS
+U1_FW_HDR_TEMP,FW header temperature,degC,0,300,5,SYS
+U1_FW_HDR_FLOW,FW total flow to HRSG,t/hr,0,350,1,SYS
+U1_UNIT_MW_GROSS,Unit gross MW output,MW,0,350,1,SYS
+U1_UNIT_MW_NET,Unit net MW output,MW,0,320,1,SYS
+U1_GT_A_LOAD,Gas turbine A load,MW,0,120,1,SYS
+U1_GT_B_LOAD,Gas turbine B load,MW,0,120,1,SYS
+U1_ST_LOAD,Steam turbine load,MW,0,120,1,SYS
+U1_DA_PRESS,Deaerator pressure (boundary),bar(g),0,15,5,SYS
+U1_DA_TEMP,Deaerator temperature (boundary),degC,0,200,5,SYS
+U1_DA_LEVEL,Deaerator level (boundary),%,0,100,5,SYS
+U1_AMBIENT_TEMP,Ambient temperature,degC,-10,55,60,SYS
+U1_CW_SUPPLY_TEMP,Cooling water supply temp,degC,0,45,60,SYS
