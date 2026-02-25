@@ -91,7 +91,10 @@ Dynamic-Network-Model/
 ├── CODE_OF_CONDUCT.md                 # Community standards
 ├── SECURITY.md                        # Security policy
 ├── PLAN.md                            # Product vision & roadmap
+├── DATASETS.md                        # V1/V2 dataset versions & adapter mapping
 ├── COMPREHENSIVE_TEST_RESULTS.md      # ML Playground validation results
+├── generate_bfp_data.py               # BFP train dataset generator
+├── validate_bfp_data.py               # BFP dataset validation suite
 ├── demo_data/                         # V1.0 dataset (original)
 │   ├── USERS_GUIDE.md                 # Comprehensive guide for power engineers
 │   ├── README.md                      # Dataset reference card
@@ -117,11 +120,22 @@ Dynamic-Network-Model/
 ├── sisyphean-power-and-light/         # V2.0 dataset (restructured for ML Playground)
 │   ├── README.md                      # V2.0 documentation
 │   ├── assets/                        # Transformer & switching device data
+│   ├── generation/                    # BFP train dataset (generating station)
+│   │   ├── timeseries/                # 1-min, 15-min, hourly parquet files
+│   │   ├── events/                    # Alarm log, trip log, operator actions
+│   │   └── reference/                 # Pump curves, heat balance, design params
 │   ├── network/                       # OpenDSS power flow model
 │   ├── outages/                       # Expanded outage & crew dispatch records
 │   ├── scenarios/                     # JSON scenario configurations
 │   ├── timeseries/                    # Parquet load & AMI data
 │   └── weather/                       # Extended weather observations
+├── notebooks/                         # ML Playground Jupyter notebooks
+│   ├── 00-getting-started.ipynb       # Setup & verification
+│   ├── 01-16 ...                      # Distribution-side guides
+│   ├── 17-bfp-health-monitoring.ipynb            # BFP health monitoring
+│   ├── 18-feedwater-load-correlation.ipynb       # Feedwater load correlation
+│   ├── 19-advanced-rotating-equipment-diagnostics.ipynb  # Rotating equipment diagnostics
+│   └── 20-bfp-digital-twin.ipynb                 # BFP digital twin
 ├── validate_demo_data.py              # Dataset validation suite
 ├── test_guide_*.py                    # ML Playground guide test scripts
 ├── convert_*.py                       # V1.0 → V2.0 conversion scripts

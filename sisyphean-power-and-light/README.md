@@ -192,8 +192,12 @@ print(f"Buses: {dss.Circuit.NumBuses()}")
 | 14 - Deep RL Volt-VAR | ✅ Ready | network/capacitors.dss |
 | 15 - Stochastic Planning | ✅ Ready | scenarios/*.json |
 | 16 - VAE Anomaly Detection | ✅ Ready | timeseries/ami_15min_sample.parquet |
+| 17 - BFP Health Monitoring | ✅ Ready | generation/ dataset |
+| 18 - Feedwater Load Correlation | ✅ Ready | generation/ + distribution datasets |
+| 19 - Advanced Rotating Equipment Diagnostics | ✅ Ready | generation/ dataset |
+| 20 - BFP Digital Twin | ✅ Ready | generation/ dataset |
 
-**Compatibility:** 16/16 guides (100%) ready to run
+**Compatibility:** 20/20 guides (100%) ready to run
 
 ---
 
@@ -250,7 +254,7 @@ This restructured dataset passed comprehensive validation:
 - ✅ JSON scenarios parse correctly
 - ✅ All technical fixes (Guides 01-07) validated
 
-**Validation Report:** See `DATASET_VALIDATION_REPORT_2026-02-12.md`
+**Validation:** Run `python validate_bfp_data.py` from the repository root to validate the dataset.
 
 ---
 

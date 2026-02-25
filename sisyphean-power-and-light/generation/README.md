@@ -27,7 +27,7 @@ One year of 1-minute operational data for the Boiler Feed Pump (BFP) train at SP
 
 ## System Description
 
-SP&L Generating Station 1 is a 300 MW 2x1 combined-cycle gas turbine (CCGT) plant consisting of two GE 7F gas turbines and one steam turbine. The BFP train feeds the HP drum of the single-pressure HRSG.
+SP&L Generating Station 1 is a 300 MW 2x1 combined-cycle gas turbine (CCGT) plant consisting of two GE 7F gas turbines and one steam turbine. The BFP train feeds the HP drum of the triple-pressure HRSG with reheat.
 
 | Parameter | Value |
 |-----------|-------|
