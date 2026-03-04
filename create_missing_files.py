@@ -150,14 +150,33 @@ print(f"   ✅ Created loads_summary.csv ({len(loads_df)} buses)")
 
 print("\n6. Creating reliability_metrics.csv...")
 
+# Load customer data to get total served count
+customers = pd.read_csv("demo_data/customers.csv")
+total_customers = len(customers)
+
+# Compute IEEE 1366 metrics from actual outage data
+outages["year"] = outages["fault_detected"].dt.year
+outages["duration_min"] = (outages["service_restored"] - outages["fault_detected"]).dt.total_seconds() / 60
+outages["cmi"] = outages["affected_customers"] * outages["duration_min"]
+
 reliability = []
-for year in range(2020, 2026):
+for year in sorted(outages["year"].unique()):
+    yr = outages[outages["year"] == year]
+    ci = yr["affected_customers"].sum()        # total customer interruptions
+    cmi = yr["cmi"].sum()                       # total customer-minutes interrupted
+    n_events = len(yr)
+
+    saifi = round(ci / total_customers, 2)                        # SAIFI = CI / N
+    saidi = round(cmi / total_customers, 1)                       # SAIDI = CMI / N
+    caidi = round(cmi / ci, 1) if ci > 0 else 0.0                # CAIDI = CMI / CI
+    maifi = round(n_events * 0.3 / total_customers * 1000, 2)    # Approximate MAIFI
+
     reliability.append({
         "year": year,
-        "saifi": round(np.random.uniform(0.8, 2.5), 2),  # Interruptions per customer
-        "saidi": round(np.random.uniform(90, 180), 1),   # Minutes per customer
-        "caidi": round(np.random.uniform(80, 150), 1),   # Minutes per interruption
-        "maifi": round(np.random.uniform(2, 8), 2)       # Momentary interruptions
+        "saifi": saifi,
+        "saidi": saidi,
+        "caidi": caidi,
+        "maifi": maifi
     })
 
 reliability_df = pd.DataFrame(reliability)

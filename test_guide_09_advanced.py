@@ -199,7 +199,7 @@ y_pred = le.inverse_transform(y_pred_encoded)
 print("\n" + "="*70)
 print("MULTI-CLASS CLASSIFICATION REPORT")
 print("="*70)
-print(classification_report(y_test, y_pred))
+print(classification_report(y_test, y_pred, zero_division=0))
 
 # ============================================================================
 # STEP 8: Feature Importance

@@ -13,34 +13,46 @@ import seaborn as sns
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
-# Check if TensorFlow/Keras is installed
-try:
-    # Suppress TensorFlow warnings before import
-    import os
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-    os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+# Check if TensorFlow/Keras is available and functional.
+# TF can segfault on certain platform/Python combos (e.g. macOS + Python 3.13),
+# so we test the import in a subprocess first to avoid crashing this process.
+import subprocess
+import sys
 
-    import tensorflow as tf
-    # Set memory growth to avoid segfaults
-    physical_devices = tf.config.list_physical_devices('GPU')
-    for device in physical_devices:
-        tf.config.experimental.set_memory_growth(device, True)
+_tf_check = subprocess.run(
+    [sys.executable, "-c",
+     "import os; os.environ['TF_CPP_MIN_LOG_LEVEL']='3'; "
+     "os.environ['TF_ENABLE_ONEDNN_OPTS']='0'; "
+     "import tensorflow; print(tensorflow.__version__)"],
+    capture_output=True, text=True, timeout=30,
+)
 
-    from tensorflow import keras
-    from tensorflow.keras.models import Sequential
-    from tensorflow.keras.layers import LSTM, Dense, Dropout
-    from tensorflow.keras.callbacks import EarlyStopping
-
-    # Use CPU only to avoid GPU issues
-    tf.config.set_visible_devices([], 'GPU')
-
-    TF_AVAILABLE = True
-except ImportError:
-    TF_AVAILABLE = False
-    print("⚠️  TensorFlow not available. Skipping LSTM test.")
-    print("Install with: pip install tensorflow")
-    import sys
+if _tf_check.returncode != 0:
+    print("⚠️  TensorFlow is not functional on this platform (import crashes or missing).")
+    print("    Skipping LSTM test. Run test_guide_10_advanced_xgboost.py instead.")
+    print(f"    (subprocess exit code: {_tf_check.returncode})")
     sys.exit(0)
+
+# TF import is safe — proceed
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+
+import tensorflow as tf
+# Set memory growth to avoid segfaults
+physical_devices = tf.config.list_physical_devices('GPU')
+for device in physical_devices:
+    tf.config.experimental.set_memory_growth(device, True)
+
+from tensorflow import keras
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Dropout
+from tensorflow.keras.callbacks import EarlyStopping
+
+# Use CPU only to avoid GPU issues
+tf.config.set_visible_devices([], 'GPU')
+
+TF_AVAILABLE = True
 
 # Set style
 sns.set_style("whitegrid")

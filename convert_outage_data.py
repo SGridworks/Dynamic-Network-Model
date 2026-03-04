@@ -10,11 +10,11 @@ np.random.seed(42)
 
 # Read source data
 print("Reading outage_history.csv...")
-df = pd.read_csv("demo_data/outage_history.csv", parse_dates=["start_time", "end_time"])
+df = pd.read_csv("demo_data/outage_history.csv", parse_dates=["fault_detected", "service_restored"])
 
 print(f"Original data: {len(df)} outages")
 
-# Rename columns to match guide expectations
+# Rename columns to match guide expectations (handles both old and new column names)
 df = df.rename(columns={
     "start_time": "fault_detected",
     "end_time": "service_restored",
@@ -62,14 +62,14 @@ if needed > 0:
         # Sample a random existing outage
         base_outage = df.sample(n=1).iloc[0].copy()
 
+        # Preserve the original event's duration before time-shifting
+        duration = base_outage["service_restored"] - base_outage["fault_detected"]
+
         # Time shift: distribute across 2020-2025
         year_offset = np.random.randint(-4, 2)  # -4 years to +1 year from 2024
         month_offset = np.random.randint(-6, 7)  # Random month variation
 
         base_outage["fault_detected"] = base_outage["fault_detected"] + pd.DateOffset(years=year_offset, months=month_offset)
-
-        # Recalculate service_restored based on duration
-        duration = base_outage["service_restored"] - df.iloc[0]["fault_detected"]
         base_outage["service_restored"] = base_outage["fault_detected"] + duration
 
         # Add some randomness to customer count (±20%)
