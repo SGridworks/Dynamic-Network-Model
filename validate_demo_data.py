@@ -87,7 +87,7 @@ def main():
         elif actual == expected:
             r.ok(C, f"{name}: {actual} rows")
         else:
-            r.fail(C, f"{name}: expected {expected}, got {actual}")
+            r.fail(C, f"{name} row count", f"expected {expected}, got {actual}")
 
     # ── Category 1: Referential Integrity ──
     C = "1. Referential Integrity"
@@ -549,12 +549,12 @@ def main():
     else:
         r.fail(C, "weather temp out of range", f"[{wt.min():.1f}, {wt.max():.1f}]")
 
-    # Weather GHI
-    ghi = wx["ghi_w_per_m2"]
+    # Solar profile GHI (weather loader drops ghi column; check it on solar profiles)
+    ghi = sp["ghi_w_per_m2"]
     if ghi.between(0, 1200).all():
-        r.ok(C, f"weather GHI: [{ghi.min():.0f}, {ghi.max():.0f}] W/m2")
+        r.ok(C, f"solar profile GHI: [{ghi.min():.0f}, {ghi.max():.0f}] W/m2")
     else:
-        r.fail(C, "GHI out of range")
+        r.fail(C, "GHI out of range", f"[{ghi.min():.0f}, {ghi.max():.0f}]")
 
     # CID power factor
     cidpf = cid["power_factor"]
