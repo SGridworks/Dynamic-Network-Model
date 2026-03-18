@@ -98,20 +98,50 @@ These functions always read from `demo_data/` regardless of V2 presence:
 - `load_battery_installations()`
 - `load_growth_scenarios()`
 
+### Distribution-Level DER Loaders (V1 only)
+
+These datasets were added to model distribution-level DER types that utilities deal with. Field names are intentionally aligned with [BTM-Optimize](https://github.com/SGridworks/btm-optimize) equipment models (vocabulary bridge, not code dependency).
+
+| Loader | File | Index | Rows | Description |
+|--------|------|-------|------|-------------|
+| `load_community_solar()` | `community_solar.csv` | `community_solar_id` | 42 | Ground-mount shared solar, 1-5 MW. SolarArray field mapping (`nameplate_dc_mw`, `dc_ac_ratio`, `annual_degradation_rate`, `tilt_degrees`, `azimuth_degrees`) |
+| `load_ev_charging_depots()` | `ev_charging_depots.csv` | `depot_id` | 13 | Fleet DCFC facilities (transit bus, delivery van, school bus, freight), 10-50 chargers per site |
+| `load_microgrids()` | `microgrids.csv` | `microgrid_id` | 10 | Coordinated DER aggregates (solar + battery + CHP) that can island. Facility types: hospital, university, military, commercial campus, water treatment |
+| `load_small_chp()` | `small_chp.csv` | `chp_id` | 23 | Reciprocating engine CHP, 0.5-5 MW. GasGenerator field mapping (`nameplate_mw`, `heat_rate_btu_per_kwh`, `forced_outage_rate`, `min_stable_level_fraction`, `startup_time_minutes`, `ramp_rate_mw_per_min`) |
+| `load_commercial_bess()` | `commercial_bess.csv` | `bess_id` | 31 | Customer-sited BESS, 250 kW-2 MW. Battery field mapping (`power_mw`, `energy_mwh`, `chemistry`, `charge_efficiency`, `discharge_efficiency`, `min_soc_fraction`, `max_soc_fraction`, `augment_threshold`, `capex_per_kwh`) |
+| `load_interconnection_queue()` | `interconnection_queue.csv` | `application_id` | 83 | IEEE 1547 distribution interconnection applications. Study levels: Level 1 Fast Track (<25 kW), Level 2 Supplemental (25 kW-5 MW), Level 3 Detailed Study (>5 MW) |
+| `load_hosting_capacity()` | `hosting_capacity_by_transformer.csv` | `transformer_id` | 36,668 | Pre-computed thermal and voltage hosting capacity at every distribution transformer |
+
 ## Usage
 
 ```python
-from demo_data.load_demo_data import load_outage_history, load_weather_data, summary
+from demo_data.load_demo_data import load_all, summary
 
-# Print dataset summary
+# Print dataset summary (23 datasets)
 summary()
 
+# Load everything
+data = load_all()
+print(list(data.keys()))
+
 # Load individual datasets
-outages = load_outage_history()
-print(outages.columns)
-# Index: outage_id
-# Columns: start_time, end_time, cause, customers_affected, feeder_id,
-#           equipment_involved, duration_hours, weather_related, substation_id
+from demo_data.load_demo_data import (
+    load_community_solar, load_commercial_bess, load_small_chp,
+    load_hosting_capacity, load_interconnection_queue,
+)
+
+# Community solar with BTM-Optimize SolarArray field names
+cs = load_community_solar()
+print(cs[["nameplate_dc_mw", "dc_ac_ratio", "annual_degradation_rate"]].describe())
+
+# Hosting capacity at every transformer
+hc = load_hosting_capacity()
+constrained = hc[hc["hosting_capacity_kw"] < 10]
+print(f"{len(constrained)} transformers near hosting capacity limit")
+
+# CHP with BTM-Optimize GasGenerator field names
+chp = load_small_chp()
+print(chp[["nameplate_mw", "heat_rate_btu_per_kwh", "forced_outage_rate"]].describe())
 ```
 
 ---

@@ -8,7 +8,7 @@ policy changes.
 
 This repository includes a complete synthetic dataset modeled after
 **Sisyphean Power & Light (SP&L)**, a fictional mid-size electric utility
-serving approximately 140,500 customers across a Phoenix, AZ-area service
+serving approximately 238,000 customers across a Phoenix, AZ-area service
 territory.
 
 > **SYNTHETIC DATA NOTICE**
@@ -39,10 +39,13 @@ you can start querying, modeling, and building against immediately.
 ### What You Can Build
 
 - **Load forecasting models** — 15-minute profiles across seasons with weather correlation
-- **Hosting capacity analysis** — solar/EV saturation on feeders and transformers
+- **Hosting capacity analysis** — solar/EV saturation on feeders and transformers, pre-computed per transformer
 - **Reliability analytics** — outage prediction from weather (storm/heatwave), equipment age, and load
 - **Network optimization** — graph analysis on the GIS node/edge topology with switching
-- **Scenario planning tools** — stress-test the grid against 5 growth projections
+- **Scenario planning tools** — stress-test the grid against 5 growth projections (now including community solar, EV depots, microgrids, CHP)
+- **DER aggregation studies** — community solar, commercial BESS, small CHP, EV charging depots, microgrids
+- **Interconnection queue analysis** — IEEE 1547 study levels, capacity allocation, system upgrade planning
+- **Microgrid islanding analysis** — coordinated DER with solar + storage + CHP that can island
 - **Geospatial dashboards** — coordinates aligned to Phoenix street grid, immediately mappable
 - **Digital twin prototypes** — the full substation-to-meter hierarchy is modeled
 - **Power flow approximations** — impedance, conductor specs, and phase data included
@@ -96,27 +99,32 @@ Dynamic-Network-Model/
 ├── generate_bfp_data.py               # BFP train dataset generator
 ├── validate_bfp_data.py               # BFP dataset validation suite
 ├── demo_data/                         # V1.0 dataset (original)
-│   ├── USERS_GUIDE.md                 # Comprehensive guide for power engineers
-│   ├── README.md                      # Dataset reference card
 │   ├── generate_demo_data.py          # Deterministic data generator (seed=42)
-│   ├── load_demo_data.py              # Combined data loader (pandas)
+│   ├── load_demo_data.py              # Combined data loader (23 datasets, pandas)
 │   ├── __init__.py
-│   ├── substations.csv                # 15 substations
-│   ├── feeders.csv                    # 65 feeders
-│   ├── transformers.csv               # 21,545 transformers
-│   ├── customers.csv                  # 140,459 customers
-│   ├── load_profiles.csv.gz           # 174,720 fifteen-minute load records
-│   ├── customer_interval_data.csv.gz  # 336,000 AMI interval records
-│   ├── solar_installations.csv        # 17,242 solar PV systems
+│   ├── substations.csv                # 23 substations
+│   ├── feeders.csv                    # 104 feeders
+│   ├── transformers.csv               # 36,668 transformers
+│   ├── customers.csv                  # 237,713 customers
+│   ├── load_profiles.csv.gz           # 1,397,760 fifteen-minute load records
+│   ├── customer_interval_data.csv.gz  # 6,720,000 AMI interval records
+│   ├── solar_installations.csv        # 28,660 solar PV systems
 │   ├── solar_profiles.csv             # 288 generation curves
-│   ├── ev_chargers.csv                # 11,076 EV chargers
+│   ├── ev_chargers.csv                # 19,015 EV chargers
 │   ├── ev_charging_profiles.csv       # 48 charging load shapes
-│   ├── battery_installations.csv      # 4,180 battery storage systems
+│   ├── battery_installations.csv      # 7,055 battery storage systems
 │   ├── weather_data.csv               # 43,848 hourly weather records (5 years)
 │   ├── growth_scenarios.csv           # 85 scenario projections
-│   ├── outage_history.csv             # 2,306 outage events (2020-2024)
-│   ├── network_nodes.csv              # 43,827 GIS point features
-│   └── network_edges.csv              # 43,826 GIS polyline features
+│   ├── outage_history.csv             # 3,746 outage events (2020-2024)
+│   ├── network_nodes.csv              # 74,517 GIS point features
+│   ├── network_edges.csv              # 74,529 GIS polyline features
+│   ├── community_solar.csv            # 42 community solar facilities (1-5 MW)
+│   ├── ev_charging_depots.csv         # 13 fleet EV charging depots
+│   ├── microgrids.csv                 # 10 islandable microgrids
+│   ├── small_chp.csv                  # 23 small CHP installations
+│   ├── commercial_bess.csv            # 31 commercial battery storage (250 kW-2 MW)
+│   ├── interconnection_queue.csv      # 83 IEEE 1547 interconnection applications
+│   └── hosting_capacity_by_transformer.csv  # 36,668 hosting capacity records
 ├── sisyphean-power-and-light/         # V2.0 dataset (restructured for ML Playground)
 │   ├── README.md                      # V2.0 documentation
 │   ├── assets/                        # Transformer & switching device data
