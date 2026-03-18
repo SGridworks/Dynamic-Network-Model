@@ -10,11 +10,11 @@ np.random.seed(42)
 
 # Read source data
 print("Reading outage_history.csv...")
-df = pd.read_csv("demo_data/outage_history.csv", parse_dates=["fault_detected", "service_restored"])
+df = pd.read_csv("demo_data/outage_history.csv", parse_dates=["start_time", "end_time"])
 
 print(f"Original data: {len(df)} outages")
 
-# Rename columns to match guide expectations (handles both old and new column names)
+# Rename columns to match V2 schema
 df = df.rename(columns={
     "start_time": "fault_detected",
     "end_time": "service_restored",
@@ -77,7 +77,7 @@ if needed > 0:
 
         # Vary feeder_id occasionally
         if np.random.random() < 0.3:
-            feeder_num = np.random.randint(1, 66)
+            feeder_num = np.random.randint(1, 105)
             base_outage["feeder_id"] = f"FDR-{feeder_num:04d}"
 
         synthetic_outages.append(base_outage)

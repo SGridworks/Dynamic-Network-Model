@@ -404,19 +404,7 @@ def load_outage_history() -> pd.DataFrame:
         return df
     else:
         df = pd.read_csv(_csv_path("outage_history.csv"),
-                          parse_dates=["fault_detected", "service_restored"])
-        # Rename V1 columns to match adapter contract
-        df = df.rename(columns={
-            "fault_detected": "start_time",
-            "service_restored": "end_time",
-            "cause_code": "cause",
-            "affected_customers": "customers_affected",
-        })
-        # Compute duration_hours if not present
-        if "duration_hours" not in df.columns:
-            df["duration_hours"] = (
-                (df["end_time"] - df["start_time"]).dt.total_seconds() / 3600
-            )
+                          parse_dates=["start_time", "end_time"])
         df["weather_related"] = df["weather_related"].astype(bool)
         df.set_index("outage_id", inplace=True)
         return df
@@ -436,6 +424,89 @@ def load_network_nodes() -> pd.DataFrame:
     """
     df = pd.read_csv(_csv_path("network_nodes.csv"))
     df.set_index("node_id", inplace=True)
+    return df
+
+
+def load_community_solar() -> pd.DataFrame:
+    """Load the community solar facilities dataset.
+
+    Contains ground-mount shared solar facilities connected at feeder level,
+    with BTM-Optimize SolarArray field mappings.
+    """
+    df = pd.read_csv(_csv_path("community_solar.csv"),
+                      parse_dates=["interconnection_date"])
+    df.set_index("community_solar_id", inplace=True)
+    return df
+
+
+def load_ev_charging_depots() -> pd.DataFrame:
+    """Load the EV charging depot (fleet facility) dataset.
+
+    Contains fleet charging facilities with concentrated DCFC load,
+    linked through the transformer/feeder/substation hierarchy.
+    """
+    df = pd.read_csv(_csv_path("ev_charging_depots.csv"),
+                      parse_dates=["install_date"])
+    df.set_index("depot_id", inplace=True)
+    return df
+
+
+def load_microgrids() -> pd.DataFrame:
+    """Load the microgrid dataset.
+
+    Contains coordinated DER aggregates that can island, with solar,
+    battery, and CHP component capacities.
+    """
+    df = pd.read_csv(_csv_path("microgrids.csv"),
+                      parse_dates=["interconnection_date"])
+    df.set_index("microgrid_id", inplace=True)
+    return df
+
+
+def load_small_chp() -> pd.DataFrame:
+    """Load the small CHP (combined heat and power) dataset.
+
+    Contains reciprocating engine CHP at commercial/institutional sites
+    with BTM-Optimize GasGenerator field mappings.
+    """
+    df = pd.read_csv(_csv_path("small_chp.csv"),
+                      parse_dates=["install_date"])
+    df.set_index("chp_id", inplace=True)
+    return df
+
+
+def load_commercial_bess() -> pd.DataFrame:
+    """Load the commercial battery energy storage dataset.
+
+    Contains customer-sited or utility-sited BESS (250 kW - 2 MW) with
+    BTM-Optimize Battery field mappings.
+    """
+    df = pd.read_csv(_csv_path("commercial_bess.csv"),
+                      parse_dates=["install_date"])
+    df.set_index("bess_id", inplace=True)
+    return df
+
+
+def load_interconnection_queue() -> pd.DataFrame:
+    """Load the distribution interconnection queue dataset.
+
+    Contains IEEE 1547 governed interconnection applications across
+    study levels (Fast Track, Supplemental, Detailed Study).
+    """
+    df = pd.read_csv(_csv_path("interconnection_queue.csv"),
+                      parse_dates=["application_date", "study_completion_date"])
+    df.set_index("application_id", inplace=True)
+    return df
+
+
+def load_hosting_capacity() -> pd.DataFrame:
+    """Load the pre-computed hosting capacity per distribution transformer.
+
+    Contains thermal and voltage hosting capacity limits for every
+    transformer, accounting for existing DER penetration.
+    """
+    df = pd.read_csv(_csv_path("hosting_capacity_by_transformer.csv"))
+    df.set_index("transformer_id", inplace=True)
     return df
 
 
@@ -497,6 +568,13 @@ def load_all(datasets: Optional[list] = None) -> Dict[str, pd.DataFrame]:
         "outage_history": load_outage_history,
         "network_nodes": load_network_nodes,
         "network_edges": load_network_edges,
+        "community_solar": load_community_solar,
+        "ev_charging_depots": load_ev_charging_depots,
+        "microgrids": load_microgrids,
+        "small_chp": load_small_chp,
+        "commercial_bess": load_commercial_bess,
+        "interconnection_queue": load_interconnection_queue,
+        "hosting_capacity": load_hosting_capacity,
     }
 
     if datasets is not None:

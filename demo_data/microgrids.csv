@@ -1,0 +1,11 @@
+microgrid_id,feeder_id,substation_id,latitude,longitude,facility_type,facility_name,solar_capacity_mw,battery_power_mw,battery_energy_mwh,chp_capacity_mw,total_generation_mw,peak_load_mw,critical_load_mw,can_island,island_duration_hours,interconnection_date,status
+MG-0001,FDR-0036,SUB-009,33.442517,-112.108762,hospital_campus,Banner Medical Center,1.5,1.0,4.0,2.0,3.5,6.17,2.15,True,1.9,2022-07-01,active
+MG-0002,FDR-0041,SUB-010,33.491847,-111.894538,hospital_campus,HonorHealth Campus,1.2,0.8,3.2,1.5,2.7,4.07,1.51,True,2.1,2024-04-01,active
+MG-0003,FDR-0044,SUB-011,33.361458,-112.100799,university,ASU Polytechnic Campus,3.0,2.0,8.0,1.0,4.0,5.51,2.61,True,3.1,2020-11-01,active
+MG-0004,FDR-0064,SUB-014,33.361422,-112.043909,university,GCU North Campus,2.0,1.5,6.0,0.5,2.5,3.9,2.01,True,3.0,2023-11-01,commissioning
+MG-0005,FDR-0002,SUB-001,33.556571,-112.143475,military,Luke AFB Annex,4.0,3.0,12.0,2.5,6.5,11.35,5.16,True,2.3,2022-06-01,active
+MG-0006,FDR-0067,SUB-015,33.643396,-112.143432,commercial_campus,PayPal Campus,2.5,2.0,8.0,0.0,2.5,4.82,2.43,True,3.3,2020-05-01,active
+MG-0007,FDR-0076,SUB-017,33.381832,-112.039228,commercial_campus,State Farm Regional,1.8,1.2,4.8,0.0,1.8,3.5,1.77,True,2.7,2022-02-01,active
+MG-0008,FDR-0093,SUB-020,33.298155,-112.160842,water_treatment,91st Ave WWTP,2.0,1.5,6.0,3.0,5.0,6.95,3.57,True,1.7,2024-03-01,active
+MG-0009,FDR-0081,SUB-018,33.397768,-112.195594,water_treatment,Cave Creek WRP,0.8,0.5,2.0,1.0,1.8,2.35,1.0,True,2.0,2024-06-01,active
+MG-0010,FDR-0026,SUB-007,33.494028,-112.03931,commercial_campus,Chandler Tech Park,2.2,1.8,7.2,0.0,2.2,3.56,1.62,True,4.4,2024-03-01,active

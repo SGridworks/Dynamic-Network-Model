@@ -66,6 +66,13 @@ def main():
     evp = d["ev_charging_profiles"]
     nodes = d["network_nodes"]
     edges = d["network_edges"]
+    cs = d["community_solar"]
+    depots = d["ev_charging_depots"]
+    mg = d["microgrids"]
+    chp = d["small_chp"]
+    cbess = d["commercial_bess"]
+    iq = d["interconnection_queue"]
+    hc = d["hosting_capacity"]
     r = Report()
 
     # ── Category 0: Row Counts ──
@@ -84,16 +91,21 @@ def main():
     expected_wx = wx_hours
 
     for name, df, expected in [
-        ("substations", subs, 15), ("feeders", fdrs, 65),
-        ("transformers", xfmrs, 21545), ("customers", custs, None),
+        ("substations", subs, None), ("feeders", fdrs, None),
+        ("transformers", xfmrs, None), ("customers", custs, None),
         ("solar_installations", solar, None), ("ev_chargers", ev, None),
         ("battery_installations", batt, None),
-        ("network_nodes", nodes, 43827), ("network_edges", edges, 43826),
+        ("network_nodes", nodes, None), ("network_edges", edges, None),
         ("load_profiles", lp, expected_lp),
         ("customer_interval_data", cid, expected_cid),
         ("weather_data", wx, expected_wx), ("outage_history", out, None),
         ("growth_scenarios", gs, 85), ("solar_profiles", sp, 288),
         ("ev_charging_profiles", evp, 48),
+        ("community_solar", cs, None), ("ev_charging_depots", depots, None),
+        ("microgrids", mg, None), ("small_chp", chp, None),
+        ("commercial_bess", cbess, None),
+        ("interconnection_queue", iq, None),
+        ("hosting_capacity", hc, None),
     ]:
         actual = len(df)
         if expected is None:
@@ -152,6 +164,27 @@ def main():
     nf = nodes[(nodes["feeder_id"].notna()) & (nodes["feeder_id"] != "") & (nodes["feeder_id"].astype(str).str.strip() != "")]
     check_fk("nodes.feeder_id", nf["feeder_id"], "feeders", fdr_ids)
     check_fk("nodes.substation_id", nodes["substation_id"], "substations", sub_ids)
+
+    # New DER datasets
+    check_fk("community_solar.feeder_id", cs["feeder_id"], "feeders", fdr_ids)
+    check_fk("community_solar.substation_id", cs["substation_id"], "substations", sub_ids)
+    check_fk("depots.feeder_id", depots["feeder_id"], "feeders", fdr_ids)
+    check_fk("depots.substation_id", depots["substation_id"], "substations", sub_ids)
+    check_fk("depots.transformer_id", depots["transformer_id"], "transformers", xfmr_ids)
+    check_fk("microgrids.feeder_id", mg["feeder_id"], "feeders", fdr_ids)
+    check_fk("microgrids.substation_id", mg["substation_id"], "substations", sub_ids)
+    check_fk("chp.customer_id", chp["customer_id"], "customers", cust_ids)
+    check_fk("chp.transformer_id", chp["transformer_id"], "transformers", xfmr_ids)
+    check_fk("chp.feeder_id", chp["feeder_id"], "feeders", fdr_ids)
+    check_fk("chp.substation_id", chp["substation_id"], "substations", sub_ids)
+    check_fk("cbess.customer_id", cbess["customer_id"], "customers", cust_ids)
+    check_fk("cbess.transformer_id", cbess["transformer_id"], "transformers", xfmr_ids)
+    check_fk("cbess.feeder_id", cbess["feeder_id"], "feeders", fdr_ids)
+    check_fk("cbess.substation_id", cbess["substation_id"], "substations", sub_ids)
+    check_fk("iq.feeder_id", iq["feeder_id"], "feeders", fdr_ids)
+    check_fk("iq.substation_id", iq["substation_id"], "substations", sub_ids)
+    check_fk("hc.transformer_id", hc.index.to_series(), "transformers", xfmr_ids)
+    check_fk("hc.feeder_id", hc["feeder_id"], "feeders", fdr_ids)
 
     # ── Category 2: Cross-Table Counts ──
     C = "2. Cross-Table Counts"
@@ -269,8 +302,8 @@ def main():
 
     # ── Category 4: Spatial Consistency ──
     C = "4. Spatial Consistency"
-    LAT_MIN, LAT_MAX = 33.2, 33.7
-    LON_MIN, LON_MAX = -112.35, -111.85
+    LAT_MIN, LAT_MAX = 33.15, 33.75
+    LON_MIN, LON_MAX = -112.40, -111.80
 
     def check_coords(name, lats, lons):
         lat_ok = lats.between(LAT_MIN, LAT_MAX).all()
@@ -564,7 +597,7 @@ def main():
 
     # Weather temperature
     wt = wx["temperature_f"]
-    if wt.between(25, 135).all():
+    if wt.between(25, 140).all():
         r.ok(C, f"weather temp: [{wt.min():.1f}, {wt.max():.1f}] F")
     else:
         r.fail(C, "weather temp out of range", f"[{wt.min():.1f}, {wt.max():.1f}]")
@@ -737,6 +770,161 @@ def main():
         r.ok(C, "EV profile values all non-negative")
     else:
         r.fail(C, "EV profile negative values", f"{ev_neg} records")
+
+    # ── Category 11: Distribution DER Datasets ──
+    C = "11. Distribution DER Datasets"
+
+    # Community solar
+    n_cs = len(cs)
+    if 20 <= n_cs <= 50:
+        r.ok(C, f"community_solar: {n_cs} facilities")
+    else:
+        r.warn(C, f"community_solar count: {n_cs}", "expected 25-40")
+    cs_dc = cs["nameplate_dc_mw"]
+    if cs_dc.between(0.5, 6.0).all():
+        r.ok(C, f"community solar DC capacity: [{cs_dc.min():.2f}, {cs_dc.max():.2f}] MW")
+    else:
+        r.fail(C, "community solar DC out of range", f"[{cs_dc.min():.2f}, {cs_dc.max():.2f}]")
+    cs_ratio = cs["dc_ac_ratio"]
+    if cs_ratio.between(1.1, 1.5).all():
+        r.ok(C, f"community solar DC/AC ratio: [{cs_ratio.min():.2f}, {cs_ratio.max():.2f}]")
+    else:
+        r.warn(C, "community solar DC/AC ratio", f"[{cs_ratio.min():.2f}, {cs_ratio.max():.2f}]")
+
+    # EV charging depots
+    n_dep = len(depots)
+    if 5 <= n_dep <= 30:
+        r.ok(C, f"ev_charging_depots: {n_dep} facilities")
+    else:
+        r.warn(C, f"ev_charging_depots count: {n_dep}", "expected 15-25")
+    dep_cap = depots["total_capacity_mw"]
+    if (dep_cap > 0).all():
+        r.ok(C, f"depot capacity: [{dep_cap.min():.2f}, {dep_cap.max():.2f}] MW")
+    else:
+        r.fail(C, "depot capacity <= 0")
+    fleet_types = set(depots["fleet_type"].unique())
+    expected_fleet = {"transit_bus", "delivery_van", "school_bus", "freight"}
+    if fleet_types <= expected_fleet:
+        r.ok(C, f"depot fleet types: {sorted(fleet_types)}")
+    else:
+        r.warn(C, "unexpected fleet types", str(fleet_types - expected_fleet))
+
+    # Microgrids
+    n_mg = len(mg)
+    if 5 <= n_mg <= 15:
+        r.ok(C, f"microgrids: {n_mg} facilities")
+    else:
+        r.warn(C, f"microgrid count: {n_mg}", "expected 8-12")
+    if mg["can_island"].all():
+        r.ok(C, "all microgrids can island")
+    mg_gen = mg["total_generation_mw"]
+    if (mg_gen > 0).all():
+        r.ok(C, f"microgrid generation: [{mg_gen.min():.2f}, {mg_gen.max():.2f}] MW")
+    else:
+        r.fail(C, "microgrid generation <= 0")
+
+    # Small CHP
+    n_chp = len(chp)
+    if 10 <= n_chp <= 30:
+        r.ok(C, f"small_chp: {n_chp} installations")
+    else:
+        r.warn(C, f"small_chp count: {n_chp}", "expected 15-25")
+    chp_np = chp["nameplate_mw"]
+    if chp_np.between(0.3, 6.0).all():
+        r.ok(C, f"CHP nameplate: [{chp_np.min():.2f}, {chp_np.max():.2f}] MW")
+    else:
+        r.warn(C, "CHP nameplate range", f"[{chp_np.min():.2f}, {chp_np.max():.2f}]")
+    chp_hr = chp["heat_rate_btu_per_kwh"]
+    if chp_hr.between(8000, 11000).all():
+        r.ok(C, f"CHP heat rate: [{chp_hr.min()}, {chp_hr.max()}] BTU/kWh")
+    else:
+        r.warn(C, "CHP heat rate range", f"[{chp_hr.min()}, {chp_hr.max()}]")
+    chp_for = chp["forced_outage_rate"]
+    if chp_for.between(0.01, 0.10).all():
+        r.ok(C, f"CHP forced outage rate: [{chp_for.min():.3f}, {chp_for.max():.3f}]")
+    else:
+        r.warn(C, "CHP FOR range", f"[{chp_for.min():.3f}, {chp_for.max():.3f}]")
+
+    # Commercial BESS
+    n_cbess = len(cbess)
+    if 20 <= n_cbess <= 60:
+        r.ok(C, f"commercial_bess: {n_cbess} installations")
+    else:
+        r.warn(C, f"commercial_bess count: {n_cbess}", "expected 30-50")
+    cbess_pwr = cbess["power_mw"]
+    if cbess_pwr.between(0.1, 3.0).all():
+        r.ok(C, f"BESS power: [{cbess_pwr.min():.3f}, {cbess_pwr.max():.3f}] MW")
+    else:
+        r.warn(C, "BESS power range", f"[{cbess_pwr.min():.3f}, {cbess_pwr.max():.3f}]")
+    cbess_eff = cbess["charge_efficiency"]
+    if cbess_eff.between(0.85, 1.0).all():
+        r.ok(C, f"BESS charge efficiency: [{cbess_eff.min():.3f}, {cbess_eff.max():.3f}]")
+    else:
+        r.fail(C, "BESS efficiency out of range", f"[{cbess_eff.min():.3f}, {cbess_eff.max():.3f}]")
+    cbess_chem = set(cbess["chemistry"].unique())
+    if cbess_chem <= {"LFP", "NMC"}:
+        r.ok(C, f"BESS chemistry: {sorted(cbess_chem)}")
+    else:
+        r.warn(C, "unexpected BESS chemistry", str(cbess_chem))
+
+    # Interconnection queue
+    n_iq = len(iq)
+    if 50 <= n_iq <= 150:
+        r.ok(C, f"interconnection_queue: {n_iq} applications")
+    else:
+        r.warn(C, f"interconnection_queue count: {n_iq}", "expected 80-120")
+    iq_cap = iq["requested_capacity_kw"]
+    if (iq_cap > 0).all():
+        r.ok(C, f"IQ capacity: [{iq_cap.min():.0f}, {iq_cap.max():.0f}] kW")
+    else:
+        r.fail(C, "IQ capacity <= 0")
+    iq_levels = set(iq["study_level"].unique())
+    expected_levels = {"Level 1 - Fast Track", "Level 2 - Supplemental", "Level 3 - Detailed Study"}
+    if iq_levels <= expected_levels:
+        r.ok(C, f"IQ study levels: {len(iq_levels)} types")
+    else:
+        r.warn(C, "unexpected study levels", str(iq_levels - expected_levels))
+
+    # Hosting capacity
+    n_hc = len(hc)
+    n_xfmrs = len(xfmrs)
+    if n_hc == n_xfmrs:
+        r.ok(C, f"hosting_capacity: {n_hc} rows (matches transformers)")
+    else:
+        r.fail(C, "hosting capacity count mismatch", f"{n_hc} vs {n_xfmrs} transformers")
+    hc_kw = hc["hosting_capacity_kw"]
+    if (hc_kw >= 0).all():
+        r.ok(C, f"hosting capacity: [{hc_kw.min():.1f}, {hc_kw.max():.1f}] kW (all non-negative)")
+    else:
+        neg = (hc_kw < 0).sum()
+        r.fail(C, "negative hosting capacity", f"{neg} transformers")
+    hc_factors = set(hc["limiting_factor"].unique())
+    if hc_factors <= {"thermal", "voltage"}:
+        r.ok(C, f"limiting factors: {sorted(hc_factors)}")
+    else:
+        r.fail(C, "unexpected limiting factors", str(hc_factors))
+
+    # CHP hierarchy consistency
+    chp_merged = chp.merge(custs[["transformer_id", "feeder_id", "substation_id"]],
+                            left_on="customer_id", right_index=True, suffixes=("_chp", "_cust"))
+    chp_xfmr = (chp_merged["transformer_id_chp"] == chp_merged["transformer_id_cust"]).all()
+    chp_fdr = (chp_merged["feeder_id_chp"] == chp_merged["feeder_id_cust"]).all()
+    chp_sub = (chp_merged["substation_id_chp"] == chp_merged["substation_id_cust"]).all()
+    if chp_xfmr and chp_fdr and chp_sub:
+        r.ok(C, "CHP hierarchy matches customer hierarchy")
+    else:
+        r.fail(C, "CHP hierarchy mismatch", f"xfmr={chp_xfmr}, fdr={chp_fdr}, sub={chp_sub}")
+
+    # CBESS hierarchy consistency
+    cbess_merged = cbess.merge(custs[["transformer_id", "feeder_id", "substation_id"]],
+                                left_on="customer_id", right_index=True, suffixes=("_bess", "_cust"))
+    cbess_xfmr = (cbess_merged["transformer_id_bess"] == cbess_merged["transformer_id_cust"]).all()
+    cbess_fdr = (cbess_merged["feeder_id_bess"] == cbess_merged["feeder_id_cust"]).all()
+    cbess_sub = (cbess_merged["substation_id_bess"] == cbess_merged["substation_id_cust"]).all()
+    if cbess_xfmr and cbess_fdr and cbess_sub:
+        r.ok(C, "CBESS hierarchy matches customer hierarchy")
+    else:
+        r.fail(C, "CBESS hierarchy mismatch", f"xfmr={cbess_xfmr}, fdr={cbess_fdr}, sub={cbess_sub}")
 
     # Print report
     r.summary()

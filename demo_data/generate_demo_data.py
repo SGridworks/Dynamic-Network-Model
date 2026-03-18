@@ -8,7 +8,7 @@ SYNTHETIC DATA NOTICE
     No real customer, infrastructure, or operational data is included.
 
 Creates realistic utility distribution system data modeled after SP&L,
-a fictional mid-size electric utility serving ~166,000 customers across
+a fictional mid-size electric utility serving ~175,000+ customers across
 a mixed suburban/rural service territory (Phoenix, AZ area).
 
 Geographic coordinates are aligned to the Phoenix street grid so that
@@ -150,6 +150,15 @@ SUBSTATION_DEFS = [
     ("Gilbert Road",     2.0,  7, "McDowell Rd", "56th St"),
     ("Chandler Heights", -6.0,  3, "Baseline Rd", "24th St"),
     ("Ocotillo",         9.5, -4, "Dunlap Ave", "35th Ave"),
+    # --- Phase 2: Distribution-level BTM expansion (8 new substations) ---
+    ("Estrella Ranch",     -4.5, -6, "Southern Ave", "51st Ave"),
+    ("Midtown Gateway",     0.0,  2, "Van Buren St", "16th St"),
+    ("Buckeye Logistics",  -1.0, -7, "Buckeye Rd", "59th Ave"),
+    ("Scottsdale Corridor", 8.5,  6, "Glendale Ave", "48th St"),
+    ("Laveen Crossing",    -6.0, -5, "Baseline Rd", "43rd Ave"),
+    ("Arcadia Heights",     5.5,  6, "Camelback Rd", "48th St"),
+    ("Maryvale Junction",   3.0, -6, "Thomas Rd", "51st Ave"),
+    ("Desert Ridge",       11.5,  3, "Cactus Rd", "24th St"),
 ]
 
 
@@ -824,6 +833,8 @@ def generate_growth_scenarios():
         "ev_adoption_pct", "solar_adoption_pct", "battery_adoption_pct",
         "load_growth_pct", "peak_demand_growth_pct",
         "energy_efficiency_savings_pct", "electrification_load_pct",
+        "community_solar_capacity_mw", "ev_depot_count",
+        "microgrid_count", "chp_capacity_mw",
         "description",
     ]
     scenarios = [
@@ -834,11 +845,11 @@ def generate_growth_scenarios():
         ("SCN-005", "Full Electrification", "Building and transportation electrification mandate"),
     ]
     params = {
-        "SCN-001": dict(ev_r=2.5, sol_r=1.8, bat_r=0.8, lg=1.0, lg_r=0.15, pg=1.2, pg_r=0.2, ee_r=0.1, el=2, el_r=0.5),
-        "SCN-002": dict(ev_r=5.0, sol_r=2.0, bat_r=1.2, lg=1.5, lg_r=0.3, pg=2.0, pg_r=0.4, ee_r=0.1, el=3, el_r=0.8),
-        "SCN-003": dict(ev_r=2.0, sol_r=4.5, bat_r=2.5, lg=0.5, lg_r=0.05, pg=0.8, pg_r=0.1, ee_r=0.2, el=2, el_r=0.3),
-        "SCN-004": dict(ev_r=2.5, sol_r=2.0, bat_r=1.0, lg=2.0, lg_r=0.4, pg=3.0, pg_r=0.6, ee_r=0.1, el=2, el_r=0.4),
-        "SCN-005": dict(ev_r=4.0, sol_r=3.0, bat_r=2.0, lg=2.5, lg_r=0.5, pg=3.0, pg_r=0.55, ee_r=0.15, el=5, el_r=2.0),
+        "SCN-001": dict(ev_r=2.5, sol_r=1.8, bat_r=0.8, lg=1.0, lg_r=0.15, pg=1.2, pg_r=0.2, ee_r=0.1, el=2, el_r=0.5, cs=15, cs_r=5, dep=3, dep_r=1, mg=10, mg_r=0, chp=8, chp_r=2),
+        "SCN-002": dict(ev_r=5.0, sol_r=2.0, bat_r=1.2, lg=1.5, lg_r=0.3, pg=2.0, pg_r=0.4, ee_r=0.1, el=3, el_r=0.8, cs=20, cs_r=8, dep=5, dep_r=3, mg=10, mg_r=1, chp=8, chp_r=1),
+        "SCN-003": dict(ev_r=2.0, sol_r=4.5, bat_r=2.5, lg=0.5, lg_r=0.05, pg=0.8, pg_r=0.1, ee_r=0.2, el=2, el_r=0.3, cs=30, cs_r=15, dep=3, dep_r=1, mg=12, mg_r=1, chp=10, chp_r=3),
+        "SCN-004": dict(ev_r=2.5, sol_r=2.0, bat_r=1.0, lg=2.0, lg_r=0.4, pg=3.0, pg_r=0.6, ee_r=0.1, el=2, el_r=0.4, cs=15, cs_r=5, dep=3, dep_r=1, mg=10, mg_r=0, chp=8, chp_r=2),
+        "SCN-005": dict(ev_r=4.0, sol_r=3.0, bat_r=2.0, lg=2.5, lg_r=0.5, pg=3.0, pg_r=0.55, ee_r=0.15, el=5, el_r=2.0, cs=25, cs_r=12, dep=8, dep_r=4, mg=15, mg_r=2, chp=12, chp_r=4),
     }
     rows = []
     for scn_id, scn_name, desc in scenarios:
@@ -854,6 +865,10 @@ def generate_growth_scenarios():
                 round(p["pg"] + yr * p["pg_r"], 2),
                 round(0.5 + yr * p["ee_r"], 2),
                 min(round(p["el"] + yr * p["el_r"], 1), 95),
+                round(p["cs"] + yr * p["cs_r"], 1),
+                p["dep"] + yr * p["dep_r"],
+                p["mg"] + yr * p["mg_r"],
+                round(p["chp"] + yr * p["chp_r"], 1),
                 desc,
             ])
     write_csv("growth_scenarios.csv", headers, rows)
@@ -1259,6 +1274,442 @@ def generate_network_nodes_and_edges(substations, feeders, transformers):
 
 
 # ---------------------------------------------------------------------------
+# 15. Community solar — ground-mount shared facilities at feeder level
+# ---------------------------------------------------------------------------
+
+def generate_community_solar(feeders):
+    print("Generating community solar facilities...")
+    headers = [
+        "community_solar_id", "feeder_id", "substation_id",
+        "latitude", "longitude",
+        "nameplate_dc_mw", "nameplate_ac_mw", "dc_ac_ratio",
+        "annual_degradation_rate",
+        "tilt_degrees", "azimuth_degrees",
+        "subscriber_count", "subscription_type",
+        "interconnection_date", "interconnection_level", "status",
+    ]
+    subscription_types = ["fixed_bill", "percentage_of_output", "capacity_block"]
+    rows = []
+    cs_num = 0
+    for fdr in feeders:
+        if random.random() < 0.35:
+            cs_num += 1
+            fdr_id = fdr[0]
+            sub_id = fdr[1]
+            head_lat, head_lon = float(fdr[4]), float(fdr[5])
+            tail_lat, tail_lon = float(fdr[6]), float(fdr[7])
+            frac = random.uniform(0.5, 0.9)
+            lat, lon = point_along_route(head_lat, head_lon, tail_lat, tail_lon, frac)
+            dc_mw = round(random.uniform(1.0, 5.0), 2)
+            dc_ac = round(random.uniform(1.2, 1.4), 2)
+            ac_mw = round(dc_mw / dc_ac, 2)
+            degradation = round(random.uniform(0.004, 0.006), 4)
+            tilt = round(random.uniform(20, 30), 1)
+            azimuth = round(random.uniform(170, 200), 1)
+            subscribers = random.randint(50, 500)
+            sub_type = random.choice(subscription_types)
+            year = random.randint(2019, 2024)
+            month = random.randint(1, 12)
+            level = random.choice(["Level 2", "Level 3"])
+            status = random.choice(["active", "active", "active", "under_construction"])
+            rows.append([
+                f"CS-{cs_num:04d}", fdr_id, sub_id, lat, lon,
+                dc_mw, ac_mw, dc_ac, degradation,
+                tilt, azimuth, subscribers, sub_type,
+                f"{year}-{month:02d}-01", level, status,
+            ])
+    write_csv("community_solar.csv", headers, rows)
+    return rows
+
+
+# ---------------------------------------------------------------------------
+# 16. EV charging depots — fleet-level DCFC facilities
+# ---------------------------------------------------------------------------
+
+def generate_ev_charging_depots(feeders, transformers):
+    print("Generating EV charging depots...")
+    headers = [
+        "depot_id", "feeder_id", "substation_id", "transformer_id",
+        "latitude", "longitude",
+        "operator_name", "fleet_type",
+        "num_chargers", "charger_power_kw", "total_capacity_mw",
+        "transformer_kva", "transformer_dedicated",
+        "peak_demand_mw", "operating_hours",
+        "install_date", "status",
+    ]
+    operators = [
+        "Valley Metro", "Amazon DSP", "UPS", "FedEx", "USPS",
+        "First Student", "Republic Services", "Frito-Lay", "Sysco",
+    ]
+    fleet_types = ["transit_bus", "delivery_van", "school_bus", "freight"]
+    industrial_subs = {"SUB-018"}
+    rows = []
+    depot_num = 0
+    for fdr in feeders:
+        sub_id = fdr[1]
+        prob = 0.40 if sub_id in industrial_subs else 0.12
+        if random.random() < prob:
+            depot_num += 1
+            fdr_id = fdr[0]
+            fdr_xfmrs = [x for x in transformers if x[1] == fdr_id]
+            if not fdr_xfmrs:
+                continue
+            xfmr = random.choice(fdr_xfmrs)
+            lat, lon = float(xfmr[3]), float(xfmr[4])
+            operator = random.choice(operators)
+            fleet = random.choice(fleet_types)
+            n_chargers = random.randint(10, 50)
+            charger_kw = random.choice([150, 180, 350])
+            total_mw = round(n_chargers * charger_kw / 1000, 2)
+            xfmr_kva = random.choice([500, 750, 1000, 1500, 2000])
+            dedicated = random.choice([True, True, False])
+            peak_mw = round(total_mw * random.uniform(0.5, 0.8), 2)
+            hours = random.choice(["06:00-22:00", "00:00-24:00", "05:00-23:00", "04:00-20:00"])
+            year = random.randint(2021, 2024)
+            month = random.randint(1, 12)
+            status = "active" if random.random() > 0.1 else "planned"
+            rows.append([
+                f"DEPOT-{depot_num:04d}", fdr_id, sub_id, xfmr[0],
+                lat, lon, operator, fleet,
+                n_chargers, charger_kw, total_mw,
+                xfmr_kva, dedicated,
+                peak_mw, hours,
+                f"{year}-{month:02d}-01", status,
+            ])
+    write_csv("ev_charging_depots.csv", headers, rows)
+    return rows
+
+
+# ---------------------------------------------------------------------------
+# 17. Microgrids — coordinated DER aggregates that can island
+# ---------------------------------------------------------------------------
+
+def generate_microgrids(feeders):
+    print("Generating microgrids...")
+    headers = [
+        "microgrid_id", "feeder_id", "substation_id",
+        "latitude", "longitude",
+        "facility_type", "facility_name",
+        "solar_capacity_mw", "battery_power_mw", "battery_energy_mwh",
+        "chp_capacity_mw", "total_generation_mw",
+        "peak_load_mw", "critical_load_mw",
+        "can_island", "island_duration_hours",
+        "interconnection_date", "status",
+    ]
+    facility_configs = [
+        ("hospital_campus", "Banner Medical Center", 1.5, 1.0, 4.0, 2.0),
+        ("hospital_campus", "HonorHealth Campus", 1.2, 0.8, 3.2, 1.5),
+        ("university", "ASU Polytechnic Campus", 3.0, 2.0, 8.0, 1.0),
+        ("university", "GCU North Campus", 2.0, 1.5, 6.0, 0.5),
+        ("military", "Luke AFB Annex", 4.0, 3.0, 12.0, 2.5),
+        ("commercial_campus", "PayPal Campus", 2.5, 2.0, 8.0, 0.0),
+        ("commercial_campus", "State Farm Regional", 1.8, 1.2, 4.8, 0.0),
+        ("water_treatment", "91st Ave WWTP", 2.0, 1.5, 6.0, 3.0),
+        ("water_treatment", "Cave Creek WRP", 0.8, 0.5, 2.0, 1.0),
+        ("commercial_campus", "Chandler Tech Park", 2.2, 1.8, 7.2, 0.0),
+    ]
+    rows = []
+    available_feeders = list(feeders)
+    random.shuffle(available_feeders)
+    for i, (ftype, fname, solar_mw, batt_mw, batt_mwh, chp_mw) in enumerate(facility_configs):
+        if i >= len(available_feeders):
+            break
+        fdr = available_feeders[i]
+        fdr_id = fdr[0]
+        sub_id = fdr[1]
+        head_lat, head_lon = float(fdr[4]), float(fdr[5])
+        tail_lat, tail_lon = float(fdr[6]), float(fdr[7])
+        lat, lon = point_along_route(
+            head_lat, head_lon, tail_lat, tail_lon, random.uniform(0.3, 0.7),
+        )
+        total_gen = round(solar_mw + chp_mw, 2)
+        peak_load = round(total_gen * random.uniform(1.2, 2.0), 2)
+        critical = round(peak_load * random.uniform(0.3, 0.6), 2)
+        can_island = True
+        if critical > 0:
+            island_hrs = round(batt_mwh / critical, 1)
+        else:
+            island_hrs = round(batt_mwh / max(batt_mw, 0.1), 1)
+        year = random.randint(2020, 2024)
+        month = random.randint(1, 12)
+        status = "active" if random.random() > 0.15 else "commissioning"
+        rows.append([
+            f"MG-{i+1:04d}", fdr_id, sub_id, lat, lon,
+            ftype, fname,
+            solar_mw, batt_mw, batt_mwh, chp_mw, total_gen,
+            peak_load, critical, can_island, island_hrs,
+            f"{year}-{month:02d}-01", status,
+        ])
+    write_csv("microgrids.csv", headers, rows)
+    return rows
+
+
+# ---------------------------------------------------------------------------
+# 18. Small CHP — reciprocating engines at commercial/institutional sites
+# ---------------------------------------------------------------------------
+
+def generate_small_chp(customers):
+    print("Generating small CHP installations...")
+    headers = [
+        "chp_id", "customer_id", "transformer_id", "feeder_id", "substation_id",
+        "latitude", "longitude",
+        "facility_type", "nameplate_mw",
+        "heat_rate_btu_per_kwh", "forced_outage_rate", "planned_outage_rate",
+        "min_stable_level_fraction", "startup_time_minutes",
+        "gas_pressure_psig_required", "ramp_rate_mw_per_min",
+        "thermal_output_mmbtu_hr", "thermal_efficiency",
+        "install_date", "status",
+    ]
+    facility_types = [
+        "hospital", "university", "food_processing", "hotel",
+        "data_center_small", "laundry", "brewery",
+    ]
+    eligible = [c for c in customers if c[4] in ("commercial", "industrial")]
+    random.shuffle(eligible)
+    n_chp = random.randint(15, 25)
+    rows = []
+    for i in range(min(n_chp, len(eligible))):
+        cust = eligible[i]
+        cust_id, xfmr_id, fdr_id, sub_id = cust[0], cust[1], cust[2], cust[3]
+        lat, lon = float(cust[7]), float(cust[8])
+        ftype = random.choice(facility_types)
+        nameplate = round(random.uniform(0.5, 5.0), 2)
+        heat_rate = random.randint(8500, 10500)
+        for_rate = round(random.uniform(0.02, 0.06), 3)
+        plan_rate = round(random.uniform(0.03, 0.05), 3)
+        min_stable = round(random.uniform(0.25, 0.40), 2)
+        startup = round(random.uniform(5, 30), 1)
+        gas_psi = random.choice([2, 5, 15, 30, 60])
+        ramp = round(nameplate * random.uniform(0.05, 0.15), 3)
+        thermal = round(nameplate * random.uniform(3.0, 5.0), 2)
+        thermal_eff = round(random.uniform(0.40, 0.55), 3)
+        year = random.randint(2018, 2024)
+        month = random.randint(1, 12)
+        status = "active" if random.random() > 0.05 else "maintenance"
+        rows.append([
+            f"CHP-{i+1:04d}", cust_id, xfmr_id, fdr_id, sub_id,
+            lat, lon, ftype, nameplate,
+            heat_rate, for_rate, plan_rate,
+            min_stable, startup, gas_psi, ramp,
+            thermal, thermal_eff,
+            f"{year}-{month:02d}-01", status,
+        ])
+    write_csv("small_chp.csv", headers, rows)
+    return rows
+
+
+# ---------------------------------------------------------------------------
+# 19. Commercial BESS — customer-sited or utility-sited battery storage
+# ---------------------------------------------------------------------------
+
+def generate_commercial_bess(customers):
+    print("Generating commercial BESS installations...")
+    headers = [
+        "bess_id", "customer_id", "transformer_id", "feeder_id", "substation_id",
+        "latitude", "longitude",
+        "power_mw", "energy_mwh", "chemistry",
+        "charge_efficiency", "discharge_efficiency",
+        "min_soc_fraction", "max_soc_fraction",
+        "augment_threshold", "capex_per_kwh",
+        "application_type", "manufacturer",
+        "install_date", "status",
+    ]
+    chemistries = ["LFP", "NMC"]
+    applications = ["demand_charge_mgmt", "peak_shaving", "backup", "solar_shifting"]
+    manufacturers = ["Tesla", "BYD", "Fluence", "Powin", "EnerSys", "Samsung SDI"]
+    eligible = [c for c in customers if c[4] in ("commercial", "industrial")]
+    random.shuffle(eligible)
+    n_bess = random.randint(30, 50)
+    rows = []
+    for i in range(min(n_bess, len(eligible))):
+        cust = eligible[i]
+        cust_id, xfmr_id, fdr_id, sub_id = cust[0], cust[1], cust[2], cust[3]
+        lat, lon = float(cust[7]), float(cust[8])
+        power_mw = round(random.uniform(0.25, 2.0), 3)
+        duration = random.choice([2, 4])
+        energy_mwh = round(power_mw * duration, 3)
+        chem = random.choice(chemistries)
+        charge_eff = round(random.uniform(0.90, 0.95), 3)
+        discharge_eff = round(random.uniform(0.90, 0.95), 3)
+        min_soc = 0.10
+        max_soc = 0.90
+        augment = 0.80
+        capex = int(round(random.uniform(200, 350), 0))
+        app = random.choice(applications)
+        mfr = random.choice(manufacturers)
+        year = random.randint(2021, 2024)
+        month = random.randint(1, 12)
+        status = "active" if random.random() > 0.05 else "commissioning"
+        rows.append([
+            f"CBESS-{i+1:04d}", cust_id, xfmr_id, fdr_id, sub_id,
+            lat, lon, power_mw, energy_mwh, chem,
+            charge_eff, discharge_eff, min_soc, max_soc,
+            augment, capex, app, mfr,
+            f"{year}-{month:02d}-01", status,
+        ])
+    write_csv("commercial_bess.csv", headers, rows)
+    return rows
+
+
+# ---------------------------------------------------------------------------
+# 20. Interconnection queue — distribution-level applications
+# ---------------------------------------------------------------------------
+
+def generate_interconnection_queue(feeders):
+    print("Generating interconnection queue...")
+    headers = [
+        "application_id", "feeder_id", "substation_id",
+        "applicant_name", "project_type",
+        "requested_capacity_kw", "technology_type",
+        "study_level", "study_status",
+        "application_date", "study_completion_date",
+        "estimated_cost", "system_upgrades_required",
+        "ieee_1547_category", "status",
+    ]
+    project_types = [
+        ("commercial_rooftop_solar", 0.35),
+        ("community_solar", 0.15),
+        ("ev_charging_facility", 0.15),
+        ("residential_solar_storage", 0.15),
+        ("small_chp", 0.10),
+        ("microgrid", 0.05),
+        ("commercial_bess", 0.05),
+    ]
+    tech_map = {
+        "commercial_rooftop_solar": "solar_pv",
+        "community_solar": "solar_pv",
+        "ev_charging_facility": "load_only",
+        "residential_solar_storage": "solar_plus_storage",
+        "small_chp": "natural_gas_recip",
+        "microgrid": "mixed_der",
+        "commercial_bess": "battery_storage",
+    }
+    applicant_prefixes = [
+        "SunPower", "NextEra", "Clearway", "Primergy", "AES",
+        "Tesla", "ChargePoint", "Bloom", "Phoenix Solar Co",
+        "Desert Energy", "Valley Clean", "Cactus Power",
+        "Mesquite Energy", "Sun Valley", "Pioneer Solar",
+    ]
+    study_statuses = ["complete", "in_progress", "not_started", "waived"]
+    app_statuses = ["approved", "in_review", "withdrawn", "pending", "active"]
+    upgrades = [
+        "none", "transformer_upgrade", "reconductoring",
+        "voltage_regulator", "protection_relay_update", "new_service_transformer",
+    ]
+    rows = []
+    n_apps = random.randint(80, 120)
+    for i in range(n_apps):
+        fdr = random.choice(feeders)
+        fdr_id = fdr[0]
+        sub_id = fdr[1]
+        r_val = random.random()
+        cum = 0
+        ptype = "commercial_rooftop_solar"
+        for pt, w in project_types:
+            cum += w
+            if r_val <= cum:
+                ptype = pt
+                break
+        tech = tech_map[ptype]
+        applicant = f"{random.choice(applicant_prefixes)} {random.choice(['LLC', 'Inc', 'Corp', 'LP'])}"
+        if ptype == "commercial_rooftop_solar":
+            cap_kw = round(random.uniform(50, 500), 0)
+        elif ptype == "community_solar":
+            cap_kw = round(random.uniform(1000, 5000), 0)
+        elif ptype == "ev_charging_facility":
+            cap_kw = round(random.uniform(500, 5000), 0)
+        elif ptype == "residential_solar_storage":
+            cap_kw = round(random.uniform(5, 25), 0)
+        elif ptype == "small_chp":
+            cap_kw = round(random.uniform(500, 5000), 0)
+        elif ptype == "microgrid":
+            cap_kw = round(random.uniform(2000, 10000), 0)
+        else:
+            cap_kw = round(random.uniform(250, 2000), 0)
+        if cap_kw < 25:
+            study_level = "Level 1 - Fast Track"
+            study_days = 15
+            ieee_cat = "Category I"
+        elif cap_kw <= 5000:
+            study_level = "Level 2 - Supplemental"
+            study_days = 40
+            ieee_cat = "Category II"
+        else:
+            study_level = "Level 3 - Detailed Study"
+            study_days = random.randint(60, 120)
+            ieee_cat = "Category III"
+        year = random.randint(2022, 2024)
+        month = random.randint(1, 12)
+        day = random.randint(1, 28)
+        app_date = datetime(year, month, day)
+        comp_date = app_date + timedelta(days=study_days + random.randint(-5, 30))
+        cost = round(random.uniform(5000, 500000), 0) if cap_kw > 100 else round(random.uniform(500, 5000), 0)
+        upgrade = random.choice(upgrades)
+        study_st = random.choice(study_statuses)
+        app_st = random.choice(app_statuses)
+        rows.append([
+            f"IQ-{i+1:05d}", fdr_id, sub_id,
+            applicant, ptype,
+            int(cap_kw), tech,
+            study_level, study_st,
+            app_date.strftime("%Y-%m-%d"),
+            comp_date.strftime("%Y-%m-%d"),
+            int(cost), upgrade, ieee_cat, app_st,
+        ])
+    write_csv("interconnection_queue.csv", headers, rows)
+    return rows
+
+
+# ---------------------------------------------------------------------------
+# 21. Hosting capacity — pre-computed per distribution transformer
+# ---------------------------------------------------------------------------
+
+def generate_hosting_capacity(transformers, solar_installations, batteries,
+                              commercial_bess):
+    print("Generating hosting capacity by transformer...")
+    headers = [
+        "transformer_id", "feeder_id",
+        "rated_kva", "existing_der_kw", "allocated_load_kw",
+        "thermal_hosting_capacity_kw", "voltage_hosting_capacity_kw",
+        "limiting_factor", "hosting_capacity_kw",
+    ]
+    # Aggregate existing DER by transformer
+    der_by_xfmr = {}
+    for s in solar_installations:
+        xid = s[2]  # transformer_id
+        der_by_xfmr[xid] = der_by_xfmr.get(xid, 0) + float(s[7])  # capacity_kw
+    for b in batteries:
+        xid = b[2]  # transformer_id
+        der_by_xfmr[xid] = der_by_xfmr.get(xid, 0) + float(b[8])  # power_kw
+    for cb in commercial_bess:
+        xid = cb[2]  # transformer_id
+        der_by_xfmr[xid] = der_by_xfmr.get(xid, 0) + float(cb[7]) * 1000  # MW->kW
+    rows = []
+    for xfmr in transformers:
+        xid = xfmr[0]
+        fdr_id = xfmr[1]
+        kva = float(xfmr[5])
+        existing_der_kw = round(der_by_xfmr.get(xid, 0), 1)
+        allocated_load_kw = round(kva * random.uniform(0.3, 0.8), 1)
+        thermal_hc = round(
+            max(0, kva * 0.85 - existing_der_kw * 0.5 - allocated_load_kw * 0.3)
+            * random.uniform(0.8, 1.2), 1,
+        )
+        voltage_hc = round(
+            max(0, kva * random.uniform(0.4, 0.7) - existing_der_kw * 0.8)
+            * random.uniform(0.7, 1.1), 1,
+        )
+        hc = min(thermal_hc, voltage_hc)
+        limiting = "voltage" if voltage_hc <= thermal_hc else "thermal"
+        rows.append([
+            xid, fdr_id, kva, existing_der_kw, allocated_load_kw,
+            thermal_hc, voltage_hc, limiting, round(hc, 1),
+        ])
+    write_csv("hosting_capacity_by_transformer.csv", headers, rows)
+    return rows
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -1292,7 +1743,7 @@ def main():
 
     generate_load_profiles(feeders)
     generate_customer_interval_data(customers)
-    generate_solar_installations(customers)
+    solar_installations = generate_solar_installations(customers)
     generate_solar_profiles()
     generate_ev_chargers(customers)
     generate_ev_profiles()
@@ -1300,7 +1751,17 @@ def main():
     generate_growth_scenarios()
     generate_outage_history(feeders, weather_rows)
     generate_network_nodes_and_edges(substations, feeders, transformers)
-    generate_battery_installations(customers)
+    batteries = generate_battery_installations(customers)
+
+    # Distribution-level DER datasets
+    generate_community_solar(feeders)
+    generate_ev_charging_depots(feeders, transformers)
+    generate_microgrids(feeders)
+    generate_small_chp(customers)
+    commercial_bess = generate_commercial_bess(customers)
+    generate_interconnection_queue(feeders)
+    generate_hosting_capacity(transformers, solar_installations, batteries,
+                              commercial_bess)
     print()
     print("All demo datasets generated successfully.")
     print(f"Output directory: {OUTPUT_DIR}")

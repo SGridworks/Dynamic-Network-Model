@@ -1,0 +1,84 @@
+application_id,feeder_id,substation_id,applicant_name,project_type,requested_capacity_kw,technology_type,study_level,study_status,application_date,study_completion_date,estimated_cost,system_upgrades_required,ieee_1547_category,status
+IQ-00001,FDR-0093,SUB-020,Tesla Corp,commercial_rooftop_solar,72,solar_pv,Level 2 - Supplemental,complete,2024-01-14,2024-03-13,878,transformer_upgrade,Category II,pending
+IQ-00002,FDR-0092,SUB-020,Phoenix Solar Co LP,ev_charging_facility,4326,load_only,Level 2 - Supplemental,not_started,2024-06-15,2024-08-19,115361,none,Category II,approved
+IQ-00003,FDR-0076,SUB-017,Cactus Power Corp,commercial_rooftop_solar,75,solar_pv,Level 2 - Supplemental,complete,2024-10-13,2024-11-23,4637,voltage_regulator,Category II,withdrawn
+IQ-00004,FDR-0035,SUB-009,Pioneer Solar LP,community_solar,4779,solar_pv,Level 2 - Supplemental,waived,2024-12-18,2025-02-26,99290,reconductoring,Category II,active
+IQ-00005,FDR-0006,SUB-002,Phoenix Solar Co LP,community_solar,4977,solar_pv,Level 2 - Supplemental,in_progress,2023-09-12,2023-10-20,192294,protection_relay_update,Category II,active
+IQ-00006,FDR-0049,SUB-012,NextEra LP,commercial_rooftop_solar,336,solar_pv,Level 2 - Supplemental,in_progress,2023-04-14,2023-05-31,447060,transformer_upgrade,Category II,approved
+IQ-00007,FDR-0102,SUB-023,Cactus Power Corp,commercial_rooftop_solar,450,solar_pv,Level 2 - Supplemental,not_started,2022-01-05,2022-02-26,284958,protection_relay_update,Category II,pending
+IQ-00008,FDR-0011,SUB-004,AES Corp,ev_charging_facility,1489,load_only,Level 2 - Supplemental,waived,2024-12-26,2025-02-05,211406,voltage_regulator,Category II,in_review
+IQ-00009,FDR-0099,SUB-022,Mesquite Energy LLC,community_solar,3598,solar_pv,Level 2 - Supplemental,complete,2023-11-25,2024-01-28,370266,voltage_regulator,Category II,active
+IQ-00010,FDR-0071,SUB-016,Tesla LLC,residential_solar_storage,10,solar_plus_storage,Level 1 - Fast Track,not_started,2022-02-05,2022-02-23,3061,protection_relay_update,Category I,approved
+IQ-00011,FDR-0016,SUB-004,Phoenix Solar Co LP,commercial_rooftop_solar,375,solar_pv,Level 2 - Supplemental,waived,2022-09-01,2022-10-18,468294,new_service_transformer,Category II,pending
+IQ-00012,FDR-0083,SUB-018,AES Inc,community_solar,3421,solar_pv,Level 2 - Supplemental,in_progress,2022-05-11,2022-07-04,498411,none,Category II,approved
+IQ-00013,FDR-0103,SUB-023,NextEra LP,residential_solar_storage,6,solar_plus_storage,Level 1 - Fast Track,not_started,2023-02-02,2023-02-23,2691,transformer_upgrade,Category I,pending
+IQ-00014,FDR-0041,SUB-010,AES LLC,commercial_rooftop_solar,280,solar_pv,Level 2 - Supplemental,not_started,2023-06-06,2023-07-12,273083,transformer_upgrade,Category II,withdrawn
+IQ-00015,FDR-0009,SUB-003,Clearway LP,residential_solar_storage,16,solar_plus_storage,Level 1 - Fast Track,in_progress,2022-02-24,2022-03-14,1551,transformer_upgrade,Category I,withdrawn
+IQ-00016,FDR-0010,SUB-003,Primergy Inc,ev_charging_facility,1715,load_only,Level 2 - Supplemental,not_started,2023-01-17,2023-03-06,270184,new_service_transformer,Category II,withdrawn
+IQ-00017,FDR-0091,SUB-020,ChargePoint LLC,community_solar,3502,solar_pv,Level 2 - Supplemental,complete,2022-06-12,2022-07-20,52559,reconductoring,Category II,active
+IQ-00018,FDR-0052,SUB-012,ChargePoint LP,ev_charging_facility,1891,load_only,Level 2 - Supplemental,not_started,2022-01-12,2022-02-27,47683,new_service_transformer,Category II,in_review
+IQ-00019,FDR-0064,SUB-014,NextEra LP,community_solar,4839,solar_pv,Level 2 - Supplemental,not_started,2022-11-24,2023-01-16,283285,transformer_upgrade,Category II,withdrawn
+IQ-00020,FDR-0041,SUB-010,Mesquite Energy LLC,commercial_rooftop_solar,459,solar_pv,Level 2 - Supplemental,not_started,2023-08-20,2023-09-30,237834,reconductoring,Category II,in_review
+IQ-00021,FDR-0022,SUB-006,Tesla LP,residential_solar_storage,20,solar_plus_storage,Level 1 - Fast Track,in_progress,2023-03-04,2023-03-21,3463,none,Category I,active
+IQ-00022,FDR-0103,SUB-023,AES Inc,ev_charging_facility,3710,load_only,Level 2 - Supplemental,not_started,2023-12-03,2024-01-20,103090,none,Category II,pending
+IQ-00023,FDR-0099,SUB-022,Bloom LP,residential_solar_storage,14,solar_plus_storage,Level 1 - Fast Track,in_progress,2024-04-03,2024-05-01,4448,none,Category I,withdrawn
+IQ-00024,FDR-0062,SUB-014,Bloom LLC,ev_charging_facility,1824,load_only,Level 2 - Supplemental,waived,2024-05-04,2024-07-06,329696,protection_relay_update,Category II,approved
+IQ-00025,FDR-0030,SUB-008,Tesla Inc,residential_solar_storage,14,solar_plus_storage,Level 1 - Fast Track,in_progress,2024-02-04,2024-03-12,3061,new_service_transformer,Category I,in_review
+IQ-00026,FDR-0010,SUB-003,Mesquite Energy Corp,commercial_bess,783,battery_storage,Level 2 - Supplemental,waived,2022-04-24,2022-06-12,333279,transformer_upgrade,Category II,approved
+IQ-00027,FDR-0097,SUB-022,Primergy Inc,small_chp,4046,natural_gas_recip,Level 2 - Supplemental,complete,2024-03-07,2024-04-25,297956,protection_relay_update,Category II,active
+IQ-00028,FDR-0101,SUB-023,Bloom Inc,residential_solar_storage,21,solar_plus_storage,Level 1 - Fast Track,complete,2022-11-11,2022-12-12,3231,transformer_upgrade,Category I,in_review
+IQ-00029,FDR-0039,SUB-010,Valley Clean Inc,commercial_rooftop_solar,483,solar_pv,Level 2 - Supplemental,waived,2023-12-21,2024-02-29,420742,reconductoring,Category II,in_review
+IQ-00030,FDR-0087,SUB-019,SunPower LP,commercial_rooftop_solar,184,solar_pv,Level 2 - Supplemental,complete,2022-08-13,2022-10-22,423157,reconductoring,Category II,withdrawn
+IQ-00031,FDR-0026,SUB-007,Valley Clean Corp,commercial_rooftop_solar,383,solar_pv,Level 2 - Supplemental,complete,2022-11-21,2023-01-05,24180,voltage_regulator,Category II,active
+IQ-00032,FDR-0084,SUB-018,Valley Clean Inc,commercial_rooftop_solar,147,solar_pv,Level 2 - Supplemental,waived,2024-05-17,2024-07-05,473391,transformer_upgrade,Category II,in_review
+IQ-00033,FDR-0042,SUB-010,Pioneer Solar Inc,small_chp,3659,natural_gas_recip,Level 2 - Supplemental,in_progress,2022-02-26,2022-04-10,318440,none,Category II,withdrawn
+IQ-00034,FDR-0053,SUB-012,Phoenix Solar Co LP,community_solar,4127,solar_pv,Level 2 - Supplemental,in_progress,2023-09-15,2023-11-08,273188,transformer_upgrade,Category II,withdrawn
+IQ-00035,FDR-0007,SUB-002,Pioneer Solar Corp,residential_solar_storage,24,solar_plus_storage,Level 1 - Fast Track,complete,2024-11-17,2024-12-20,2449,none,Category I,approved
+IQ-00036,FDR-0056,SUB-013,NextEra Inc,residential_solar_storage,7,solar_plus_storage,Level 1 - Fast Track,not_started,2023-05-05,2023-05-17,4724,protection_relay_update,Category I,withdrawn
+IQ-00037,FDR-0067,SUB-015,SunPower Inc,ev_charging_facility,4356,load_only,Level 2 - Supplemental,in_progress,2023-09-19,2023-10-24,334791,reconductoring,Category II,active
+IQ-00038,FDR-0040,SUB-010,SunPower LLC,ev_charging_facility,2020,load_only,Level 2 - Supplemental,complete,2023-02-08,2023-03-24,443638,reconductoring,Category II,active
+IQ-00039,FDR-0030,SUB-008,Primergy Inc,small_chp,1747,natural_gas_recip,Level 2 - Supplemental,waived,2024-04-05,2024-06-11,203162,transformer_upgrade,Category II,approved
+IQ-00040,FDR-0046,SUB-011,AES LP,residential_solar_storage,10,solar_plus_storage,Level 1 - Fast Track,not_started,2024-06-12,2024-07-21,2521,transformer_upgrade,Category I,in_review
+IQ-00041,FDR-0098,SUB-022,Primergy LLC,community_solar,2208,solar_pv,Level 2 - Supplemental,complete,2023-09-14,2023-11-20,243850,transformer_upgrade,Category II,in_review
+IQ-00042,FDR-0004,SUB-002,Clearway Corp,small_chp,4750,natural_gas_recip,Level 2 - Supplemental,waived,2022-06-27,2022-08-28,200410,transformer_upgrade,Category II,in_review
+IQ-00043,FDR-0005,SUB-002,Sun Valley Corp,community_solar,3259,solar_pv,Level 2 - Supplemental,waived,2024-11-03,2025-01-05,141546,none,Category II,active
+IQ-00044,FDR-0053,SUB-012,Phoenix Solar Co LP,commercial_rooftop_solar,449,solar_pv,Level 2 - Supplemental,not_started,2023-05-18,2023-07-21,215380,reconductoring,Category II,withdrawn
+IQ-00045,FDR-0048,SUB-011,Valley Clean Inc,commercial_rooftop_solar,174,solar_pv,Level 2 - Supplemental,waived,2023-02-26,2023-04-08,109371,protection_relay_update,Category II,active
+IQ-00046,FDR-0063,SUB-014,Clearway Corp,ev_charging_facility,2534,load_only,Level 2 - Supplemental,not_started,2023-11-22,2024-01-06,44978,new_service_transformer,Category II,pending
+IQ-00047,FDR-0065,SUB-014,SunPower LLC,commercial_bess,1357,battery_storage,Level 2 - Supplemental,waived,2024-04-28,2024-06-23,278733,none,Category II,withdrawn
+IQ-00048,FDR-0008,SUB-003,NextEra Corp,commercial_rooftop_solar,181,solar_pv,Level 2 - Supplemental,complete,2022-05-24,2022-08-01,471465,none,Category II,in_review
+IQ-00049,FDR-0061,SUB-014,Tesla Inc,community_solar,2264,solar_pv,Level 2 - Supplemental,complete,2024-12-03,2025-01-23,413265,voltage_regulator,Category II,pending
+IQ-00050,FDR-0086,SUB-019,Desert Energy Corp,microgrid,2174,mixed_der,Level 2 - Supplemental,in_progress,2023-04-25,2023-07-01,380775,transformer_upgrade,Category II,active
+IQ-00051,FDR-0029,SUB-008,Pioneer Solar Inc,small_chp,4604,natural_gas_recip,Level 2 - Supplemental,not_started,2024-09-04,2024-11-04,257325,new_service_transformer,Category II,active
+IQ-00052,FDR-0002,SUB-001,Valley Clean LP,commercial_rooftop_solar,314,solar_pv,Level 2 - Supplemental,waived,2022-10-15,2022-12-03,496990,new_service_transformer,Category II,active
+IQ-00053,FDR-0055,SUB-013,NextEra Corp,commercial_rooftop_solar,87,solar_pv,Level 2 - Supplemental,not_started,2022-12-15,2023-02-21,4014,none,Category II,approved
+IQ-00054,FDR-0083,SUB-018,ChargePoint Inc,community_solar,1340,solar_pv,Level 2 - Supplemental,waived,2024-06-12,2024-07-23,319025,transformer_upgrade,Category II,in_review
+IQ-00055,FDR-0029,SUB-008,Tesla LLC,commercial_bess,1910,battery_storage,Level 2 - Supplemental,in_progress,2022-03-09,2022-05-10,410370,new_service_transformer,Category II,in_review
+IQ-00056,FDR-0084,SUB-018,Cactus Power LP,community_solar,3208,solar_pv,Level 2 - Supplemental,complete,2024-04-01,2024-06-06,308139,voltage_regulator,Category II,approved
+IQ-00057,FDR-0032,SUB-008,SunPower LLC,commercial_rooftop_solar,424,solar_pv,Level 2 - Supplemental,not_started,2022-02-27,2022-05-03,322916,new_service_transformer,Category II,in_review
+IQ-00058,FDR-0062,SUB-014,Cactus Power Corp,small_chp,1208,natural_gas_recip,Level 2 - Supplemental,waived,2022-08-15,2022-09-23,272160,transformer_upgrade,Category II,in_review
+IQ-00059,FDR-0034,SUB-009,Pioneer Solar Inc,commercial_rooftop_solar,430,solar_pv,Level 2 - Supplemental,complete,2023-01-27,2023-03-23,41793,transformer_upgrade,Category II,in_review
+IQ-00060,FDR-0071,SUB-016,Mesquite Energy Corp,commercial_rooftop_solar,485,solar_pv,Level 2 - Supplemental,not_started,2023-12-15,2024-02-18,83018,voltage_regulator,Category II,active
+IQ-00061,FDR-0048,SUB-011,Sun Valley LLC,small_chp,3697,natural_gas_recip,Level 2 - Supplemental,waived,2022-02-19,2022-04-28,103681,new_service_transformer,Category II,in_review
+IQ-00062,FDR-0093,SUB-020,Phoenix Solar Co LLC,commercial_rooftop_solar,200,solar_pv,Level 2 - Supplemental,in_progress,2022-01-27,2022-03-18,365934,transformer_upgrade,Category II,approved
+IQ-00063,FDR-0041,SUB-010,AES LP,commercial_rooftop_solar,284,solar_pv,Level 2 - Supplemental,complete,2024-07-15,2024-09-19,29974,new_service_transformer,Category II,pending
+IQ-00064,FDR-0064,SUB-014,ChargePoint LLC,commercial_rooftop_solar,94,solar_pv,Level 2 - Supplemental,waived,2023-05-09,2023-06-29,1759,transformer_upgrade,Category II,in_review
+IQ-00065,FDR-0005,SUB-002,Desert Energy LP,community_solar,4856,solar_pv,Level 2 - Supplemental,waived,2023-03-19,2023-05-04,21796,reconductoring,Category II,withdrawn
+IQ-00066,FDR-0095,SUB-021,NextEra Inc,ev_charging_facility,4737,load_only,Level 2 - Supplemental,not_started,2022-12-20,2023-01-29,329835,transformer_upgrade,Category II,active
+IQ-00067,FDR-0024,SUB-006,Mesquite Energy Corp,residential_solar_storage,11,solar_plus_storage,Level 1 - Fast Track,complete,2022-01-19,2022-02-22,658,reconductoring,Category I,withdrawn
+IQ-00068,FDR-0038,SUB-010,NextEra Corp,commercial_rooftop_solar,286,solar_pv,Level 2 - Supplemental,in_progress,2022-11-05,2022-12-19,8398,voltage_regulator,Category II,approved
+IQ-00069,FDR-0027,SUB-007,Valley Clean LP,ev_charging_facility,2391,load_only,Level 2 - Supplemental,not_started,2022-01-11,2022-03-11,276952,none,Category II,approved
+IQ-00070,FDR-0083,SUB-018,SunPower LLC,ev_charging_facility,1523,load_only,Level 2 - Supplemental,not_started,2022-04-28,2022-06-21,309778,new_service_transformer,Category II,active
+IQ-00071,FDR-0033,SUB-008,Primergy Corp,ev_charging_facility,3789,load_only,Level 2 - Supplemental,not_started,2022-06-28,2022-08-09,337033,new_service_transformer,Category II,in_review
+IQ-00072,FDR-0009,SUB-003,Sun Valley LLC,ev_charging_facility,756,load_only,Level 2 - Supplemental,in_progress,2024-12-22,2025-02-16,481558,transformer_upgrade,Category II,approved
+IQ-00073,FDR-0091,SUB-020,Primergy Inc,commercial_rooftop_solar,431,solar_pv,Level 2 - Supplemental,complete,2024-12-17,2025-02-14,372598,transformer_upgrade,Category II,pending
+IQ-00074,FDR-0087,SUB-019,SunPower LLC,commercial_rooftop_solar,463,solar_pv,Level 2 - Supplemental,in_progress,2024-01-09,2024-02-18,68075,new_service_transformer,Category II,pending
+IQ-00075,FDR-0102,SUB-023,Cactus Power Inc,ev_charging_facility,2410,load_only,Level 2 - Supplemental,not_started,2023-02-11,2023-03-25,239601,protection_relay_update,Category II,active
+IQ-00076,FDR-0037,SUB-010,Tesla LP,microgrid,5521,mixed_der,Level 3 - Detailed Study,in_progress,2023-04-24,2023-09-15,90308,voltage_regulator,Category III,approved
+IQ-00077,FDR-0031,SUB-008,Pioneer Solar Corp,commercial_rooftop_solar,72,solar_pv,Level 2 - Supplemental,not_started,2024-07-04,2024-08-27,2122,voltage_regulator,Category II,in_review
+IQ-00078,FDR-0086,SUB-019,ChargePoint LLC,commercial_rooftop_solar,342,solar_pv,Level 2 - Supplemental,not_started,2022-07-27,2022-09-19,274855,protection_relay_update,Category II,active
+IQ-00079,FDR-0087,SUB-019,Mesquite Energy LP,residential_solar_storage,21,solar_plus_storage,Level 1 - Fast Track,not_started,2024-12-22,2025-01-16,4009,reconductoring,Category I,in_review
+IQ-00080,FDR-0092,SUB-020,Tesla Corp,commercial_rooftop_solar,349,solar_pv,Level 2 - Supplemental,complete,2024-02-02,2024-03-14,439673,reconductoring,Category II,approved
+IQ-00081,FDR-0102,SUB-023,Bloom LLC,commercial_rooftop_solar,79,solar_pv,Level 2 - Supplemental,not_started,2023-06-13,2023-07-27,2183,transformer_upgrade,Category II,withdrawn
+IQ-00082,FDR-0104,SUB-023,Bloom Inc,community_solar,2145,solar_pv,Level 2 - Supplemental,waived,2024-10-14,2024-12-22,402628,none,Category II,in_review
+IQ-00083,FDR-0060,SUB-014,Primergy Inc,small_chp,2395,natural_gas_recip,Level 2 - Supplemental,not_started,2023-04-16,2023-06-14,305968,reconductoring,Category II,active
