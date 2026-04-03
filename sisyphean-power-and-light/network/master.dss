@@ -1,22 +1,25 @@
 ! Sisyphean Power & Light Distribution System Model
 ! Generated from Dynamic Network Model dataset
-! Date: 2026-02-12
 
 Clear
 
-! Define the circuit
-New Circuit.SP&L bus1=sourcebus basekV=69 pu=1.00 phases=3 MVAsc3=2000 MVAsc1=2100
+! Circuit source at substation bus
+New Circuit.SPL bus1=bus_SUB-001 basekV=69 pu=1.00 phases=3 MVAsc3=2000 MVAsc1=2100
 
-! Load auxiliary model files
+! Load network model files
 Redirect lines.dss
 Redirect transformers.dss
 Redirect loads.dss
 Redirect capacitors.dss
+
+! Establish voltage bases (must precede coordinate assignment)
+Set voltagebases=[69, 12.47, 0.24]
+Calcvoltagebases
+
+! Bus coordinates (requires buses to exist)
 Redirect coordinates.dss
 
-! Set solution parameters
-Set voltagebases=[69, 12.47, 0.48]
-Calcvoltagebases
+! Solution parameters
 Set tolerance=0.0001
 Set maxiterations=100
 
