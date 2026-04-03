@@ -1,0 +1,18 @@
+{
+  "circuit_name": "spl",
+  "num_buses": 1492,
+  "num_elements": 2321,
+  "num_nodes": 2251,
+  "converged": true,
+  "iterations": 2,
+  "total_power_kw": 13990.51,
+  "total_power_kvar": 5742.64,
+  "total_loss_kw": 478.79,
+  "total_loss_kvar": 3448.15,
+  "loss_pct": 3.42,
+  "v_min": 0.8908,
+  "v_max": 1.0356,
+  "v_mean": 0.9469,
+  "buses_under_095": 845,
+  "buses_over_105": 0
+}

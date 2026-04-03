@@ -36,6 +36,7 @@ Usage:
 """
 
 import os
+from pathlib import Path
 from typing import Dict, Optional
 
 try:
@@ -80,6 +81,27 @@ def _feeder_to_substation(feeder_id: str) -> str:
         return f"SUB-{sub_num:03d}"
     except (IndexError, ValueError):
         return "SUB-001"
+
+
+def _load_bus_voltages() -> "float | None":
+    """Return mean bus voltage from power flow results, or None if unavailable."""
+    try:
+        vpath = (
+            Path(__file__).resolve().parent.parent
+            / "sisyphean-power-and-light"
+            / "network"
+            / "results"
+            / "bus_voltages.parquet"
+        )
+        if not vpath.exists():
+            return None
+        vdf = pd.read_parquet(vpath, columns=["voltage_pu"])
+        mean_v = float(vdf["voltage_pu"].mean())
+        if 0.9 <= mean_v <= 1.1:
+            return mean_v
+        return None
+    except Exception:
+        return None
 
 
 # ---------------------------------------------------------------------------
@@ -206,13 +228,14 @@ def load_load_profiles() -> pd.DataFrame:
         # Derive additional columns
         df["load_mvar"] = df["load_mw"] * 0.3
 
+        base_v = _load_bus_voltages() or 1.0
         if np is not None:
             rng = np.random.RandomState(42)
-            df["voltage_pu"] = 1.0 + rng.normal(0, 0.01, size=len(df))
+            df["voltage_pu"] = base_v + rng.normal(0, 0.01, size=len(df))
             pf_noise = rng.normal(0, 0.02, size=len(df))
             df["power_factor"] = (0.95 + pf_noise).clip(0.85, 1.0)
         else:
-            df["voltage_pu"] = 1.0
+            df["voltage_pu"] = base_v
             df["power_factor"] = 0.95
 
         return df

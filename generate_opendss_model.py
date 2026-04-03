@@ -1,228 +1,263 @@
 #!/usr/bin/env python3
-"""Generate OpenDSS network model from network_nodes.csv and network_edges.csv"""
+"""Generate OpenDSS model from SP&L network data."""
 
-import os
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-print("Generating OpenDSS network model...")
+# ---------------------------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------------------------
+MAX_FEEDERS = 12
+MAX_LINES = 1000
+DATA_DIR = Path("demo_data")
+ASSET_DIR = Path("sisyphean-power-and-light/assets")
+OUT_DIR = Path("sisyphean-power-and-light/network")
 
-# Read network topology
-nodes = pd.read_csv("demo_data/network_nodes.csv")
-edges = pd.read_csv("demo_data/network_edges.csv")
-transformers_df = pd.read_csv("sisyphean-power-and-light/assets/transformers.csv")
-
-print(f"Nodes: {len(nodes)}")
-print(f"Edges: {len(edges)}")
-print(f"Transformers: {len(transformers_df)}")
-
-os.makedirs("sisyphean-power-and-light/network", exist_ok=True)
-
-# ============================================================================
-# LINES.DSS - Distribution lines (generated first to establish bus namespace)
-# ============================================================================
-
-feeders = edges["feeder_id"].unique()[:12]
-edges_subset = edges[edges["feeder_id"].isin(feeders)].head(1000)
-
-line_codes = {
-    "477 ACSR": {"r1": 0.306, "x1": 0.627, "r0": 0.592, "x0": 1.461, "amps": 730},
-    "336.4 ACSR": {"r1": 0.306, "x1": 0.626, "r0": 0.592, "x0": 1.463, "amps": 530},
-    "#2 ACSR": {"r1": 1.69, "x1": 0.726, "r0": 1.978, "x0": 1.766, "amps": 180},
+LINE_CODES: dict[str, dict[str, float]] = {
+    "795 ACSR":   {"r1": 0.1198, "x1": 0.355,  "normamps": 700},
+    "477 ACSR":   {"r1": 0.306,  "x1": 0.627,  "normamps": 730},
+    "336 ACSR":   {"r1": 0.306,  "x1": 0.626,  "normamps": 530},
+    "#2 ACSR":    {"r1": 1.69,   "x1": 0.726,  "normamps": 180},
+    "#4 CU":      {"r1": 2.55,   "x1": 0.777,  "normamps": 135},
+    "1/0 AL":     {"r1": 1.12,   "x1": 0.714,  "normamps": 200},
+    "4/0 AL":     {"r1": 0.447,  "x1": 0.647,  "normamps": 340},
+    "397.5 AAC":  {"r1": 0.259,  "x1": 0.612,  "normamps": 590},
 }
+DEFAULT_CODE = "477_ACSR"
 
-lines_content = "! Distribution Lines\n\n"
-lines_content += "New LineCode.Default nphases=3 r1=0.306 x1=0.627 r0=0.592 x0=1.461 normamps=730\n\n"
+rng = np.random.default_rng(seed=42)
 
-for conductor_type, params in line_codes.items():
-    lines_content += f"New LineCode.{conductor_type.replace(' ', '_')} nphases=3 "
-    lines_content += f"r1={params['r1']} x1={params['x1']} r0={params['r0']} x0={params['x0']} "
-    lines_content += f"normamps={params['amps']}\n"
 
-lines_content += "\n! Line Segments\n\n"
+def sanitize_code(name: str) -> str:
+    return name.replace(" ", "_").replace(".", "p").replace("/", "_")
 
-# Track all buses created by lines and identify XFMR endpoint buses
-line_buses = set()
-xfmr_endpoint_buses = []
 
-for _, row in edges_subset.iterrows():
+# ---------------------------------------------------------------------------
+# Load data
+# ---------------------------------------------------------------------------
+print("Loading SP&L network data...")
+nodes = pd.read_csv(DATA_DIR / "network_nodes.csv")
+edges = pd.read_csv(DATA_DIR / "network_edges.csv")
+transformers = pd.read_csv(ASSET_DIR / "transformers.csv")
+solar = pd.read_csv(DATA_DIR / "solar_installations.csv")
+battery = pd.read_csv(DATA_DIR / "battery_installations.csv")
+
+feeders = edges["feeder_id"].unique()[:MAX_FEEDERS]
+edges_sub = edges[edges["feeder_id"].isin(feeders)].head(MAX_LINES)
+
+print(f"  Feeders: {len(feeders)}, Lines: {len(edges_sub)}, "
+      f"Transformers: {len(transformers)}, Solar: {len(solar)}, Battery: {len(battery)}")
+
+OUT_DIR.mkdir(parents=True, exist_ok=True)
+
+# ---------------------------------------------------------------------------
+# 1. lines.dss -- line codes + line segments
+# ---------------------------------------------------------------------------
+line_buses: set[str] = set()
+xfmr_bus_ids: set[str] = set()
+
+lines: list[str] = ["! SP&L Distribution Lines", ""]
+
+for raw_name, params in LINE_CODES.items():
+    code = sanitize_code(raw_name)
+    lines.append(
+        f"New LineCode.{code} nphases=3 r1={params['r1']} x1={params['x1']} "
+        f"normamps={int(params['normamps'])}"
+    )
+lines.append("")
+
+for _, row in edges_sub.iterrows():
     from_bus = f"bus_{row['from_node_id']}"
     to_bus = f"bus_{row['to_node_id']}"
-    line_buses.add(from_bus)
-    line_buses.add(to_bus)
+    line_buses.update((from_bus, to_bus))
 
-    if to_bus.startswith("bus_XFMR"):
-        xfmr_endpoint_buses.append(to_bus)
+    to_id = str(row["to_node_id"])
+    if to_id.startswith("XFMR"):
+        xfmr_bus_ids.add(to_id)
 
-    conductor = row.get("conductor_type", "477 ACSR")
-    linecode = conductor.replace(" ", "_") if conductor in line_codes else "Default"
-    length_ft = row.get("length_ft", 100)
-    length_mi = length_ft / 5280
-    line_name = f"line_{row['edge_id']}"
+    raw_cond = str(row["conductor_type"])
+    code = sanitize_code(raw_cond) if raw_cond in LINE_CODES else DEFAULT_CODE
+    length_mi = row["length_ft"] / 5280 if pd.notna(row["length_ft"]) else 0.01
+    nphases = int(row["num_phases"]) if pd.notna(row.get("num_phases")) else 3
 
-    lines_content += f"New Line.{line_name} bus1={from_bus} bus2={to_bus} "
-    lines_content += f"linecode={linecode} length={length_mi:.4f} units=mi phases=3\n"
+    lines.append(
+        f"New Line.line_{row['edge_id']} bus1={from_bus} bus2={to_bus} "
+        f"linecode={code} length={length_mi:.4f} units=mi phases={nphases}"
+    )
 
-with open("sisyphean-power-and-light/network/lines.dss", "w") as f:
-    f.write(lines_content)
+(OUT_DIR / "lines.dss").write_text("\n".join(lines) + "\n")
+print(f"  lines.dss: {len(edges_sub)} segments, {len(xfmr_bus_ids)} XFMR endpoints")
 
-xfmr_endpoint_buses = sorted(set(xfmr_endpoint_buses))
-print(f"Created lines.dss ({len(edges_subset)} segments, {len(xfmr_endpoint_buses)} XFMR endpoints)")
+# ---------------------------------------------------------------------------
+# 2. transformers.dss -- match transformer_id to XFMR bus endpoints
+# ---------------------------------------------------------------------------
+matched_xfmrs = transformers[transformers["transformer_id"].isin(xfmr_bus_ids)]
+xfmr_ids_in_model: list[str] = []
+xfmr_kva: dict[str, float] = {}
+xfmr_lines: list[str] = ["! SP&L Distribution Transformers", ""]
 
-# ============================================================================
-# TRANSFORMERS.DSS - Distribution transformers (mapped to line XFMR buses)
-# ============================================================================
+for _, row in matched_xfmrs.iterrows():
+    xid = row["transformer_id"]
+    kva = row["kva_rating"]
+    xfmr_ids_in_model.append(xid)
+    xfmr_kva[xid] = kva
+    xfmr_lines.append(
+        f"New Transformer.{xid} phases=1 windings=2 "
+        f"buses=[bus_{xid} bus_{xid}_sec] conns=[wye wye] "
+        f"kvs=[12.47 0.24] kvas=[{kva} {kva}] XHL=2.5"
+    )
 
-xfmr_subset = transformers_df.sample(
-    n=min(len(transformers_df), len(xfmr_endpoint_buses)),
-    random_state=42,
+(OUT_DIR / "transformers.dss").write_text("\n".join(xfmr_lines) + "\n")
+print(f"  transformers.dss: {len(xfmr_ids_in_model)} transformers")
+
+# ---------------------------------------------------------------------------
+# 3. loads.dss -- customer loads on transformer secondaries
+# ---------------------------------------------------------------------------
+load_lines: list[str] = ["! Customer Loads", ""]
+
+for xid in xfmr_ids_in_model:
+    kva = xfmr_kva[xid]
+    load_kw = kva * rng.uniform(0.5, 0.8)
+    load_lines.append(
+        f"New Load.load_{xid} bus1=bus_{xid}_sec phases=1 "
+        f"kv=0.24 kw={load_kw:.2f} pf=0.95"
+    )
+
+(OUT_DIR / "loads.dss").write_text("\n".join(load_lines) + "\n")
+print(f"  loads.dss: {len(xfmr_ids_in_model)} loads")
+
+# ---------------------------------------------------------------------------
+# 4. pvsystems.dss -- solar aggregated by transformer
+# ---------------------------------------------------------------------------
+solar_active = solar[
+    (solar["status"] == "active")
+    & (solar["transformer_id"].isin(xfmr_bus_ids))
+]
+solar_agg = solar_active.groupby("transformer_id")["capacity_kw"].sum()
+
+pv_lines: list[str] = ["! PV Systems (aggregated by transformer)", ""]
+for xid, total_kw in solar_agg.items():
+    pv_lines.append(
+        f"New PVSystem.pv_{xid} bus1=bus_{xid}_sec phases=1 "
+        f"kVA={total_kw:.1f} Pmpp={total_kw:.1f} irradiance=1 pf=1"
+    )
+
+(OUT_DIR / "pvsystems.dss").write_text("\n".join(pv_lines) + "\n")
+print(f"  pvsystems.dss: {len(solar_agg)} PV systems")
+
+# ---------------------------------------------------------------------------
+# 5. storage.dss -- battery aggregated by transformer
+# ---------------------------------------------------------------------------
+batt_active = battery[
+    (battery["status"] == "active")
+    & (battery["transformer_id"].isin(xfmr_bus_ids))
+]
+batt_agg = batt_active.groupby("transformer_id").agg(
+    total_kwh=("capacity_kwh", "sum"),
+    total_kw=("power_kw", "sum"),
 )
 
-xfmr_content = "! Distribution Transformers\n\n"
-xfmr_bus_map = {}
+stor_lines: list[str] = ["! Battery Storage (aggregated by transformer)", ""]
+for xid, row in batt_agg.iterrows():
+    stor_lines.append(
+        f"New Storage.batt_{xid} bus1=bus_{xid}_sec phases=1 "
+        f"kWRated={row['total_kw']:.1f} kWhRated={row['total_kwh']:.1f} %stored=50"
+    )
 
-for i, (_, row) in enumerate(xfmr_subset.iterrows()):
-    xfmr_id = row["transformer_id"]
-    kva = row["kva_rating"]
-    bus = xfmr_endpoint_buses[i % len(xfmr_endpoint_buses)]
-    xfmr_bus_map[xfmr_id] = bus
+(OUT_DIR / "storage.dss").write_text("\n".join(stor_lines) + "\n")
+print(f"  storage.dss: {len(batt_agg)} storage systems")
 
-    xfmr_content += f"New Transformer.{xfmr_id} phases=1 windings=2 "
-    xfmr_content += f"buses=[{bus} {bus}_sec] conns=[wye wye] "
-    xfmr_content += f"kvs=[12.47 0.24] kvas=[{kva} {kva}] XHL=2.5\n"
-
-with open("sisyphean-power-and-light/network/transformers.dss", "w") as f:
-    f.write(xfmr_content)
-
-print(f"Created transformers.dss ({len(xfmr_subset)} transformers)")
-
-# ============================================================================
-# LOADS.DSS - Customer loads (on transformer secondary buses)
-# ============================================================================
-
-loads_content = "! Customer Loads\n\n"
-
-for _, row in xfmr_subset.iterrows():
-    xfmr_id = row["transformer_id"]
-    kva = row["kva_rating"]
-    load_kw = kva * np.random.uniform(0.5, 0.8)
-    bus = f"{xfmr_bus_map[xfmr_id]}_sec"
-
-    loads_content += f"New Load.load_{xfmr_id} bus1={bus} phases=1 kv=0.240 kw={load_kw:.2f} pf=0.95\n"
-
-with open("sisyphean-power-and-light/network/loads.dss", "w") as f:
-    f.write(loads_content)
-
-print(f"Created loads.dss ({len(xfmr_subset)} loads)")
-
-# ============================================================================
-# CAPACITORS.DSS - Capacitor banks (on feeder junction buses)
-# ============================================================================
-
+# ---------------------------------------------------------------------------
+# 6. capacitors.dss -- on feeder junction buses
+# ---------------------------------------------------------------------------
 jct_buses = sorted(b for b in line_buses if "JCT" in b)
-cap_buses = jct_buses[:5]
+cap_lines: list[str] = ["! Capacitor Banks", ""]
 cap_kvars = [300, 300, 300, 600, 600]
 
-capacitors_content = "! Capacitor Banks\n\n"
-for i, (bus, kvar) in enumerate(zip(cap_buses, cap_kvars)):
-    capacitors_content += f"New Capacitor.cap_FDR-{i+1:04d} bus1={bus} phases=3 kvar={kvar} kv=12.47\n"
+for i, bus in enumerate(jct_buses[: len(cap_kvars)]):
+    cap_lines.append(
+        f"New Capacitor.cap_{i + 1:04d} bus1={bus} phases=3 kvar={cap_kvars[i]} kv=12.47"
+    )
 
-with open("sisyphean-power-and-light/network/capacitors.dss", "w") as f:
-    f.write(capacitors_content)
+(OUT_DIR / "capacitors.dss").write_text("\n".join(cap_lines) + "\n")
+print(f"  capacitors.dss: {min(len(jct_buses), len(cap_kvars))} capacitors")
 
-print(f"Created capacitors.dss ({len(cap_buses)} capacitors)")
+# ---------------------------------------------------------------------------
+# 7. coordinates.dss -- only for buses that exist in the model
+# ---------------------------------------------------------------------------
+sec_buses = {f"bus_{xid}_sec" for xid in xfmr_ids_in_model}
+all_model_buses = line_buses | sec_buses
 
-# ============================================================================
-# COORDINATES.DSS - Bus coordinates for visualization
-# ============================================================================
+coord_lines: list[str] = ["! Bus Coordinates", ""]
+nodes_in_feeders = nodes[nodes["node_id"].apply(lambda nid: f"bus_{nid}" in all_model_buses)]
 
-# Only emit coordinates for buses that exist in the model
-nodes_subset = nodes[nodes["feeder_id"].isin(feeders)].head(1000)
-model_buses = line_buses | {f"{b}_sec" for b in xfmr_bus_map.values()}
-
-coords_content = "! Bus Coordinates\n\n"
-coord_count = 0
-for _, row in nodes_subset.iterrows():
+for _, row in nodes_in_feeders.iterrows():
     bus_name = f"bus_{row['node_id']}"
-    if bus_name in model_buses:
-        coords_content += f"SetBusXY bus={bus_name} x={row['longitude']} y={row['latitude']}\n"
-        coord_count += 1
+    coord_lines.append(
+        f"SetBusXY bus={bus_name} x={row['longitude']} y={row['latitude']}"
+    )
 
-with open("sisyphean-power-and-light/network/coordinates.dss", "w") as f:
-    f.write(coords_content)
+(OUT_DIR / "coordinates.dss").write_text("\n".join(coord_lines) + "\n")
+print(f"  coordinates.dss: {len(nodes_in_feeders)} coordinates")
 
-print(f"Created coordinates.dss ({coord_count} coordinates)")
+# ---------------------------------------------------------------------------
+# 8. coordinates.csv -- for external visualization
+# ---------------------------------------------------------------------------
+coord_df = nodes_in_feeders[["node_id", "latitude", "longitude"]].copy()
+coord_df["bus_name"] = "bus_" + coord_df["node_id"].astype(str)
+coord_df = coord_df.rename(columns={"longitude": "x", "latitude": "y"})
+coord_df[["bus_name", "x", "y"]].to_csv(OUT_DIR / "coordinates.csv", index=False)
 
-# ============================================================================
-# COORDINATES.CSV - Bus coordinates for guides
-# ============================================================================
-
-coords_csv = nodes_subset[["node_id", "latitude", "longitude"]].copy()
-coords_csv["bus_name"] = "bus_" + coords_csv["node_id"].astype(str)
-coords_csv = coords_csv[coords_csv["bus_name"].isin(model_buses)]
-coords_csv = coords_csv.rename(columns={"longitude": "x", "latitude": "y"})
-coords_csv[["bus_name", "x", "y"]].to_csv(
-    "sisyphean-power-and-light/network/coordinates.csv",
-    index=False,
-)
-
-print(f"Created coordinates.csv ({len(coords_csv)} coordinates)")
-
-# ============================================================================
-# MASTER.DSS - Main coordination file
-# ============================================================================
-
-# Find the substation bus (source connection point)
+# ---------------------------------------------------------------------------
+# 9. master.dss
+# ---------------------------------------------------------------------------
 sub_buses = sorted(b for b in line_buses if "SUB" in b)
-source_bus = sub_buses[0] if sub_buses else "sourcebus"
+source_bus = sub_buses[0] if sub_buses else "bus_SUB-001"
 
-master_content = f"""! Sisyphean Power & Light Distribution System Model
-! Generated from Dynamic Network Model dataset
+master = f"""\
+! Sisyphean Power & Light Distribution System Model
 
 Clear
 
-! Circuit source at substation bus
-New Circuit.SPL bus1={source_bus} basekV=69 pu=1.00 phases=3 MVAsc3=2000 MVAsc1=2100
+! 69 kV source with substation transformer to 12.47 kV distribution
+New Circuit.SPL bus1=sourcebus basekV=69 pu=1.04 phases=3 MVAsc3=2000 MVAsc1=2100
+New Transformer.sub_xfmr phases=3 windings=2 buses=[sourcebus {source_bus}] conns=[delta wye] kvs=[69 12.47] kvas=[20000 20000] XHL=7
 
-! Load network model files
 Redirect lines.dss
 Redirect transformers.dss
 Redirect loads.dss
+Redirect pvsystems.dss
+Redirect storage.dss
 Redirect capacitors.dss
 
-! Establish voltage bases (must precede coordinate assignment)
 Set voltagebases=[69, 12.47, 0.24]
 Calcvoltagebases
 
-! Bus coordinates (requires buses to exist after Calcvoltagebases)
 Redirect coordinates.dss
 
-! Solution parameters
 Set tolerance=0.0001
 Set maxiterations=100
 
-! Solve initial power flow
 Solve
 """
 
-with open("sisyphean-power-and-light/network/master.dss", "w") as f:
-    f.write(master_content)
+(OUT_DIR / "master.dss").write_text(master)
+print(f"  master.dss: source bus = {source_bus}")
 
-print(f"Created master.dss (source bus: {source_bus})")
-
-# ============================================================================
+# ---------------------------------------------------------------------------
 # Summary
-# ============================================================================
-
+# ---------------------------------------------------------------------------
 print("\n" + "=" * 60)
 print("OpenDSS Model Generation Complete")
 print("=" * 60)
-print(f"  master.dss:       Source at {source_bus}")
-print(f"  lines.dss:        {len(edges_subset)} distribution line segments")
-print(f"  transformers.dss: {len(xfmr_subset)} distribution transformers")
-print(f"  loads.dss:        {len(xfmr_subset)} customer loads")
-print(f"  capacitors.dss:   {len(cap_buses)} capacitor banks")
-print(f"  coordinates.dss:  {coord_count} bus coordinates")
-print(f"  coordinates.csv:  {len(coords_csv)} bus coordinates (CSV)")
+print(f"  Lines:        {len(edges_sub)} segments")
+print(f"  Transformers: {len(xfmr_ids_in_model)}")
+print(f"  Loads:        {len(xfmr_ids_in_model)}")
+print(f"  PV Systems:   {len(solar_agg)}")
+print(f"  Storage:      {len(batt_agg)}")
+print(f"  Capacitors:   {min(len(jct_buses), len(cap_kvars))}")
+print(f"  Coordinates:  {len(nodes_in_feeders)}")
+print(f"  Output:       {OUT_DIR.resolve()}")
 print("=" * 60)
