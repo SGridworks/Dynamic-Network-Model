@@ -1,0 +1,28 @@
+! SP&L Scenario: High DER 2030
+
+Clear
+
+New Circuit.SPL bus1=sourcebus basekV=69 pu=1.04 phases=3 MVAsc3=2000 MVAsc1=2100
+New Transformer.sub_xfmr phases=3 windings=2 buses=[sourcebus bus_SUB-001] conns=[delta wye] kvs=[69 12.47] kvas=[20000 20000] XHL=7
+
+Redirect /Users/2agents/Projects/Dynamic-Network-Model/sisyphean-power-and-light/network/lines.dss
+Redirect /Users/2agents/Projects/Dynamic-Network-Model/sisyphean-power-and-light/network/transformers.dss
+Redirect /Users/2agents/Projects/Dynamic-Network-Model/sisyphean-power-and-light/network/loads.dss
+
+! Scenario DER (replaces base PV/storage)
+Redirect /Users/2agents/Projects/Dynamic-Network-Model/sisyphean-power-and-light/network/results/scenarios/high_der_2030/pvsystems.dss
+Redirect /Users/2agents/Projects/Dynamic-Network-Model/sisyphean-power-and-light/network/results/scenarios/high_der_2030/ev_loads.dss
+Redirect /Users/2agents/Projects/Dynamic-Network-Model/sisyphean-power-and-light/network/results/scenarios/high_der_2030/storage.dss
+
+Redirect /Users/2agents/Projects/Dynamic-Network-Model/sisyphean-power-and-light/network/capacitors.dss
+
+Set voltagebases=[69, 12.47, 0.24]
+Calcvoltagebases
+
+Redirect /Users/2agents/Projects/Dynamic-Network-Model/sisyphean-power-and-light/network/coordinates.dss
+
+Set loadmult=1.0
+Set tolerance=0.0001
+Set maxiterations=100
+
+Solve

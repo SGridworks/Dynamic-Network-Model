@@ -1,0 +1,16 @@
+{
+  "converged": true,
+  "iterations": 8,
+  "total_power_kw": 66030.23,
+  "total_power_kvar": 16653.85,
+  "total_loss_kw": 2322.95,
+  "loss_pct": 3.52,
+  "v_min": 0.0654,
+  "v_max": 1.0534,
+  "v_mean": 0.8615,
+  "buses_under_095": 1491,
+  "buses_over_105": 85,
+  "num_violations": 1359,
+  "scenario": "Extreme Weather",
+  "slug": "extreme_weather"
+}

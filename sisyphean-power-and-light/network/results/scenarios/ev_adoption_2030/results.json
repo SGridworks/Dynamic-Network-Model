@@ -1,0 +1,16 @@
+{
+  "converged": true,
+  "iterations": 7,
+  "total_power_kw": 191492.23,
+  "total_power_kvar": 23490.05,
+  "total_loss_kw": 3392.67,
+  "loss_pct": 1.77,
+  "v_min": 0.0294,
+  "v_max": 1.0553,
+  "v_mean": 0.7785,
+  "buses_under_095": 1491,
+  "buses_over_105": 84,
+  "num_violations": 1491,
+  "scenario": "EV Adoption 2030",
+  "slug": "ev_adoption_2030"
+}

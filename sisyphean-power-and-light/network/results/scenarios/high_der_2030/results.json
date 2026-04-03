@@ -1,0 +1,16 @@
+{
+  "converged": true,
+  "iterations": 7,
+  "total_power_kw": 162118.53,
+  "total_power_kvar": 28989.24,
+  "total_loss_kw": 4319.79,
+  "loss_pct": 2.66,
+  "v_min": 0.0213,
+  "v_max": 1.0558,
+  "v_mean": 0.7408,
+  "buses_under_095": 1491,
+  "buses_over_105": 67,
+  "num_violations": 1491,
+  "scenario": "High DER 2030",
+  "slug": "high_der_2030"
+}

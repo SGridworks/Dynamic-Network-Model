@@ -1,0 +1,16 @@
+{
+  "converged": true,
+  "iterations": 8,
+  "total_power_kw": 66030.23,
+  "total_power_kvar": 18521.02,
+  "total_loss_kw": 2733.16,
+  "loss_pct": 4.14,
+  "v_min": 0.0525,
+  "v_max": 1.0535,
+  "v_mean": 0.8511,
+  "buses_under_095": 1491,
+  "buses_over_105": 70,
+  "num_violations": 1403,
+  "scenario": "Baseline 2025",
+  "slug": "baseline_2025"
+}

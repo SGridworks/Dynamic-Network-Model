@@ -1,0 +1,5 @@
+converged,iterations,total_power_kw,total_power_kvar,total_loss_kw,loss_pct,v_min,v_max,v_mean,buses_under_095,buses_over_105,num_violations,scenario,slug
+True,8,66030.23,18521.02,2733.16,4.14,0.0525,1.0535,0.8511,1491,70,1403,Baseline 2025,baseline_2025
+True,7,191492.23,23490.05,3392.67,1.77,0.0294,1.0553,0.7785,1491,84,1491,EV Adoption 2030,ev_adoption_2030
+True,8,66030.23,16653.85,2322.95,3.52,0.0654,1.0534,0.8615,1491,85,1359,Extreme Weather,extreme_weather
+True,7,162118.53,28989.24,4319.79,2.66,0.0213,1.0558,0.7408,1491,67,1491,High DER 2030,high_der_2030
