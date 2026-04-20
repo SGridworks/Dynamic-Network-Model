@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.ipynb_checkpoints/
+.DS_Store
+dist/
+build/
+*.egg-info/
+.lancedb/
+.cache/
+evals/results*.md
+fixtures/traces/live/

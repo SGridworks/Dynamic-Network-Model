@@ -1,0 +1,101 @@
+{
+  "scenario_id": "05-microgrid-island",
+  "title": "Multi-feeder event — Luke AFB microgrid islanding",
+  "query": "OUT-00009: weather-driven fuse operation, FDR-0002, 8-hour outage. FDR-0002 hosts the Luke AFB Annex microgrid (MG-0005). Walk me through whether to island, when, and the resync conditions. Be explicit about what happens after the 2.3-hour battery window if the feeder is still out.",
+  "final_text": "This response provides a sequence of recommended actions for $\\text{OUT-00009}$ on $\\text{FDR-0002}$, prioritizing asset protection and load continuity based on the $\\text{MG-0005}$ operational limits.\n\n**System Context:**\n*   **Outage:** $\\text{OUT-00009}$ (Weather-driven, $\\text{FDR-0002}$, approx. 8+ hours).\n*   **Asset:** $\\text{MG-0005}$ (Luke AFB Annex).\n*   **Constraint:** $\\text{MG-0005}$ has a battery runtime limit of **2.3 hours**.\n\n---\n\n### ⚡️ Proposed Restoration Sequence (Rung 2)\n\n#### Phase 1: Initiation of Islanding (Recommended Immediately)\n\n**When:** As soon as the outage confirmation is stable and the initial utility supply interruption is confirmed, $\\text{MG-0005}$ must transition to island mode to utilize its $\\text{BESS}$ reserves. Delaying this risks an unscheduled shutdown.\n\n**How (Action Proposal):**\n1.  **Confirm Boundaries:** Verify the exact $\\text{PCC}$ connection points for $\\text{MG-0005}$ relative to the $\\text{SUB-001}$ bus structure.\n2.  **Isolate $\\text{MG-0005}$:** Propose opening the appropriate upstream $\\text{breaker}$ or $\\text{sectionalizer}$ protecting $\\text{MG-0005}$ on $\\text{FDR-0002}$ to isolate it from the utility source.\n3.  **Stabilization:** Allow the microgrid controls to confirm self-sustained operation using $\\text{Solar}$ (4.0 MW), $\\text{BESS}$ (3.0 MW), and $\\text{CHP}$ (2.5 MW).\n\n#### Phase 2: Operation During Islanding (0 to 2.3 Hours)\n\n**Goal:** Maintain critical loads ($\\text{Critical Load} = 5.16 \\text{ MW}$) while maximizing $\\text{BESS}$ utilization.\n\n*   **Monitoring:** Continuously monitor $\\text{BESS}$ State-of-Charge ($\\text{SoC}$), $\\text{CHP}$ output vs. $\\text{Solar}$ output, and load shed status.\n*   **Action:** Shed all non-critical load immediately to extend $\\text{BESS}$ reserve past the 2.3-hour threshold, prioritizing the $\\text{Critical Load}$.\n\n#### Phase 3: Post-Battery Depletion Contingency (After 2.3 Hours)\n\n**Condition:** If the main grid remains out past the 2.3-hour mark, $\\text{MG-0005}$ will enter a critical state and will be unable to support the full $\\text{Critical Load}$ through $\\text{BESS}$ alone.\n\n**Action Plan (Requires Operator Judgment):**\n1.  **Load Shedding:** Immediately implement pre-determined emergency load shedding protocols for non-essential $\\text{MG-0005}$ assets to conserve remaining $\\text{BESS}$ energy.\n2.  **Request External Support:** $\\text{Requires operator judgment}$: Simultaneously request confirmation from SP\\&L operations for an expected restoration timeline or deployment of supplemental generation (e.g., external $\\text{diesel}$ support).\n3.  **Sustain Mode:** Operate in a severely restricted mode, only powering the absolute life-safety critical loads until external support or system restoration is confirmed.\n\n#### Phase 4: Resynchronization (Requires Utilities Confirmation)\n\n**Prerequisite:** This phase can only begin when the primary substation $\\text{SUB-001}$ feeder $\\text{FDR-0002}$ is confirmed stable, within acceptable voltage/frequency bands, and the initial weather event has passed.\n\n**Sequence:**\n1.  **Utility Stabilization Check:** Verify substation voltage ($\\text{pu}$) and frequency match $\\text{MG-0005}$ output tolerances.\n2.  **Internal System Confirmation:** Confirm $\\text{MG-0005}$ is stable and prepared to accept external power.\n3.  **Resync:** Propose closing the isolated upstream $\\text{breaker}$ in a controlled sequence, allowing the $\\text{MG-0005}$ control system to manage the controlled reconnection.\n\n***\n\n**Summary of Dependence:** The entire plan hinges on the 2.3-hour battery window. After this time, operational focus shifts entirely to load shedding and external resource coordination until the main utility source is restored.",
+  "tool_calls": [
+    {
+      "name": "get_outage",
+      "arguments": {
+        "outage_id": "OUT-00009"
+      },
+      "result": {
+        "outage_id": "OUT-00009",
+        "start_time": "2020-08-03T14:00:00",
+        "end_time": "2020-08-03T22:07:00",
+        "cause": "weather",
+        "customers_affected": 806,
+        "feeder_id": "FDR-0002",
+        "equipment_involved": "fuse",
+        "duration_hours": 8.116666666666667,
+        "weather_related": true,
+        "substation_id": "SUB-001"
+      }
+    },
+    {
+      "name": "get_microgrid",
+      "arguments": {
+        "microgrid_id": "MG-0005"
+      },
+      "result": {
+        "error": "bad arguments to get_microgrid: get_microgrid() got an unexpected keyword argument 'microgrid_id'"
+      }
+    },
+    {
+      "name": "get_microgrid",
+      "arguments": {},
+      "result": {
+        "microgrid_id": "MG-0005",
+        "feeder_id": "FDR-0002",
+        "substation_id": "SUB-001",
+        "latitude": 33.556571,
+        "longitude": -112.143475,
+        "facility_type": "military",
+        "facility_name": "Luke AFB Annex",
+        "solar_capacity_mw": 4.0,
+        "battery_power_mw": 3.0,
+        "battery_energy_mwh": 12.0,
+        "chp_capacity_mw": 2.5,
+        "total_generation_mw": 6.5,
+        "peak_load_mw": 11.35,
+        "critical_load_mw": 5.16,
+        "can_island": true,
+        "island_duration_hours": 2.3,
+        "interconnection_date": "2022-06-01T00:00:00",
+        "status": "active"
+      }
+    },
+    {
+      "name": "get_topology",
+      "arguments": {},
+      "result": {
+        "nodes": {
+          "total": 1647,
+          "by_feeder": {
+            "FDR-0001": 739,
+            "FDR-0002": 325,
+            "FDR-0003": 583
+          },
+          "by_equipment_class": {
+            "distribution_transformer": 807,
+            "fuse": 807,
+            "pole_top": 19,
+            "sectionalizer": 6,
+            "breaker": 3,
+            "open_point": 3,
+            "padmount": 2
+          }
+        },
+        "edges": {
+          "total": 1647,
+          "by_feeder": {
+            "FDR-0001": 739,
+            "FDR-0002": 325,
+            "FDR-0003": 583
+          },
+          "by_edge_type": {
+            "lateral_overhead": 1228,
+            "lateral_underground": 386,
+            "primary_overhead": 26,
+            "primary_underground": 4,
+            "bus_tie": 3
+          }
+        }
+      }
+    }
+  ],
+  "provider": "ollama",
+  "model": "gemma4:e4b",
+  "elapsed_seconds": 111.23103237501346,
+  "recorded_at": "2026-04-20T20:35:47+00:00"
+}

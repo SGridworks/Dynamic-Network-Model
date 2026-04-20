@@ -1,0 +1,118 @@
+{
+  "scenario_id": "03-monsoon",
+  "title": "Monsoon event — DER absorption vs voltage hold",
+  "query": "Monsoon cell over the west Valley — July 8, 2020, 4pm local, storm flag is set on the weather feed. Solar output is swinging sharply every few minutes. For FDR-0001 in the next hour, what's the right tradeoff between chasing DER absorption and holding voltage steady? Be explicit about what you would NOT do.",
+  "final_text": "Based on the current network constraints for FDR-0001, the primary binding factor is **thermal capacity**, not voltage.\n\nIn a rapidly fluctuating environment like a monsoon storm with swinging solar output, the priority must shift to system stability and thermal adherence over maximizing DER absorption.\n\n**Tradeoff Recommendation:**\n**Prioritize stable voltage profiles and respecting the thermal limit.** Do not attempt to absorb the entire fluctuating DER output to \"chase\" apparent capacity headroom. The high variability inherent to the storm conditions risks causing rapid, protective over-current or voltage excursions that the grid model cannot predict in real-time.\n\n**Proposed Strategy (Draft for Operator Review):**\n\n1.  **Voltage Support (VAR Control):** If voltage sags occur, utilize VAR support (e.g., dispatching capacitor banks or smart inverter Q) to keep the voltage within steady band limits. This is the highest priority control action.\n2.  **DER Management:** Implement **smoothing controls** or **curtailment schedules** on the variable solar sources. The goal is to limit the *rate of change* of power flow ($\\text{dP/dt}$), rather than the instantaneous peak power absorption.\n3.  **System Monitoring:** Continuously monitor the load vs. available thermal capacity. If the system approaches the thermal limit, immediate, controlled reduction of DER injection is required, even if solar generation is technically available.\n\n**What You Must NOT Do:**\n\n*   **Do Not** allow the DER management system to operate in \"maximum absorption\" or \"maximum tracking\" mode. The inherent variability will violate the stability assumptions needed for reliable operation.\n*   **Do Not** ignore the thermal limit. Treating the thermal limit as secondary to voltage stability in this scenario is unsafe; both must be respected, but thermal constraints dictate the upper physical boundary for power flow.\n*   **Do Not** assume that because voltage support (VARs) *could* theoretically unlock more power, this headroom is available for transient, fast-changing DER input under storm conditions.\n\nThis recommendation assumes the operator can access granular DER curtailment controls to manage ramp rates.",
+  "tool_calls": [
+    {
+      "name": "get_weather",
+      "arguments": {
+        "timestamp": "2020-07-08 16:00"
+      },
+      "result": {
+        "requested": "2020-07-08 16:00",
+        "at_timestamp": "2020-07-08T16:00:00",
+        "temperature_f": 115.9,
+        "humidity_pct": 37.2,
+        "wind_speed_mph": 25.9,
+        "ghi_w_per_m2": 191.1,
+        "cloud_cover_pct": 58.9,
+        "is_heatwave": false,
+        "is_storm": true
+      }
+    },
+    {
+      "name": "get_solar_snapshot",
+      "arguments": {
+        "timestamp": "2020-07-08 16:00"
+      },
+      "result": {
+        "requested": "2020-07-08 16:00",
+        "profile_applied_month": 7,
+        "profile_applied_hour": 16,
+        "clear_sky_factor": 0.32,
+        "generation_pct_of_capacity": 32.0,
+        "ghi_w_per_m2": 319.7,
+        "estimated_solar_kw_by_feeder": {
+          "FDR-0001": 3439.8,
+          "FDR-0002": 1678.8,
+          "FDR-0003": 2639.5
+        }
+      }
+    },
+    {
+      "name": "get_load_snapshot",
+      "arguments": {
+        "timestamp": "2020-07-08 16:00"
+      },
+      "result": {
+        "requested": "2020-07-08 16:00",
+        "by_feeder": {
+          "FDR-0001": {
+            "timestamp": "2020-07-15T00:00:00",
+            "load_mw": 6.268,
+            "load_mvar": 2.708,
+            "voltage_pu": 1.0252,
+            "power_factor": 0.918
+          },
+          "FDR-0002": {
+            "timestamp": "2020-07-15T00:00:00",
+            "load_mw": 6.993,
+            "load_mvar": 3.083,
+            "voltage_pu": 1.043,
+            "power_factor": 0.915
+          },
+          "FDR-0003": {
+            "timestamp": "2020-07-15T00:00:00",
+            "load_mw": 5.877,
+            "load_mvar": 1.932,
+            "voltage_pu": 0.967,
+            "power_factor": 0.95
+          }
+        }
+      }
+    },
+    {
+      "name": "get_hosting_capacity",
+      "arguments": {},
+      "result": {
+        "total_binding_kw": 48865.799999999996,
+        "total_existing_der_kw": 27787.899999999998,
+        "by_feeder": [
+          {
+            "feeder_id": "FDR-0001",
+            "transformers": 364,
+            "thermal_kw": 32749.9,
+            "voltage_kw": 22975.5,
+            "binding_kw": 22780.8,
+            "existing_der_kw": 12331.7
+          },
+          {
+            "feeder_id": "FDR-0002",
+            "transformers": 157,
+            "thermal_kw": 16129.9,
+            "voltage_kw": 10980.6,
+            "binding_kw": 10930.8,
+            "existing_der_kw": 5963.3
+          },
+          {
+            "feeder_id": "FDR-0003",
+            "transformers": 286,
+            "thermal_kw": 22792.2,
+            "voltage_kw": 15368.9,
+            "binding_kw": 15154.2,
+            "existing_der_kw": 9492.9
+          }
+        ],
+        "limiting_factors": {
+          "voltage": 766,
+          "thermal": 41
+        }
+      }
+    }
+  ],
+  "provider": "ollama",
+  "model": "gemma4:e4b",
+  "elapsed_seconds": 76.06566945789382,
+  "recorded_at": "2026-04-20T20:33:03+00:00"
+}

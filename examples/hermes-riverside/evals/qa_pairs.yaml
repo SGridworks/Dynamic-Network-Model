@@ -1,0 +1,104 @@
+# Otter Creek eval pairs. Each pair scores:
+#   - expected_tools: did the agent call these tools (order-insensitive)?
+#   - expected_keywords: do these strings appear in the final answer?
+# Scoring is boolean per field, aggregated to a 0-1 per pair.
+
+- id: subs_list
+  q: "What substations are in the SP&L network?"
+  expected_tools: [list_substations]
+  expected_keywords: ["Otter Creek", "SUB-01", "Saguaro West"]
+
+- id: otter_voltage
+  q: "What are the voltage levels at Otter Creek substation?"
+  expected_tools: [list_substations]
+  expected_keywords: ["SUB-01", "230", "12.47"]
+
+- id: otter_oneline
+  q: "Give me the one-line for Otter Creek — buses, transformers, feeders."
+  expected_tools: [get_one_line]
+  expected_keywords: ["SUB-01-T1", "SUB-01-BUS-HV", "SUB-01-F1"]
+
+- id: sel_relays_sub03
+  q: "How many SEL relays are at Saguaro West, and what functions do they serve?"
+  expected_tools: [find_relay]
+  expected_keywords: ["SUB-03", "SEL"]
+
+- id: differential_relays
+  q: "List all differential relays across the network."
+  expected_tools: [find_relay]
+  expected_keywords: ["differential"]
+
+- id: alarms_sub01
+  q: "What alarms have fired at Otter Creek in the last 30 days?"
+  expected_tools: [get_alarms]
+  expected_keywords: ["SUB-01"]
+
+- id: critical_alarms
+  q: "Any critical alarms anywhere in the last month?"
+  expected_tools: [get_alarms]
+  expected_keywords: ["critical"]
+
+- id: top_oil_tags
+  q: "Show me the top-oil temperature tags at Copper Mesa."
+  expected_tools: [query_tags]
+  expected_keywords: ["SUB-02", "TOP_OIL"]
+
+- id: ltc_tags
+  q: "What LTC tap position tags do we have at Otter Creek?"
+  expected_tools: [query_tags]
+  expected_keywords: ["SUB-01", "LTC_TAP"]
+
+- id: wo_preventive_otter
+  q: "Summarize preventive work orders for Otter Creek."
+  expected_tools: [search_work_orders]
+  expected_keywords: ["SUB-01", "preventive"]
+
+- id: wo_dga
+  q: "Any work orders referencing DGA or oil sampling?"
+  expected_tools: [search_work_orders]
+  expected_keywords: ["DGA"]
+
+- id: switching_transformer_outage
+  q: "Find a switching order for taking a transformer out for oil sampling."
+  expected_tools: [search_switching_orders]
+  expected_keywords: ["transformer", "SO-"]
+
+- id: switching_load_transfer
+  q: "Is there a switching order for transferring load between feeders at Otter Creek?"
+  expected_tools: [search_switching_orders]
+  expected_keywords: ["SUB-01", "TIE"]
+
+- id: sub03_capacity
+  q: "What's the rated capacity of Saguaro West?"
+  expected_tools: [list_substations]
+  expected_keywords: ["SUB-03", "60"]
+
+- id: tie_switches_otter
+  q: "What tie switches does Otter Creek have?"
+  expected_tools: [get_one_line]
+  expected_keywords: ["SUB-01-TIE-1"]
+
+- id: ge_relays
+  q: "Do we have any GE line-current-differential relays installed?"
+  expected_tools: [find_relay]
+  expected_keywords: ["GE"]
+
+- id: cap_bank_alarms
+  q: "Any cap bank unbalance alarms recently?"
+  expected_tools: [get_alarms]
+  expected_keywords: ["cap bank"]
+
+- id: feeder_current_tags
+  q: "List the feeder current tags for Dry Wash Junction."
+  expected_tools: [query_tags]
+  expected_keywords: ["SUB-04", "AMPS"]
+
+- id: emergent_wo
+  q: "Show me emergent work orders across the network."
+  expected_tools: [search_work_orders]
+  expected_keywords: ["emergent"]
+
+- id: saguaro_oneline
+  q: "What's the one-line topology at Saguaro West?"
+  expected_tools: [get_one_line]
+  expected_keywords: ["SUB-03", "BUS-HV", "BUS-LV"]

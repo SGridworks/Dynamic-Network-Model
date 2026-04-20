@@ -51,6 +51,15 @@ you can start querying, modeling, and building against immediately.
 - **Power flow approximations** — impedance, conductor specs, and phase data included
 - **AMI analytics** — 15-minute customer interval data with realistic load shapes
 
+## Featured example: Hermes at Riverside
+
+[`examples/hermes-riverside/`](examples/hermes-riverside/) — an open-source agentic
+substation copilot running against SP&L's Riverside substation (SUB-001). Five
+recorded scenarios across VVO and restoration, including a military microgrid
+islanding case. Default inference is Gemma 4 E4B via Ollama, fully local; AWS
+Bedrock-over-VPC is available behind a compliance gate. Read the narrative on
+[sgridworks.com/hermes-riverside-poc.html](https://sgridworks.com/hermes-riverside-poc.html).
+
 ## Quick Start
 
 ```bash

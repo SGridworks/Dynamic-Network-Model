@@ -1,0 +1,68 @@
+{
+  "scenario_id": "04-single-feeder-restoration",
+  "title": "Weather outage on FDR-0003 — single-feeder restoration",
+  "query": "Draft a restoration plan for OUT-00016 (FDR-0003 overhead-line fault, weather-driven, ~1000 customers out). Use what the topology gives you — sectionalizers, open points, and any tie-switch paths to adjacent feeders. Call out what requires operator judgment.",
+  "final_text": "**Draft Restoration Plan for OUT-00016 (FDR-0003)**\n\nThis draft outlines a sequence for restoring power to FDR-0003 following a weather-driven overhead-line fault. This plan is proposed at Rung 2 for operator review.\n\n**Assumptions:**\n1. The faulted section of FDR-0003 has been isolated and deemed safe for testing/repair.\n2. The substation breaker at SUB-001 is the primary point of control.\n\n**Topology Reference:** The network includes 6 sectionalizers and 3 open points across the feeders. These devices will be critical for sectionalizing the fault and managing subsequent re-energization.\n\n---\n\n### **Restoration Sequence Draft**\n\n**Phase 1: Fault Verification & Isolation (Requires Crew On-Site)**\n\n1.  **Verify Fault Clearance:** Confirm the overhead-line fault on FDR-0003 is cleared and the line is de-energized at the work site.\n2.  **Sectionalize:** Remotely operate the sectionalizers on FDR-0003 *upstream* of the fault location to isolate the damaged segment.\n3.  **Open Point Confirmation:** Verify all necessary protective devices (open points) are set to isolate the faulty section, preventing backfeed.\n\n**Phase 2: Power Restoration (Recommendation)**\n\n*   **Primary Attempt (Normal Restoration):** If the repair is localized, re-energize FDR-0003 by closing the main substation breaker at SUB-001, followed by sequential closure of the sectionalizers/reclosers downstream until the healthy load is reached.\n*   **Contingency Attempt (Tie-Switch Path):** If the fault is extensive and cannot be cleared, assess the topology for a viable tie-switch path from FDR-0001 or FDR-0002.\n    *   *Recommendation:* Check tie-switch status and voltage compatibility for temporarily feeding the critical load area of FDR-0003 from an adjacent feeder, if available and safe.\n\n**Phase 3: Finalization**\n\n1.  Monitor voltage and load flow across the restored sections of FDR-0003.\n2.  Once stability is confirmed, restore all open points and remove all temporary sectionalizing measures to restore normal system configuration.\n\n---\n\n**⚠ Operator Judgment Required Actions:**\n\n*   **Fault Location Pinpointing:** The exact coordination of sectionalizers and open points relative to the fault location *must* be determined by field crews.\n*   **Re-energization Sequence:** The precise, step-by-step opening/closing sequence of sectionalizers and switches requires detailed confirmation against the fault-end status and local protection coordination plans.\n*   **Tie-Switch Feasibility:** Any proposal to utilize a tie-switch path to FDR-0001 or FDR-0002 is conditional upon real-time substation breaker status, load levels on the supplying feeder, and clearance from the protection engineer.",
+  "tool_calls": [
+    {
+      "name": "get_outage",
+      "arguments": {
+        "outage_id": "OUT-00016"
+      },
+      "result": {
+        "outage_id": "OUT-00016",
+        "start_time": "2020-12-20T20:00:00",
+        "end_time": "2020-12-21T00:45:00",
+        "cause": "weather",
+        "customers_affected": 1007,
+        "feeder_id": "FDR-0003",
+        "equipment_involved": "overhead line",
+        "duration_hours": 4.75,
+        "weather_related": true,
+        "substation_id": "SUB-001"
+      }
+    },
+    {
+      "name": "get_topology",
+      "arguments": {},
+      "result": {
+        "nodes": {
+          "total": 1647,
+          "by_feeder": {
+            "FDR-0001": 739,
+            "FDR-0002": 325,
+            "FDR-0003": 583
+          },
+          "by_equipment_class": {
+            "distribution_transformer": 807,
+            "fuse": 807,
+            "pole_top": 19,
+            "sectionalizer": 6,
+            "breaker": 3,
+            "open_point": 3,
+            "padmount": 2
+          }
+        },
+        "edges": {
+          "total": 1647,
+          "by_feeder": {
+            "FDR-0001": 739,
+            "FDR-0002": 325,
+            "FDR-0003": 583
+          },
+          "by_edge_type": {
+            "lateral_overhead": 1228,
+            "lateral_underground": 386,
+            "primary_overhead": 26,
+            "primary_underground": 4,
+            "bus_tie": 3
+          }
+        }
+      }
+    }
+  ],
+  "provider": "ollama",
+  "model": "gemma4:e4b",
+  "elapsed_seconds": 52.38663337496109,
+  "recorded_at": "2026-04-20T20:33:55+00:00"
+}
