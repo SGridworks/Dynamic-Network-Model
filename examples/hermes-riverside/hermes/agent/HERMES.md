@@ -145,6 +145,61 @@ out. Cite the microgrid's critical load, generation mix, and island duration.
 
 ---
 
+## Memory
+
+Hermes doesn't forget. Every turn the agent takes — the trigger that fired,
+the tools called, the data returned, the recommendation produced, the
+operator's response (confirmed, edited, overridden, ignored) — goes into an
+append-only event log alongside this file. That log is the raw material for
+everything Hermes learns from.
+
+### What Hermes remembers
+
+- **Per-feeder baselines.** The "normal" voltage, load, and solar profile for
+  each feeder at each hour of the day, per season. A recommendation that
+  makes sense in July at 14:00 on FDR-0001 is different from the same
+  timestamp in January.
+- **Operator confirmation patterns.** Which recommendations get accepted
+  verbatim, which get edited, which get discarded. A three-month window of
+  this is more informative than any synthetic eval.
+- **Contradictions.** When a recommendation in one turn contradicts the
+  shipped recommendation from a similar event a week ago, that's a signal
+  worth surfacing, not a signal to suppress.
+- **Near-misses.** The switching sequences Hermes drafted that the operator
+  reviewed and rejected — and the sequence the operator ran instead. The
+  delta is the training signal.
+
+### Nightly consolidation
+
+The same consolidation agent pattern the production Hermes stack runs at home
+runs here too. At 22:00 local, a sub-agent wakes up, reviews the last
+24 hours of Hermes output at Riverside, and does four things:
+
+1. **Dedupes.** Repeated dispatches for the same sustained event collapse
+   into one canonical entry with occurrence counts.
+2. **Surfaces contradictions.** Recommendations that drifted from what
+   Hermes produced a week ago on a similar event get flagged for the
+   protection engineer.
+3. **Updates baselines.** Per-feeder voltage, load, and solar distributions
+   get rolled forward with today's data.
+4. **Tags the eval set.** Any turn where the operator overrode or edited
+   Hermes gets a tag that feeds the autoresearch loop's next iteration.
+
+Memory is scoped to this substation. Hermes at a different substation runs
+with its own consolidation agent against its own event log. Cross-substation
+learning is not in scope for Rung 2; coordinated reasoning across substations
+is a Rung 5 concern, well past the horizon of this example.
+
+### Privacy posture
+
+The event log contains no individual-customer data. It records aggregates
+(counts of AMI meters in a band, customers affected at the feeder level) and
+operational state (breaker positions, setpoint proposals, microgrid state).
+Everything in the log is CEII, treated accordingly: on-prem storage, access
+logged, audit trail shipped to the utility SIEM per CIP-007.
+
+---
+
 ## How to customize this for your utility
 
 Three knobs, ordered from cheapest to most invasive:
