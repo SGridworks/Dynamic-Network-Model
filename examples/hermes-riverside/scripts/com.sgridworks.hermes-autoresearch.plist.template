@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Launchd plist template for the nightly autoresearch run on mini1.
+     Install instructions:
+       1. Copy to ~/Library/LaunchAgents/com.sgridworks.hermes-autoresearch.plist
+       2. Replace __USER_HOME__ with your absolute home directory path
+          (e.g., /Users/2agents). launchd does not expand $HOME.
+       3. Adjust the StartCalendarInterval if you want a different time.
+       4. launchctl load ~/Library/LaunchAgents/com.sgridworks.hermes-autoresearch.plist
+       5. Confirm registered: launchctl list | grep hermes-autoresearch
+       6. Trigger a manual run: launchctl start com.sgridworks.hermes-autoresearch
+       7. Tail the log: tail -f ~/.hermes/logs/autoresearch-*.log
+
+     To disable without deleting:
+       launchctl unload ~/Library/LaunchAgents/com.sgridworks.hermes-autoresearch.plist
+
+     To halt mid-run (without touching launchd):
+       hermes autoresearch halt --reason "manual halt"
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.sgridworks.hermes-autoresearch</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>__USER_HOME__/Projects/Dynamic-Network-Model/examples/hermes-riverside/scripts/run_autoresearch.sh</string>
+  </array>
+
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>2</integer>
+    <key>Minute</key>
+    <integer>30</integer>
+  </dict>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HERMES_REPO_ROOT</key>
+    <string>__USER_HOME__/Projects/Dynamic-Network-Model</string>
+    <key>HERMES_ENV_FILE</key>
+    <string>__USER_HOME__/.hermes/autoresearch.env</string>
+    <key>HERMES_LOG_DIR</key>
+    <string>__USER_HOME__/.hermes/logs</string>
+    <key>HERMES_AUTO_PUSH</key>
+    <string>false</string>
+    <!-- Flip HERMES_AUTO_PUSH to "true" only after observing local-only
+         runs succeed for ~7 consecutive nights. -->
+  </dict>
+
+  <key>StandardOutPath</key>
+  <string>__USER_HOME__/.hermes/logs/autoresearch-launchd.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>__USER_HOME__/.hermes/logs/autoresearch-launchd.err.log</string>
+
+  <key>RunAtLoad</key>
+  <false/>
+</dict>
+</plist>

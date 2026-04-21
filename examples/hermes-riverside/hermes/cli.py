@@ -92,6 +92,84 @@ def autoresearch_unhalt(
     console.print(f"[bold green]UNHALTED[/bold green] — kill-switch state reset at {killswitch_path}")
 
 
+@autoresearch_app.command("run")
+def autoresearch_run(
+    repo_root: Path = typer.Option(Path.cwd(), help="Git repo root"),
+    targets_dir: Path = typer.Option(
+        Path("hermes/agent"),
+        help="Dir containing HERMES*.md playbooks to improve (relative to repo_root)",
+    ),
+    pairs_path: Path = typer.Option(Path("evals/qa_pairs.yaml"), help="Eval YAML"),
+    killswitch_path: Path = typer.Option(_DEFAULT_KILLSWITCH),
+    ledger_path: Path = typer.Option(_DEFAULT_LEDGER),
+    runs_dir: Path = typer.Option(Path("runs/autoresearch")),
+    default_branch: str = typer.Option("main"),
+    auto_push: bool = typer.Option(False, help="Push commits + open PRs. Default false."),
+) -> None:
+    """Run one pass of the autoresearch loop over every HERMES*.md in targets_dir.
+
+    Default posture is --no-auto-push: commits land on local autoresearch/* branches
+    but nothing is pushed and no PR is opened. Flip the flag explicitly once the
+    PAT is wired and you've confirmed the loop is behaving.
+    """
+    import yaml
+
+    from evals.run import _evaluate
+    from evals.scoring import Score
+    from hermes.autoresearch.loop import LoopConfig, run_loop
+    from hermes.config import load_or_exit
+
+    load_or_exit()
+    abs_targets_dir = (repo_root / targets_dir).resolve()
+    targets = sorted(abs_targets_dir.glob("HERMES*.md"))
+    if not targets:
+        console.print(f"[red]no HERMES*.md under {abs_targets_dir}[/red]")
+        raise typer.Exit(code=1)
+
+    qa_pairs = yaml.safe_load((repo_root / pairs_path).read_text())
+
+    def evaluate(hermes_md_path: Path, pairs: list[dict]) -> list[Score]:
+        """Production EvaluateCallable: uses evals.run._evaluate with the agent
+        pointed at the scratch playbook via prompts.system_message override."""
+        from hermes.agent.prompts import system_message
+
+        scores = []
+        for pair in pairs:
+            from evals.scoring import score_pair
+            from hermes.agent.loop import run as run_turn
+
+            history = [system_message(hermes_md_path=hermes_md_path)]
+            turn = run_turn(pair["q"], history=history)
+            tools_called = [t.name for t in turn.traces]
+            scores.append(score_pair(pair, turn.final_text or "", tools_called))
+        return scores
+
+    def llm(messages: list[dict]) -> str:
+        """Route proposal-prompt messages through litellm to the configured model."""
+        from hermes.llm import get_client
+
+        client = get_client()
+        return client.complete(messages)
+
+    cfg = LoopConfig(
+        repo_root=repo_root.resolve(),
+        targets=targets,
+        qa_pairs=qa_pairs,
+        killswitch_path=(repo_root / killswitch_path).resolve(),
+        runs_dir=(repo_root / runs_dir).resolve(),
+        ledger_path=(repo_root / ledger_path).resolve(),
+        default_branch=default_branch,
+        auto_push=auto_push,
+    )
+    outcomes = run_loop(cfg, llm=llm, evaluate=evaluate)
+    for o in outcomes:
+        console.print(
+            f"{o.substation_id}: [bold]{o.decision}[/bold]"
+            + (f" ({o.commit_kind})" if o.commit_kind else "")
+            + (f" commit={o.commit_sha[:8]}" if o.commit_sha else "")
+        )
+
+
 @app.command()
 def chat() -> None:
     """Live chat REPL (requires a configured LLM provider)."""
