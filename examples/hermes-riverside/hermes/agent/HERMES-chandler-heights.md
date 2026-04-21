@@ -1,3 +1,15 @@
+---
+schema_version: "0.1"
+substation_id: SUB-014
+substation_name: Chandler Heights
+archetype:
+  topology: urban_radial
+  load_mix: mixed
+  climate: desert_sw
+  criticality: elevated
+version: 0.1.0
+---
+
 # HERMES-chandler-heights.md
 
 Port of [HERMES.md](HERMES.md) to SP&L's Chandler Heights substation

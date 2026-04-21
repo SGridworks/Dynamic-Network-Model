@@ -9,5 +9,6 @@ build/
 *.egg-info/
 .lancedb/
 .cache/
+.pytest_cache/
 evals/results*.md
 fixtures/traces/live/
