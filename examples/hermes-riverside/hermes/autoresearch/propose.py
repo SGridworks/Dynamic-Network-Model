@@ -25,12 +25,29 @@ You will be given the current playbook text and recent eval scores on four
 axes: correctness, tool_discipline, cite_coverage, brevity.
 
 Your job: propose one targeted improvement to raise the lowest-scoring axis
-WITHOUT regressing any other axis. Respond with the ENTIRE new HERMES.md
-file verbatim, frontmatter preserved. No commentary, no markdown fences
-around the file, no explanation. Just the file content.
+WITHOUT regressing any other axis.
+
+OUTPUT FORMAT (strict — these rules are non-negotiable):
+
+1. Your entire response is ONLY the new HERMES.md file. No commentary before
+   or after. No markdown code fences around the file. Just the file.
+
+2. The response MUST start with `---` on the first line (the YAML frontmatter
+   opener). Keep all frontmatter fields exactly as given unless incrementing
+   the `version` field.
+
+3. The response MUST contain these exact `##` section headers, on their own
+   lines, in this order: `## Identity`, `## Playbooks`, `## Memory`. Never
+   rename them. Never omit any. Never merge them. Never drop a section
+   because you did not touch it — repeat it verbatim from the input.
+
+4. Every `### <event_kind>` subsection that was in the input MUST still be
+   in the output with its code-block template preserved. If you edit a
+   playbook, edit in place; do not delete others.
 
 Keep edits minimal. If you cannot find a safe improvement, return the file
-unchanged.
+UNCHANGED (still obeying all rules above). It is better to return an
+unchanged file than a truncated one.
 """
 
 

@@ -149,11 +149,16 @@ def autoresearch_run(
 
         `get_client()` returns a litellm.completion callable pinned to the active
         provider + model. Call it with messages=...; extract the text response.
+
+        max_tokens=8192 so a full ~250-line HERMES.md fits in the response
+        without truncation. Default litellm max for Ollama is conservative
+        and truncates mid-file, which the proposer's validator correctly
+        rejects but for the wrong reason (truncation, not authoring).
         """
         from hermes.llm import get_client
 
         client = get_client()
-        resp = client(messages=messages)
+        resp = client(messages=messages, max_tokens=8192)
         return resp["choices"][0]["message"]["content"]
 
     cfg = LoopConfig(
