@@ -148,3 +148,72 @@ def test_user_prompt_includes_baseline_scores() -> None:
     assert "0.70" in user_content
     assert "0.50" in user_content
     assert "Target axis to raise: brevity" in user_content
+
+
+# --- retry behaviour ------------------------------------------------------
+
+
+def test_retries_on_transient_bad_output_then_succeeds() -> None:
+    """If the first sample drops a section but the second is valid, return
+    the valid candidate."""
+    ctx = _mk_ctx()
+    bad = "# not a playbook\n\n## Identity\n\nno frontmatter\n"
+    calls = {"n": 0}
+
+    def flaky_llm(_msgs):
+        calls["n"] += 1
+        return VALID_CANDIDATE if calls["n"] >= 2 else bad
+
+    out = propose_edit(ctx, flaky_llm)
+    assert out.strip() == VALID_CANDIDATE.strip()
+    assert calls["n"] == 2
+
+
+def test_raises_after_all_retries_exhausted() -> None:
+    """If every attempt is structurally bad, raise InvalidProposal with the
+    last error."""
+    from hermes.autoresearch.propose import PROPOSE_RETRIES
+
+    ctx = _mk_ctx()
+    calls = {"n": 0}
+
+    def always_bad_llm(_msgs):
+        calls["n"] += 1
+        return "garbage without frontmatter"
+
+    with pytest.raises(InvalidProposal, match="frontmatter"):
+        propose_edit(ctx, always_bad_llm)
+    assert calls["n"] == PROPOSE_RETRIES
+
+
+def test_retry_count_matches_constant() -> None:
+    """Contract: PROPOSE_RETRIES is the upper bound on LLM calls per propose."""
+    from hermes.autoresearch.propose import PROPOSE_RETRIES
+
+    ctx = _mk_ctx()
+    calls = {"n": 0}
+
+    def counting_llm(_msgs):
+        calls["n"] += 1
+        return ""  # empty → rejected
+
+    try:
+        propose_edit(ctx, counting_llm)
+    except InvalidProposal:
+        pass
+    assert calls["n"] == PROPOSE_RETRIES
+
+
+def test_llm_exception_does_not_trigger_retry() -> None:
+    """Retries are for STRUCTURAL rejections only. A raised exception from the
+    LLM (timeout, network) should bubble up on the first call, not retry 3x."""
+    ctx = _mk_ctx()
+    calls = {"n": 0}
+
+    def exploding_llm(_msgs):
+        calls["n"] += 1
+        raise TimeoutError("ollama unreachable")
+
+    with pytest.raises(TimeoutError):
+        propose_edit(ctx, exploding_llm)
+    assert calls["n"] == 1

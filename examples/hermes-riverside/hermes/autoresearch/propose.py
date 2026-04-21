@@ -70,18 +70,36 @@ class ProposalContext:
 LLMCallable = Callable[[list[dict]], str]
 """A function that takes a litellm-style messages list and returns the raw text."""
 
+PROPOSE_RETRIES = 3
+"""How many times to ask the LLM before giving up and returning InvalidProposal.
+
+Smaller models are stochastically sloppy about preserving all required sections
+on long-form rewrites. One bad sample is cheap to retry; three bad samples is
+a real signal the model cannot handle the task.
+"""
+
 
 def propose_edit(ctx: ProposalContext, llm: LLMCallable) -> str:
-    """Call the LLM and validate the response. Raises InvalidProposal on any
-    structural problem. Returns the candidate HERMES.md text on success.
+    """Call the LLM and validate the response. Retries up to PROPOSE_RETRIES
+    times on structural failures before raising InvalidProposal with the last
+    error.
+
+    Returns the candidate HERMES.md text on success.
     """
     user = _render_user_prompt(ctx)
     messages = [
         {"role": "system", "content": PROPOSAL_SYSTEM_PROMPT},
         {"role": "user", "content": user},
     ]
-    raw = llm(messages)
-    return _validate_candidate(raw)
+    last_err: InvalidProposal | None = None
+    for _ in range(PROPOSE_RETRIES):
+        raw = llm(messages)
+        try:
+            return _validate_candidate(raw)
+        except InvalidProposal as e:
+            last_err = e
+    assert last_err is not None
+    raise last_err
 
 
 def _render_user_prompt(ctx: ProposalContext) -> str:
