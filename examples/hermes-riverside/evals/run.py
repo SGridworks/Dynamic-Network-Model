@@ -1,61 +1,51 @@
+"""Eval harness entry point.
+
+Pure scoring logic lives in evals/scoring.py so tests can reach it without
+triggering the agent/LLM import graph. This file wires the scorer to the
+live agent turn.
+"""
+
 from __future__ import annotations
 
-from dataclasses import dataclass
 from pathlib import Path
 
 import yaml
 
+from evals.scoring import AxisScores, Score, aggregate, score_pair
 from hermes.agent.loop import run as run_turn
 from hermes.agent.prompts import system_message
 from hermes.config import load_or_exit
 
 
-@dataclass
-class Score:
-    qid: str
-    tools_ok: bool
-    keywords_ok: bool
-    tools_called: list[str]
-    answer: str
-
-
 def _evaluate(pair: dict) -> Score:
     history = [system_message()]
     turn = run_turn(pair["q"], history=history)
-    called = [t.name for t in turn.traces]
-    expected_tools = set(pair.get("expected_tools", []))
-    tools_ok = expected_tools.issubset(set(called))
-    ans = (turn.final_text or "").lower()
-    keywords_ok = all(kw.lower() in ans for kw in pair.get("expected_keywords", []))
-    return Score(
-        qid=pair["id"],
-        tools_ok=tools_ok,
-        keywords_ok=keywords_ok,
-        tools_called=called,
-        answer=turn.final_text or "",
-    )
+    tools_called = [t.name for t in turn.traces]
+    answer = turn.final_text or ""
+    return score_pair(pair, answer, tools_called)
 
 
 def _render_md(cfg_label: str, scores: list[Score]) -> str:
     n = len(scores)
-    t_ok = sum(1 for s in scores if s.tools_ok)
-    k_ok = sum(1 for s in scores if s.keywords_ok)
-    both = sum(1 for s in scores if s.tools_ok and s.keywords_ok)
+    agg = aggregate(scores)
     lines = [
         f"# Eval results — {cfg_label}",
         "",
         f"- pairs: **{n}**",
-        f"- tools correct: **{t_ok}/{n}** ({t_ok/n:.0%})",
-        f"- keywords correct: **{k_ok}/{n}** ({k_ok/n:.0%})",
-        f"- both: **{both}/{n}** ({both/n:.0%})",
+        f"- correctness:     **{agg.correctness:.2f}**",
+        f"- tool_discipline: **{agg.tool_discipline:.2f}**",
+        f"- cite_coverage:   **{agg.cite_coverage:.2f}**",
+        f"- brevity:         **{agg.brevity:.2f}**",
         "",
-        "| id | tools | keywords | tools called |",
-        "|---|---|---|---|",
+        "| id | corr | tool | cite | brev | tools called |",
+        "|---|---|---|---|---|---|",
     ]
     for s in scores:
+        a = s.axes
         lines.append(
-            f"| `{s.qid}` | {'ok' if s.tools_ok else 'miss'} | "
-            f"{'ok' if s.keywords_ok else 'miss'} | {', '.join(s.tools_called) or '(none)'} |"
+            f"| `{s.qid}` | {a.correctness:.2f} | {a.tool_discipline:.2f} | "
+            f"{a.cite_coverage:.2f} | {a.brevity:.2f} | "
+            f"{', '.join(s.tools_called) or '(none)'} |"
         )
     lines.append("")
     lines.append("## Answer snippets")
@@ -73,9 +63,18 @@ def run(pairs_path: Path, out_path: Path) -> None:
         try:
             s = _evaluate(pair)
         except Exception as e:  # noqa: BLE001
-            s = Score(qid=pair["id"], tools_ok=False, keywords_ok=False, tools_called=[], answer=f"ERROR: {e}")
+            s = Score(
+                qid=pair["id"],
+                axes=AxisScores(0.0, 0.0, 0.0, 0.0),
+                tools_called=[],
+                answer=f"ERROR: {e}",
+            )
         scores.append(s)
-        print(f"{s.qid}: tools={'ok' if s.tools_ok else 'miss'} kw={'ok' if s.keywords_ok else 'miss'}")
+        a = s.axes
+        print(
+            f"{s.qid}: corr={a.correctness:.2f} tool={a.tool_discipline:.2f} "
+            f"cite={a.cite_coverage:.2f} brev={a.brevity:.2f}"
+        )
 
     label = f"provider={cfg.provider} model={cfg.model}"
     out_path.parent.mkdir(parents=True, exist_ok=True)
