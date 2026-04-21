@@ -24,6 +24,10 @@ The architecture is grounded in five articles:
 
 The agent in this POC operates at **Rung 2 (Shadow)** per the Agentic Epoch framework: it recommends and explains; it never actuates.
 
+## In progress — Atlas Phase 1a
+
+Foundation work for the Substation Atlas is on the `feat/hermes-atlas-phase-1a` branch. Adds a `HERMES.md` v0.1 schema + loader, a 4-axis Pareto eval scorer (correctness, tool_discipline, cite_coverage, brevity), a self-improving `hermes autoresearch` loop with a kill-switch and rollback runbook, and a third archetype playbook (SUB-013 Gilbert Road — rural loop). The public atlas launch at `sgridworks.com/hermes-atlas` is Phase 1b; the `main` branch here stays at the POC until the atlas has observed ~7 consecutive clean nightly runs. See `docs/ROLLBACK.md` and `docs/SETUP-AUTORESEARCH.md` on that branch for the operational details.
+
 ## Quickstart — notebook (no LLM required)
 
 ```bash
