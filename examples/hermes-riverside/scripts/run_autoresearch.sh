@@ -58,6 +58,12 @@ if [[ "$AUTO_PUSH" == "true" ]]; then
   PUSH_FLAG="--auto-push"
 fi
 
+# Default branch: the branch we return to after creating an autoresearch/<date>
+# branch. Must be a branch that contains this codebase (so the editable-install
+# hermes CLI keeps working after the loop returns). Defaults to whatever is
+# currently checked out; overridable via HERMES_DEFAULT_BRANCH env var.
+DEFAULT_BRANCH="${HERMES_DEFAULT_BRANCH:-$(git rev-parse --abbrev-ref HEAD)}"
+
 .venv/bin/python -m hermes.cli autoresearch run \
   --repo-root "$REPO_ROOT" \
   --targets-dir examples/hermes-riverside/hermes/agent \
@@ -65,7 +71,7 @@ fi
   --killswitch-path examples/hermes-riverside/runs/autoresearch_state.json \
   --ledger-path examples/hermes-riverside/public/autoresearch-ledger.json \
   --runs-dir examples/hermes-riverside/runs/autoresearch \
-  --default-branch main \
+  --default-branch "$DEFAULT_BRANCH" \
   $PUSH_FLAG
 
 echo "=== $(date -u +%Y-%m-%dT%H:%M:%SZ) autoresearch end ==="
