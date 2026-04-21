@@ -1,23 +1,24 @@
 """Event-driven dispatch for the Hermes substation copilot.
 
 Hermes doesn't wait for an operator query. It watches the utility's existing
-telemetry and dispatches the right scenario when a detection signal fires.
+telemetry and dispatches the right playbook when a detection signal fires.
 
-This module ships three reference watchers:
+This module ships two reference watchers:
 
-    PowerQualityWatcher  — historian/PQ → VVO scenarios (1, 2, 3)
-    AMIOutageWatcher     — AMI last-gasp → restoration scenarios (4, 5)
-    WeatherWatcher       — storm flag   — augments the PQ signal on scenario 3
+    PowerQualityWatcher  — historian/PQ + AMI → VVO playbooks
+    AMIOutageWatcher     — AMI last-gasp cluster → restoration playbooks
 
-Each watcher is a simple polling loop. Replace the stub `_poll_*` method with a
-call into your utility's historian / AMI head-end / weather vendor. Nothing
-else in the stack changes. When a trigger fires, the watcher hands a
-`TriggerEvent` to its dispatcher callback, which spawns the corresponding
-Hermes scenario via `scripts.record_traces.record_one()`.
+The watchers emit `TriggerEvent(playbook_key, context)`. The dispatcher looks
+the playbook up in `hermes/agent/HERMES.md` (via `hermes.agent.prompts`),
+renders it with the event context, and hands it to the agent loop as the first
+user turn. What the agent actually does on each event is authored in HERMES.md,
+not here. Add a new event kind by adding a playbook to the markdown file and
+wiring a detection threshold in this module.
 
-The 80-line watcher pattern below is intentionally minimal. A production
-deployment replaces the poll with a Kafka/MQTT subscription, but the contract
-(detection → TriggerEvent → dispatcher) stays identical.
+Each watcher is a minimal polling loop. Replace the stub `_poll_*` method with
+a call into your utility's historian / AMI head-end / weather vendor. A
+production deployment swaps the poll for a Kafka/MQTT subscription, but the
+contract (detection → TriggerEvent → dispatcher) stays identical.
 """
 
 from __future__ import annotations
@@ -35,18 +36,18 @@ from hermes.data import spl
 
 @dataclass
 class TriggerEvent:
-    """A detection signal that dispatches a scenario."""
+    """A detection signal routed to a playbook in HERMES.md."""
 
-    source: str                       # "Power quality", "AMI last-gasp", etc.
-    event: str                        # human-readable trigger description
-    scenario_id: str                  # which scenario to dispatch
-    context: dict[str, Any] = field(default_factory=dict)
+    source: str                             # "AMI last-gasp", "Power quality", ...
+    playbook_key: str                       # maps to ### heading under Playbooks
+    summary: str                            # human-readable event line
+    context: dict[str, Any] = field(default_factory=dict)  # renders into template
 
     def as_dict(self) -> dict[str, Any]:
         return {
             "source": self.source,
-            "event": self.event,
-            "scenario_id": self.scenario_id,
+            "playbook_key": self.playbook_key,
+            "summary": self.summary,
             "context": self.context,
         }
 
@@ -54,17 +55,15 @@ class TriggerEvent:
 Dispatcher = Callable[[TriggerEvent], None]
 
 
-# --- Power-quality → VVO (scenarios 1, 2, 3) --------------------------------
+# --- Power-quality → VVO playbooks ------------------------------------------
 
 
 class PowerQualityWatcher:
     """Poll historian + AMI for voltage excursions on Riverside feeders.
 
-    Fires scenario-01 when upper-band voltage is sustained on FDR-0001.
-    Fires scenario-02 when far-end undervoltage clusters on FDR-0003.
-    Fires scenario-03 when dV/dt jumps AND weather.is_storm is set.
-
-    Replace `_poll_feeder_state` with a call into your historian / AMI stack.
+    Fires `upper_band_voltage` on FDR-0001 when V > 1.05 pu sustains.
+    Fires `far_end_undervoltage` on FDR-0003 when far-end V < 0.95 pu clusters.
+    Fires `dvdt_storm` when dV/dt is high AND weather.is_storm is set.
     """
 
     UPPER_BAND_PU = 1.05
@@ -79,7 +78,7 @@ class PowerQualityWatcher:
     def _poll_feeder_state(self, feeder_id: str) -> dict[str, float]:
         """Stub — replace with historian/AMI query.
 
-        Returns a dict with keys: voltage_pu (feeder-head), far_end_voltage_pu,
+        Returns a dict with at least: voltage_pu, far_end_voltage_pu,
         dvdt_pu_per_min, ami_upper_band_count, ami_lower_band_count.
         """
         snap = spl.riverside_load_snapshot(time.strftime("%Y-%m-%d %H:%M"))
@@ -93,63 +92,77 @@ class PowerQualityWatcher:
         }
 
     def _evaluate(self) -> TriggerEvent | None:
+        ts = time.strftime("%Y-%m-%d %H:%M")
+
         fdr1 = self._poll_feeder_state("FDR-0001")
         if fdr1["voltage_pu"] >= self.UPPER_BAND_PU or fdr1["ami_upper_band_count"] >= 10:
             return TriggerEvent(
                 source="Power quality · AMI",
-                event=(
+                playbook_key="upper_band_voltage",
+                summary=(
                     f"V={fdr1['voltage_pu']:.3f} pu at FDR-0001 head · "
                     f"{fdr1['ami_upper_band_count']} AMI meters in upper band"
                 ),
-                scenario_id="01-afternoon-der",
-                context=fdr1,
+                context={
+                    "source": "Power quality · AMI",
+                    "feeder_id": "FDR-0001",
+                    "timestamp": ts,
+                    **fdr1,
+                },
             )
 
         fdr3 = self._poll_feeder_state("FDR-0003")
         if fdr3["far_end_voltage_pu"] <= self.LOWER_BAND_PU or fdr3["ami_lower_band_count"] >= 8:
+            battery_sites = spl.riverside_battery_summary().get("total_sites", 0)
             return TriggerEvent(
                 source="Power quality · AMI",
-                event=(
+                playbook_key="far_end_undervoltage",
+                summary=(
                     f"Far-end V={fdr3['far_end_voltage_pu']:.3f} pu on FDR-0003 · "
                     f"{fdr3['ami_lower_band_count']} AMI meters in lower band"
                 ),
-                scenario_id="02-evening-sag",
-                context=fdr3,
+                context={
+                    "source": "Power quality · AMI",
+                    "feeder_id": "FDR-0003",
+                    "timestamp": ts,
+                    "battery_sites": battery_sites,
+                    **fdr3,
+                },
             )
 
-        storm = self._weather_is_storm()
-        if fdr1["dvdt_pu_per_min"] >= self.DVDT_PU_PER_MIN and storm:
+        weather = spl.riverside_weather(ts)
+        if fdr1["dvdt_pu_per_min"] >= self.DVDT_PU_PER_MIN and weather.get("is_storm"):
             return TriggerEvent(
                 source="Power quality · weather",
-                event=(
+                playbook_key="dvdt_storm",
+                summary=(
                     f"dV/dt={fdr1['dvdt_pu_per_min']:.3f} pu/min on FDR-0001 · "
                     f"weather.is_storm=True"
                 ),
-                scenario_id="03-monsoon",
-                context={**fdr1, "is_storm": storm},
+                context={
+                    "source": "Power quality · weather",
+                    "feeder_id": "FDR-0001",
+                    "timestamp": ts,
+                    "cloud_cover_pct": weather.get("cloud_cover_pct", "<unset>"),
+                    **fdr1,
+                },
             )
         return None
 
-    def _weather_is_storm(self) -> bool:
-        w = spl.riverside_weather(time.strftime("%Y-%m-%d %H:%M"))
-        return bool(w.get("is_storm"))
-
-    def _debounce_ok(self, scenario_id: str, cooldown_seconds: int = 900) -> bool:
-        """Avoid re-firing the same scenario within a cooldown window."""
+    def _debounce_ok(self, key: str, cooldown_seconds: int = 900) -> bool:
         now = time.monotonic()
-        last = self._last_fire.get(scenario_id, 0.0)
+        last = self._last_fire.get(key, 0.0)
         if now - last < cooldown_seconds:
             return False
-        self._last_fire[scenario_id] = now
+        self._last_fire[key] = now
         return True
 
     def tick(self) -> None:
         ev = self._evaluate()
-        if ev and self._debounce_ok(ev.scenario_id):
+        if ev and self._debounce_ok(ev.playbook_key):
             self.dispatch(ev)
 
     def run(self) -> None:
-        """Long-running poll loop. In production, replace with pub/sub."""
         while True:
             try:
                 self.tick()
@@ -158,18 +171,19 @@ class PowerQualityWatcher:
             time.sleep(self.poll_seconds)
 
 
-# --- AMI last-gasp → restoration (scenarios 4, 5) ---------------------------
+# --- AMI last-gasp → restoration playbooks ----------------------------------
 
 
 class AMIOutageWatcher:
-    """Cluster AMI last-gasp messages; dispatch restoration scenarios.
+    """Cluster AMI last-gasp messages and dispatch restoration playbooks.
 
-    The fastest detection signal on a distribution feeder is an AMI last-gasp
-    cluster — individual meters reporting loss-of-power within seconds of the
-    event, before the upstream SCADA/OMS has finished evaluating the trip.
+    The fastest outage-detection signal on a distribution feeder is an AMI
+    last-gasp cluster — individual meters reporting loss-of-power within
+    seconds of the event, before the upstream SCADA/OMS has finished
+    evaluating the trip.
 
-    Fires scenario-04 on a last-gasp cluster for a feeder without a microgrid.
-    Fires scenario-05 if the affected feeder hosts a microgrid.
+    Fires `ami_last_gasp_cluster` on a cluster for a feeder without a
+    microgrid. Fires `microgrid_islanding` if the affected feeder hosts one.
     """
 
     CLUSTER_THRESHOLD = 50
@@ -193,7 +207,16 @@ class AMIOutageWatcher:
             return mg
         return None
 
+    def _debounce_ok(self, feeder_id: str, cooldown_seconds: int = 1800) -> bool:
+        now = time.monotonic()
+        last = self._last_fire.get(feeder_id, 0.0)
+        if now - last < cooldown_seconds:
+            return False
+        self._last_fire[feeder_id] = now
+        return True
+
     def tick(self) -> None:
+        ts = time.strftime("%Y-%m-%d %H:%M")
         counts = self._poll_last_gasp_counts()
         for feeder_id, n in counts.items():
             if n < self.CLUSTER_THRESHOLD:
@@ -204,33 +227,39 @@ class AMIOutageWatcher:
             if mg:
                 ev = TriggerEvent(
                     source="AMI last-gasp · microgrid controller",
-                    event=(
+                    playbook_key="microgrid_islanding",
+                    summary=(
                         f"{n} last-gasp messages on {feeder_id} in "
-                        f"{self.CLUSTER_WINDOW_SECONDS}s · {mg['facility_name']} "
-                        f"({mg['microgrid_id']}) on feeder"
+                        f"{self.CLUSTER_WINDOW_SECONDS}s · "
+                        f"{mg['facility_name']} ({mg['microgrid_id']})"
                     ),
-                    scenario_id="05-microgrid-island",
-                    context={"feeder_id": feeder_id, "count": n, "microgrid": mg},
+                    context={
+                        "source": "AMI last-gasp · microgrid controller",
+                        "feeder_id": feeder_id,
+                        "count": n,
+                        "window_seconds": self.CLUSTER_WINDOW_SECONDS,
+                        "timestamp": ts,
+                        "microgrid_name": mg["facility_name"],
+                        "microgrid_id": mg["microgrid_id"],
+                    },
                 )
             else:
                 ev = TriggerEvent(
                     source="AMI last-gasp",
-                    event=(
+                    playbook_key="ami_last_gasp_cluster",
+                    summary=(
                         f"{n} last-gasp messages on {feeder_id} in "
                         f"{self.CLUSTER_WINDOW_SECONDS}s · OMS ticket pending"
                     ),
-                    scenario_id="04-single-feeder-restoration",
-                    context={"feeder_id": feeder_id, "count": n},
+                    context={
+                        "source": "AMI last-gasp",
+                        "feeder_id": feeder_id,
+                        "count": n,
+                        "window_seconds": self.CLUSTER_WINDOW_SECONDS,
+                        "timestamp": ts,
+                    },
                 )
             self.dispatch(ev)
-
-    def _debounce_ok(self, feeder_id: str, cooldown_seconds: int = 1800) -> bool:
-        now = time.monotonic()
-        last = self._last_fire.get(feeder_id, 0.0)
-        if now - last < cooldown_seconds:
-            return False
-        self._last_fire[feeder_id] = now
-        return True
 
     def run(self) -> None:
         while True:
@@ -244,27 +273,26 @@ class AMIOutageWatcher:
 # --- Default dispatcher ------------------------------------------------------
 
 
-def default_dispatcher(out_dir: str = "fixtures/traces/live") -> Dispatcher:
-    """Return a dispatcher that records a Hermes trace for the triggered scenario."""
-    from pathlib import Path
-
-    from scripts.record_traces import record_one
-
-    target = Path(out_dir)
-    target.mkdir(parents=True, exist_ok=True)
+def default_dispatcher() -> Dispatcher:
+    """Render the playbook from HERMES.md and hand it to the agent loop."""
+    from hermes.agent.loop import run as run_turn
+    from hermes.agent.prompts import action_message, system_message
 
     def _dispatch(ev: TriggerEvent) -> None:
-        print(f"[hermes.triggers] {ev.source}: {ev.event}")
-        print(f"[hermes.triggers] dispatching scenario {ev.scenario_id}")
-        record_one(ev.scenario_id, target)
+        print(f"[hermes.triggers] {ev.source}: {ev.summary}")
+        print(f"[hermes.triggers] playbook={ev.playbook_key}")
+        history = [system_message()]
+        user_turn = action_message(ev.playbook_key, **ev.context)
+        turn = run_turn(user_turn["content"], history=history)
+        print(f"[hermes.triggers] agent response:\n{turn.final_text}\n")
 
     return _dispatch
 
 
 if __name__ == "__main__":
-    dispatch = default_dispatcher()
     import threading
 
+    dispatch = default_dispatcher()
     threading.Thread(target=PowerQualityWatcher(dispatch).run, daemon=True).start()
     threading.Thread(target=AMIOutageWatcher(dispatch).run, daemon=True).start()
     try:
