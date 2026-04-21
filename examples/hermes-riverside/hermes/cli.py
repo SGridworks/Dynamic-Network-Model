@@ -7,17 +7,98 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
-from hermes.agent.loop import ToolTrace, run
-from hermes.agent.prompts import system_message
-from hermes.config import load_or_exit
-
 app = typer.Typer(help="Otter Creek POC — agentic substation copilot over SP&L data.")
 console = Console()
+
+autoresearch_app = typer.Typer(help="Autoresearch loop control: status, halt, unhalt.")
+app.add_typer(autoresearch_app, name="autoresearch")
+
+
+_DEFAULT_KILLSWITCH = Path("runs/autoresearch_state.json")
+_DEFAULT_LEDGER = Path("public/autoresearch-ledger.json")
+
+
+@autoresearch_app.command("status")
+def autoresearch_status(
+    killswitch_path: Path = typer.Option(_DEFAULT_KILLSWITCH, help="Kill-switch state file"),
+    ledger_path: Path = typer.Option(_DEFAULT_LEDGER, help="Ledger JSON"),
+    tail: int = typer.Option(5, help="Show the last N ledger entries"),
+) -> None:
+    """Print kill-switch state and the most-recent ledger entries."""
+    import json
+
+    from hermes.autoresearch.commit import load_killswitch
+
+    state = load_killswitch(killswitch_path)
+    panel_color = "red" if state.halted else "green"
+    console.print(
+        Panel.fit(
+            f"halted: [bold {panel_color}]{state.halted}[/bold {panel_color}]\n"
+            f"consecutive_regressions: {state.consecutive_regressions}\n"
+            f"last_run_ts: {state.last_run_ts or '—'}\n"
+            f"state file: {killswitch_path}",
+            title="autoresearch kill-switch",
+        )
+    )
+
+    if not ledger_path.exists():
+        console.print(f"[dim]no ledger at {ledger_path}[/dim]")
+        return
+    try:
+        entries = json.loads(ledger_path.read_text())
+    except (OSError, json.JSONDecodeError) as e:
+        console.print(f"[red]could not read ledger: {e}[/red]")
+        return
+    tbl = Table(title=f"ledger: most recent {min(tail, len(entries))} of {len(entries)}")
+    for col in ("timestamp", "substation_id", "decision", "commit_kind", "target_axis", "commit_sha"):
+        tbl.add_column(col)
+    for e in entries[:tail]:
+        tbl.add_row(
+            str(e.get("timestamp", ""))[:19],
+            str(e.get("substation_id", "")),
+            str(e.get("decision", "")),
+            str(e.get("commit_kind") or "—"),
+            str(e.get("target_axis") or "—"),
+            str(e.get("commit_sha") or "—")[:10],
+        )
+    console.print(tbl)
+
+
+@autoresearch_app.command("halt")
+def autoresearch_halt(
+    killswitch_path: Path = typer.Option(_DEFAULT_KILLSWITCH, help="Kill-switch state file"),
+    reason: str = typer.Option("", help="Reason for halting (logged)"),
+) -> None:
+    """Halt the autoresearch loop immediately. Future cron runs will exit early."""
+    from hermes.autoresearch.commit import KillSwitchState, save_killswitch
+
+    save_killswitch(
+        KillSwitchState(consecutive_regressions=0, halted=True, last_run_ts=reason or "manual"),
+        killswitch_path,
+    )
+    console.print(f"[bold red]HALTED[/bold red] — wrote {killswitch_path}")
+    if reason:
+        console.print(f"[dim]reason: {reason}[/dim]")
+
+
+@autoresearch_app.command("unhalt")
+def autoresearch_unhalt(
+    killswitch_path: Path = typer.Option(_DEFAULT_KILLSWITCH, help="Kill-switch state file"),
+) -> None:
+    """Clear the halt flag. Next cron run will proceed normally."""
+    from hermes.autoresearch.commit import KillSwitchState, save_killswitch
+
+    save_killswitch(KillSwitchState(), killswitch_path)
+    console.print(f"[bold green]UNHALTED[/bold green] — kill-switch state reset at {killswitch_path}")
 
 
 @app.command()
 def chat() -> None:
     """Live chat REPL (requires a configured LLM provider)."""
+    from hermes.agent.loop import ToolTrace, run
+    from hermes.agent.prompts import system_message
+    from hermes.config import load_or_exit
+
     cfg = load_or_exit()
     console.print(
         Panel.fit(
@@ -48,6 +129,7 @@ def chat() -> None:
 @app.command()
 def summary() -> None:
     """Print Riverside overview pulled live from SP&L. Sanity check."""
+    from hermes.config import load_or_exit
     from hermes.data import spl
 
     load_or_exit()
@@ -95,6 +177,8 @@ def summary() -> None:
 @app.command()
 def ingest() -> None:
     """Rebuild the LanceDB vector store (reserved for future RAG over outage narratives)."""
+    from hermes.config import load_or_exit
+
     load_or_exit()
     console.print("[yellow]RAG ingest is not wired in the SP&L build yet.[/yellow]")
 
@@ -106,6 +190,7 @@ def eval(
 ) -> None:
     """Run the eval harness (live inference required)."""
     from evals.run import run as run_eval
+    from hermes.config import load_or_exit
 
     load_or_exit()
     run_eval(pairs, out)
@@ -117,6 +202,7 @@ def record(
     out_dir: Path = typer.Option(Path("fixtures/traces"), help="Where to write JSON traces"),
 ) -> None:
     """Record agent traces for the showcase notebook."""
+    from hermes.config import load_or_exit
     from scripts.record_traces import record_all, record_one
 
     load_or_exit()
