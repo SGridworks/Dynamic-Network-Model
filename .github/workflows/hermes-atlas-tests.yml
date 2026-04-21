@@ -1,0 +1,57 @@
+name: hermes-atlas tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "examples/hermes-riverside/**"
+      - ".github/workflows/hermes-atlas-tests.yml"
+  pull_request:
+    paths:
+      - "examples/hermes-riverside/**"
+      - ".github/workflows/hermes-atlas-tests.yml"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/hermes-riverside
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install test dependencies only
+        # Full project deps (litellm, streamlit, lancedb, sentence-transformers)
+        # are heavy and unnecessary for the atlas test suite. The suite covers
+        # schema, scoring, autoresearch, and CLI — all of which are designed
+        # to import cleanly without the LLM stack.
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pyyaml jsonschema typer rich
+
+      - name: Run tests
+        run: pytest tests/ -v
+
+      - name: Lint shipped HERMES*.md files
+        run: |
+          python -c "
+          from pathlib import Path
+          import sys
+          sys.path.insert(0, '.')
+          from hermes.schema import validate_playbook_file
+          failures = []
+          for p in sorted(Path('hermes/agent').glob('HERMES*.md')):
+              try:
+                  validate_playbook_file(p)
+                  print(f'OK  {p.name}')
+              except Exception as e:
+                  print(f'BAD {p.name}: {e}')
+                  failures.append(p.name)
+          sys.exit(1 if failures else 0)
+          "

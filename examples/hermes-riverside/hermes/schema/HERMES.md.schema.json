@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sgridworks.com/schema/HERMES.md.schema.json",
+  "title": "HERMES.md v0.1 frontmatter",
+  "description": "YAML frontmatter shape for a Hermes playbook file. The Identity + Playbooks + Memory markdown sections are enforced by hermes/schema/loader.py, not by this schema.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "substation_id",
+    "substation_name",
+    "archetype",
+    "version"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "0.1",
+      "description": "Version of HERMES.md.schema.json this file targets."
+    },
+    "substation_id": {
+      "type": "string",
+      "pattern": "^SUB-[A-Z0-9]{2,8}$",
+      "description": "Stable identifier. Matches the fixture and tool inputs."
+    },
+    "substation_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "archetype": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["topology", "load_mix", "climate", "criticality"],
+      "properties": {
+        "topology": {
+          "type": "string",
+          "enum": [
+            "urban_radial",
+            "meshed_urban",
+            "rural_loop",
+            "rural_radial",
+            "industrial_tap",
+            "transmission_tap"
+          ]
+        },
+        "load_mix": {
+          "type": "string",
+          "enum": [
+            "residential_dominant",
+            "commercial_dominant",
+            "industrial_dominant",
+            "mixed",
+            "der_heavy",
+            "customer_critical"
+          ]
+        },
+        "climate": {
+          "type": "string",
+          "enum": [
+            "desert_sw",
+            "coastal_storm",
+            "frozen_north",
+            "temperate",
+            "tropical",
+            "mountain"
+          ]
+        },
+        "criticality": {
+          "type": "string",
+          "enum": ["standard", "elevated", "critical"]
+        }
+      }
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semver for the playbook content."
+    },
+    "supersedes": {
+      "type": "string",
+      "description": "Optional: previous version ID this replaces."
+    },
+    "license": {
+      "type": "string",
+      "description": "Optional: SPDX license string. Defaults to repo license."
+    }
+  }
+}

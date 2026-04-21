@@ -1,3 +1,15 @@
+---
+schema_version: "0.1"
+substation_id: SUB-001
+substation_name: Riverside
+archetype:
+  topology: urban_radial
+  load_mix: der_heavy
+  climate: desert_sw
+  criticality: elevated
+version: 0.1.0
+---
+
 # HERMES.md
 
 The identity and playbooks for the Hermes substation copilot at Riverside. This

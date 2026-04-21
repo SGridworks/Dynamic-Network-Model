@@ -1,0 +1,290 @@
+# Autoresearch canary set.
+#
+# Each case pairs a known-wrong (or known-good) LLM response with the outcome
+# the autoresearch pipeline MUST produce. This is how we keep the loop honest:
+# without canaries, "autoresearch works" is an act of faith. With canaries,
+# we can answer "works by what definition?"
+#
+# Schema (one entry per case):
+#   id                : stable identifier
+#   kind              : obvious_bad | obvious_good | ambiguous
+#   description       : one-line human hint about what's being tested
+#   llm_response      : exact text the LLM returns (stored inline for reproducibility)
+#   expected_outcome  : rejected_proposal | reject_regression | accept
+#   baseline          : axis scores the eval returns on the CURRENT playbook
+#   candidate         : axis scores the eval returns on the PROPOSED playbook
+#                       (omitted when expected_outcome == rejected_proposal — the
+#                        candidate never reaches the eval in that branch)
+
+- id: empty_response
+  kind: obvious_bad
+  description: LLM returns empty string; propose rejects before eval runs.
+  llm_response: ""
+  expected_outcome: rejected_proposal
+  baseline: &default_baseline
+    correctness: 0.7
+    tool_discipline: 0.9
+    cite_coverage: 0.9
+    brevity: 0.5
+
+- id: not_markdown
+  kind: obvious_bad
+  description: LLM returns prose with no frontmatter. Schema gate rejects.
+  llm_response: |
+    I think the playbook should emphasize voltage bands more clearly.
+    Here is my suggestion: rewrite the Identity section to be shorter.
+  expected_outcome: rejected_proposal
+  baseline: *default_baseline
+
+- id: missing_memory_section
+  kind: obvious_bad
+  description: Candidate has frontmatter and Identity + Playbooks, but no `## Memory`.
+  llm_response: |
+    ---
+    schema_version: "0.1"
+    substation_id: SUB-001
+    substation_name: Riverside
+    archetype:
+      topology: urban_radial
+      load_mix: der_heavy
+      climate: desert_sw
+      criticality: elevated
+    version: 0.1.1
+    ---
+
+    # HERMES.md
+
+    ## Identity
+
+    Short identity.
+
+    ## Playbooks
+
+    ### event
+
+    ```
+    Trigger: {source}.
+    Respond.
+    ```
+  expected_outcome: rejected_proposal
+  baseline: *default_baseline
+
+- id: brevity_improvement_accepted
+  kind: obvious_good
+  description: >
+    Candidate tightens Memory wording without touching Identity. Baseline has
+    low brevity; candidate scores higher on brevity, ties everywhere else.
+  llm_response: |
+    ---
+    schema_version: "0.1"
+    substation_id: SUB-001
+    substation_name: Riverside
+    archetype:
+      topology: urban_radial
+      load_mix: der_heavy
+      climate: desert_sw
+      criticality: elevated
+    version: 0.1.1
+    ---
+
+    # HERMES.md
+
+    ## Identity
+
+    Short identity.
+
+    ## Playbooks
+
+    ### event
+
+    ```
+    Trigger: {source}.
+    Respond.
+    ```
+
+    ## Memory
+
+    Tighter memory posture.
+  expected_outcome: accept
+  baseline: *default_baseline
+  candidate:
+    correctness: 0.7
+    tool_discipline: 0.9
+    cite_coverage: 0.9
+    brevity: 0.75
+
+- id: citation_improvement_accepted
+  kind: obvious_good
+  description: Candidate raises cite_coverage without regressing anything.
+  llm_response: |
+    ---
+    schema_version: "0.1"
+    substation_id: SUB-001
+    substation_name: Riverside
+    archetype:
+      topology: urban_radial
+      load_mix: der_heavy
+      climate: desert_sw
+      criticality: elevated
+    version: 0.1.1
+    ---
+
+    # HERMES.md
+
+    ## Identity
+
+    Short identity, now with SUB-001 cite.
+
+    ## Playbooks
+
+    ### event
+
+    ```
+    Trigger: {source}.
+    Respond and cite SUB-001.
+    ```
+
+    ## Memory
+
+    Memory posture.
+  expected_outcome: accept
+  baseline:
+    correctness: 0.7
+    tool_discipline: 0.9
+    cite_coverage: 0.6
+    brevity: 0.8
+  candidate:
+    correctness: 0.7
+    tool_discipline: 0.9
+    cite_coverage: 0.85
+    brevity: 0.8
+
+- id: regression_on_tool_discipline_rejected
+  kind: obvious_bad
+  description: >
+    Candidate improves brevity by cutting tool-call instructions. Tool-discipline
+    drops as a result; the Pareto gate rejects.
+  llm_response: |
+    ---
+    schema_version: "0.1"
+    substation_id: SUB-001
+    substation_name: Riverside
+    archetype:
+      topology: urban_radial
+      load_mix: der_heavy
+      climate: desert_sw
+      criticality: elevated
+    version: 0.1.1
+    ---
+
+    # HERMES.md
+
+    ## Identity
+
+    Very short identity.
+
+    ## Playbooks
+
+    ### event
+
+    ```
+    Trigger: {source}.
+    ```
+
+    ## Memory
+
+    Memory.
+  expected_outcome: reject_regression
+  baseline: *default_baseline
+  candidate:
+    correctness: 0.7
+    tool_discipline: 0.75
+    cite_coverage: 0.9
+    brevity: 0.95
+
+- id: ambiguous_tie_on_all_axes
+  kind: ambiguous
+  description: >
+    Candidate ties baseline on every axis. Technically Pareto non-regressing,
+    so accept. A human reader might call this a no-op; the pipeline still
+    commits it because it cleared the gate. This encodes the behavior rather
+    than debating it.
+  llm_response: |
+    ---
+    schema_version: "0.1"
+    substation_id: SUB-001
+    substation_name: Riverside
+    archetype:
+      topology: urban_radial
+      load_mix: der_heavy
+      climate: desert_sw
+      criticality: elevated
+    version: 0.1.1
+    ---
+
+    # HERMES.md
+
+    ## Identity
+
+    Same identity.
+
+    ## Playbooks
+
+    ### event
+
+    ```
+    Trigger: {source}.
+    Respond.
+    ```
+
+    ## Memory
+
+    Same memory.
+  expected_outcome: accept
+  baseline: *default_baseline
+  candidate: *default_baseline
+
+- id: ambiguous_small_gain_small_regression_net_negative
+  kind: ambiguous
+  description: >
+    One axis up 0.02, another down 0.01. The Pareto gate is strict: any
+    regression rejects. A human might trade one for the other; the pipeline
+    does not. This is the behavior we want to lock in.
+  llm_response: |
+    ---
+    schema_version: "0.1"
+    substation_id: SUB-001
+    substation_name: Riverside
+    archetype:
+      topology: urban_radial
+      load_mix: der_heavy
+      climate: desert_sw
+      criticality: elevated
+    version: 0.1.1
+    ---
+
+    # HERMES.md
+
+    ## Identity
+
+    Small identity tweak.
+
+    ## Playbooks
+
+    ### event
+
+    ```
+    Trigger: {source}.
+    Respond.
+    ```
+
+    ## Memory
+
+    Memory.
+  expected_outcome: reject_regression
+  baseline: *default_baseline
+  candidate:
+    correctness: 0.72
+    tool_discipline: 0.89
+    cite_coverage: 0.9
+    brevity: 0.5

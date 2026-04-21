@@ -25,6 +25,7 @@ class Config:
     provider: str
     model: str
     ollama_api_base: str
+    ollama_api_key: str | None
     vllm_api_base: str | None
     llama_cpp_api_base: str | None
     aws_region: str | None
@@ -90,6 +91,7 @@ def load() -> Config:
         provider=provider,
         model=model,
         ollama_api_base=os.getenv("OLLAMA_API_BASE", "http://localhost:11434"),
+        ollama_api_key=os.getenv("OLLAMA_API_KEY"),
         vllm_api_base=os.getenv("VLLM_API_BASE"),
         llama_cpp_api_base=os.getenv("LLAMA_CPP_API_BASE"),
         aws_region=os.getenv("AWS_REGION"),
