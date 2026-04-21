@@ -42,14 +42,20 @@ _CODE_BLOCK = re.compile(r"^```\s*\n(.+?)\n```", re.MULTILINE | re.DOTALL)
 
 
 @lru_cache(maxsize=1)
-def _md_text() -> str:
+def _default_md_text() -> str:
     return IDENTITY_MD.read_text()
 
 
-def _section(heading: str, level: int = 2) -> str:
+def _md_text(path: Path | None = None) -> str:
+    if path is None:
+        return _default_md_text()
+    return Path(path).read_text()
+
+
+def _section(heading: str, level: int = 2, path: Path | None = None) -> str:
     """Return the body under '## {heading}' or '### {heading}' up to the next
     heading at the same or shallower level."""
-    text = _md_text()
+    text = _md_text(path)
     pattern = _H2 if level == 2 else _H3
     for m in pattern.finditer(text):
         if m.group(1).strip() == heading:
@@ -63,14 +69,24 @@ def _section(heading: str, level: int = 2) -> str:
 
 
 @lru_cache(maxsize=1)
-def identity() -> str:
-    """The system-prompt body, verbatim from HERMES.md §Identity."""
+def _default_identity() -> str:
     return _section("Identity", level=2)
 
 
-@lru_cache(maxsize=1)
-def _playbooks_map() -> dict[str, Playbook]:
-    section = _section("Playbooks", level=2)
+def identity(path: Path | None = None) -> str:
+    """The system-prompt body, verbatim from `## Identity`.
+
+    When path is None the default HERMES.md next to this module is used and the
+    result is cached. When path is given the cache is bypassed (autoresearch's
+    scratch-playbook evaluation needs a fresh read each call).
+    """
+    if path is None:
+        return _default_identity()
+    return _section("Identity", level=2, path=path)
+
+
+def _build_playbooks_map(path: Path | None = None) -> dict[str, Playbook]:
+    section = _section("Playbooks", level=2, path=path)
     out: dict[str, Playbook] = {}
     h3s = list(_H3.finditer(section))
     for i, m in enumerate(h3s):
@@ -85,29 +101,46 @@ def _playbooks_map() -> dict[str, Playbook]:
     return out
 
 
-def playbook(key: str) -> Playbook:
+@lru_cache(maxsize=1)
+def _default_playbooks_map() -> dict[str, Playbook]:
+    return _build_playbooks_map(path=None)
+
+
+def playbook(key: str, path: Path | None = None) -> Playbook:
+    pbs = _default_playbooks_map() if path is None else _build_playbooks_map(path=path)
     try:
-        return _playbooks_map()[key]
+        return pbs[key]
     except KeyError as e:
-        keys = ", ".join(sorted(_playbooks_map()))
+        keys = ", ".join(sorted(pbs))
         raise KeyError(f"unknown playbook '{key}'. known: {keys}") from e
 
 
-def playbook_keys() -> list[str]:
-    return sorted(_playbooks_map())
+def playbook_keys(path: Path | None = None) -> list[str]:
+    pbs = _default_playbooks_map() if path is None else _build_playbooks_map(path=path)
+    return sorted(pbs)
 
 
 # --- Agent-loop adapters ----------------------------------------------------
 
 
-def system_message() -> dict[str, str]:
-    """System message shape expected by the agent loop."""
-    return {"role": "system", "content": identity()}
+def system_message(hermes_md_path: Path | None = None) -> dict[str, str]:
+    """System message shape expected by the agent loop.
+
+    Pass `hermes_md_path` to evaluate a scratch playbook without touching the
+    default HERMES.md. Autoresearch uses this to score a proposed edit before
+    deciding to commit.
+    """
+    return {"role": "system", "content": identity(path=hermes_md_path)}
 
 
-def action_message(playbook_key: str, **context: object) -> dict[str, str]:
+def action_message(
+    playbook_key: str, hermes_md_path: Path | None = None, **context: object
+) -> dict[str, str]:
     """Render a playbook into the first user-turn message for the agent loop."""
-    return {"role": "user", "content": playbook(playbook_key).render(**context)}
+    return {
+        "role": "user",
+        "content": playbook(playbook_key, path=hermes_md_path).render(**context),
+    }
 
 
 # Back-compat shim for any caller still importing SYSTEM_PROMPT by name.
