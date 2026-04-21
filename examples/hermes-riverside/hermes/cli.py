@@ -145,11 +145,16 @@ def autoresearch_run(
         return scores
 
     def llm(messages: list[dict]) -> str:
-        """Route proposal-prompt messages through litellm to the configured model."""
+        """Route proposal-prompt messages through litellm to the configured model.
+
+        `get_client()` returns a litellm.completion callable pinned to the active
+        provider + model. Call it with messages=...; extract the text response.
+        """
         from hermes.llm import get_client
 
         client = get_client()
-        return client.complete(messages)
+        resp = client(messages=messages)
+        return resp["choices"][0]["message"]["content"]
 
     cfg = LoopConfig(
         repo_root=repo_root.resolve(),

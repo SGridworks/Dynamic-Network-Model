@@ -12,3 +12,8 @@ build/
 .pytest_cache/
 evals/results*.md
 fixtures/traces/live/
+# Autoresearch runtime artifacts (ledger + replay JSONs written per run).
+# Excluded for Phase 1a. Phase 1b revisits whether the ledger should be
+# committed as part of the public atlas surface.
+public/
+runs/
