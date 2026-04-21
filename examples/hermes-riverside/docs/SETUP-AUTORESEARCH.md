@@ -142,6 +142,28 @@ From this point:
 PR that touches `examples/hermes-riverside/**`. This is the status check
 `main` requires before merge.
 
+## Appendix — Ollama Cloud toggle
+
+If local Gemma 4 E4B drops sections or truncates during the proposal step
+(a known failure mode with ~8B-class models on long-form rewrites), flip
+to Ollama Cloud for that step. Leave the eval harness on local. The agent
+layer uses whatever `HERMES_LLM_MODEL` says.
+
+On mini1, add to `~/Projects/Dynamic-Network-Model/examples/hermes-riverside/.env`:
+
+```
+HERMES_LLM_MODEL=gemma3:27b
+OLLAMA_API_BASE=https://ollama.com
+OLLAMA_API_KEY=ollama_cloud_key_here
+```
+
+Revert by commenting those out (local defaults kick back in).
+
+Get the key at https://ollama.com → Settings → API Keys. It's per-account;
+billing is token-based at pennies per iteration. Treat it the same as the
+GitHub PAT: stored in a 600-perm file, rotated on schedule, revoked
+immediately if exposed.
+
 ## Summary
 
 | Step | Where | Reversible |

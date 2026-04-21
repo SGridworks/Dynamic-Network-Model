@@ -26,7 +26,12 @@ def _model_string(cfg: Config) -> str:
 
 def _extra_kwargs(cfg: Config) -> dict[str, Any]:
     if cfg.provider == "ollama":
-        return {"api_base": cfg.ollama_api_base}
+        kw: dict[str, Any] = {"api_base": cfg.ollama_api_base}
+        # Ollama Cloud and any gated Ollama proxy require an API key.
+        # Local Ollama ignores it. Pass it when set; otherwise omit.
+        if cfg.ollama_api_key:
+            kw["api_key"] = cfg.ollama_api_key
+        return kw
     if cfg.provider == "vllm":
         return {"api_base": cfg.vllm_api_base, "api_key": "unused"}
     if cfg.provider == "llama_cpp":
