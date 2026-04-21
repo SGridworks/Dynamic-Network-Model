@@ -33,8 +33,14 @@ if [[ ! -f "$ENV_FILE" ]]; then
   exit 2
 fi
 
+# Export every KEY=value line from the env file as an environment variable so
+# the Python process inherits it. `source` alone only creates shell variables,
+# which don't propagate to child processes. `set -a` (allexport) flips the
+# "auto-export" flag for the duration of the source.
+set -a
 # shellcheck disable=SC1090
 source "$ENV_FILE"
+set +a
 
 if [[ -z "${GITHUB_TOKEN:-}" ]]; then
   echo "GITHUB_TOKEN not set in $ENV_FILE" >&2
