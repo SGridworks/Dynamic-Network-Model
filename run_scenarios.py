@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -10,18 +11,15 @@ import numpy as np
 import opendssdirect as odd
 import pandas as pd
 
-DATA_DIR = Path("demo_data")
-NETWORK_DIR = Path("sisyphean-power-and-light/network")
-SCENARIO_DIR = Path("sisyphean-power-and-light/scenarios")
-
-MAX_FEEDERS = 12
-rng = np.random.default_rng(seed=42)
+ROOT = Path(__file__).resolve().parent
+DATA_DIR = ROOT / "demo_data"
+NETWORK_DIR = ROOT / "sisyphean-power-and-light/network"
+SCENARIO_DIR = ROOT / "sisyphean-power-and-light/scenarios"
 
 
 def load_der_data() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, list[str]]:
     """Load DER datasets filtered to model feeders."""
-    edges = pd.read_csv(DATA_DIR / "network_edges.csv")
-    feeders = list(edges["feeder_id"].unique()[:MAX_FEEDERS])
+    feeders = json.loads((NETWORK_DIR / "model_manifest.json").read_text())["feeders"]
 
     solar = pd.read_csv(DATA_DIR / "solar_installations.csv")
     solar = solar[(solar["feeder_id"].isin(feeders)) & (solar["status"] == "active")]
@@ -37,11 +35,7 @@ def load_der_data() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, list[str]
 
 def get_xfmr_buses() -> set[str]:
     """Get XFMR bus IDs present in the line network."""
-    with open(NETWORK_DIR / "lines.dss") as f:
-        text = f.read()
-    import re
-    buses = set(re.findall(r"bus_XFMR-\d+", text))
-    return {b.replace("bus_", "") for b in buses}
+    return set(json.loads((NETWORK_DIR / "model_manifest.json").read_text())["connections"])
 
 
 def scale_der(
@@ -94,6 +88,7 @@ def write_scenario_dss(
 ) -> None:
     """Write scenario-specific DSS files (PV, EV loads, storage)."""
     out_dir.mkdir(parents=True, exist_ok=True)
+    connections = json.loads((NETWORK_DIR / "model_manifest.json").read_text())["connections"]
 
     # PVSystems — aggregate by transformer
     pv_lines = ["! Scenario PV Systems", ""]
@@ -102,9 +97,10 @@ def write_scenario_dss(
         solar_derate = scenario.get("solar_derate_factor", 1.0)
         for xid, total_kw in solar_agg.items():
             kw = total_kw * solar_derate
+            connection = connections[xid]
             pv_lines.append(
-                f"New PVSystem.pv_{xid} bus1=bus_{xid}_sec phases=1 "
-                f"kV=0.24 kVA={kw:.1f} Pmpp={kw:.1f} irradiance=1 pf=1"
+                f"New PVSystem.pv_{xid} bus1={connection['bus']} phases={connection['phases']} "
+                f"kV={connection['kv']} kVA={kw:.1f} Pmpp={kw:.1f} irradiance=1 pf=1"
             )
     (out_dir / "pvsystems.dss").write_text("\n".join(pv_lines) + "\n")
 
@@ -113,9 +109,10 @@ def write_scenario_dss(
     if len(ev_s) > 0:
         ev_agg = ev_s.groupby("transformer_id")["power_kw"].sum()
         for xid, total_kw in ev_agg.items():
+            connection = connections[xid]
             ev_lines.append(
-                f"New Load.ev_{xid} bus1=bus_{xid}_sec phases=1 "
-                f"kv=0.24 kw={total_kw:.2f} pf=0.98"
+                f"New Load.ev_{xid} bus1={connection['bus']} phases={connection['phases']} "
+                f"kv={connection['kv']} kw={total_kw:.2f} pf=0.98"
             )
     (out_dir / "ev_loads.dss").write_text("\n".join(ev_lines) + "\n")
 
@@ -127,60 +124,40 @@ def write_scenario_dss(
             total_kw=("power_kw", "sum"),
         )
         for xid, row in batt_agg.iterrows():
+            connection = connections[xid]
             stor_lines.append(
-                f"New Storage.batt_{xid} bus1=bus_{xid}_sec phases=1 "
+                f"New Storage.batt_{xid} bus1={connection['bus']} phases={connection['phases']} "
+                f"kV={connection['kv']} "
                 f"kWRated={row['total_kw']:.1f} kWhRated={row['total_kwh']:.1f} "
-                f"%stored=50"
+                f"%stored=50 state=idling"
             )
     (out_dir / "storage.dss").write_text("\n".join(stor_lines) + "\n")
 
     # Scenario master — wraps base model with scenario DER
     load_mult = scenario.get("peak_load_multiplier", 1.0)
-    master = f"""\
-! SP&L Scenario: {scenario['name']}
-
-Clear
-
-New Circuit.SPL bus1=sourcebus basekV=69 pu=1.04 phases=3 MVAsc3=2000 MVAsc1=2100
-New Transformer.sub_xfmr phases=3 windings=2 buses=[sourcebus bus_SUB-001] conns=[delta wye] kvs=[69 12.47] kvas=[20000 20000] XHL=7
-
-Redirect {NETWORK_DIR.resolve()}/lines.dss
-Redirect {NETWORK_DIR.resolve()}/transformers.dss
-Redirect {NETWORK_DIR.resolve()}/loads.dss
-
-! Scenario DER (replaces base PV/storage)
-Redirect {out_dir.resolve()}/pvsystems.dss
-Redirect {out_dir.resolve()}/ev_loads.dss
-Redirect {out_dir.resolve()}/storage.dss
-
-Redirect {NETWORK_DIR.resolve()}/capacitors.dss
-
-Set voltagebases=[69, 12.47, 0.24]
-Calcvoltagebases
-
-Redirect {NETWORK_DIR.resolve()}/coordinates.dss
-
-Set loadmult={load_mult}
-Set tolerance=0.0001
-Set maxiterations=100
-
-Solve
-"""
+    # Reuse the repaired source, winding ratings and voltage bases.
+    master_lines = [f"! SP&L Scenario: {scenario['name']}"]
+    for line in (NETWORK_DIR / "master.dss").read_text().splitlines():
+        if line.strip().lower() == "solve":
+            continue
+        if line.startswith("Redirect "):
+            filename = line.split(maxsplit=1)[1]
+            parent = out_dir if filename in {"pvsystems.dss", "storage.dss"} else NETWORK_DIR
+            relative = Path(os.path.relpath(parent / filename, out_dir)).as_posix()
+            line = f'Redirect "{relative}"'
+        master_lines.append(line)
+    master_lines.extend([
+        'Redirect "ev_loads.dss"',
+        f"Set loadmult={load_mult}", "Solve",
+    ])
+    master = "\n".join(master_lines) + "\n"
     (out_dir / "master.dss").write_text(master)
 
 
 def solve_scenario(master: Path) -> dict[str, Any]:
     """Compile and solve a scenario, return results."""
-    # Full restart to clear CWD state from previous compile
     odd.Basic.Start(0)
-    odd.Text.Command("ClearAll")
-    # Read and execute master.dss line-by-line to control path resolution
-    master_abs = master.resolve()
-    for line in master_abs.read_text().splitlines():
-        line = line.strip()
-        if not line or line.startswith("!"):
-            continue
-        odd.Text.Command(line)
+    odd.Text.Command(f'compile "{master.resolve()}"')
 
     converged = odd.Solution.Converged()
     tp = odd.Circuit.TotalPower()
@@ -190,14 +167,14 @@ def solve_scenario(master: Path) -> dict[str, Any]:
     vmag = np.array(odd.Circuit.AllBusMagPu())
     nonzero = vmag[vmag > 0.01]
 
-    source_kw = abs(tp[0])
+    source_kw = -tp[0]
     loss_kw = losses[0] / 1000.0
 
     # Gross load = sum of all Load elements (not net of PV/storage)
     gross_load_kw = 0.0
     idx = odd.Loads.First()
     while idx != 0:
-        gross_load_kw += odd.Loads.kW()
+        gross_load_kw += odd.Loads.kW() * odd.Solution.LoadMult()
         idx = odd.Loads.Next()
     total_kw = gross_load_kw if gross_load_kw > 0 else source_kw
 
@@ -211,11 +188,11 @@ def solve_scenario(master: Path) -> dict[str, Any]:
         phase_v = vmag[idx : idx + n] if idx + n <= len(vmag) else []
         nz = [v for v in phase_v if v > 0.01]
         mean_v = float(np.mean(nz)) if nz else 0.0
-        if mean_v > 1.05 or (mean_v < 0.95 and mean_v > 0.01):
+        if len(phase_v) and (min(phase_v) < 0.95 or max(phase_v) > 1.05):
             violations.append({
                 "bus_name": name,
                 "voltage_pu": round(mean_v, 4),
-                "violation": "over" if mean_v > 1.05 else "under",
+                "violation": "over" if max(phase_v) > 1.05 else "under",
             })
         idx += n
 
@@ -223,14 +200,17 @@ def solve_scenario(master: Path) -> dict[str, Any]:
         "converged": converged,
         "iterations": odd.Solution.Iterations(),
         "total_power_kw": round(total_kw, 2),
+        "source_power_kw": round(source_kw, 2),
         "total_power_kvar": round(abs(tp[1]), 2),
         "total_loss_kw": round(loss_kw, 2),
         "loss_pct": round(loss_kw / total_kw * 100, 2) if total_kw > 0 else 0.0,
         "v_min": round(float(nonzero.min()), 4) if len(nonzero) > 0 else 0.0,
         "v_max": round(float(nonzero.max()), 4) if len(nonzero) > 0 else 0.0,
         "v_mean": round(float(nonzero.mean()), 4) if len(nonzero) > 0 else 0.0,
-        "buses_under_095": int((nonzero < 0.95).sum()),
-        "buses_over_105": int((nonzero > 1.05).sum()),
+        "phases_under_095": int((vmag < 0.95).sum()),
+        "phases_over_105": int((vmag > 1.05).sum()),
+        "buses_under_095": sum(v["violation"] == "under" for v in violations),
+        "buses_over_105": sum(v["violation"] == "over" for v in violations),
         "num_violations": len(violations),
         "violations": violations,
     }
@@ -253,7 +233,7 @@ def main() -> None:
     solar, ev, batt, feeders = load_der_data()
     xfmr_ids = get_xfmr_buses()
     customers = pd.read_csv(DATA_DIR / "customers.csv")
-    n_customers = len(customers[customers["feeder_id"].isin(feeders)])
+    n_customers = len(customers[customers["transformer_id"].isin(xfmr_ids)])
 
     print(f"Customers in model: {n_customers}")
     print(f"Base DER: {len(solar)} solar, {len(ev)} EV, {len(batt)} battery")
@@ -298,8 +278,9 @@ def main() -> None:
 
         # Save per-scenario results
         violations_df = pd.DataFrame(result.pop("violations"))
-        if len(violations_df) > 0:
-            violations_df.to_csv(scenario_out / "violations.csv", index=False)
+        violations_df.reindex(columns=["bus_name", "voltage_pu", "violation"]).to_csv(
+            scenario_out / "violations.csv", index=False
+        )
 
         (scenario_out / "results.json").write_text(json.dumps(result, indent=2))
 

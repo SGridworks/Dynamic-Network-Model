@@ -2,6 +2,10 @@
 
 ## Overview
 
+Current verification and reproduction commands: [DATA-QUALITY.md](DATA-QUALITY.md).
+The combined loader exposes 31 datasets. The hourly table contains 349,440
+populated sampled hours, not a continuous five-year history.
+
 The repository contains two versions of the synthetic dataset:
 
 | Version | Directory | Format | Description |
@@ -64,7 +68,7 @@ Index: `outage_id` (generated sequential OUT-00001, etc.)
 | `install_year` | `install_year` | Pass through |
 | `type` | `type` | Pass through |
 | _(derived)_ | `substation_id` | From feeder_id mapping |
-| _(derived)_ | `status`, `phase`, `primary_voltage_kv`, etc. | Generated defaults |
+| V1 registry | `status`, `phase`, `primary_voltage_kv`, `secondary_voltage_v`, `latitude`, `longitude` | Preserved by transformer ID; never generated defaults |
 
 ### `load_load_profiles()`
 
@@ -74,13 +78,15 @@ Index: `outage_id` (generated sequential OUT-00001, etc.)
 | `feeder_id` | `feeder_id` | Pass through |
 | `total_load_mw` | `load_mw` | Renamed |
 | _(derived)_ | `substation_id` | From feeder_id mapping |
-| _(derived)_ | `load_mvar` | `load_mw * 0.3` |
-| _(derived)_ | `voltage_pu` | `1.0 + noise` |
-| _(derived)_ | `power_factor` | `0.95 + noise`, clipped to [0.85, 1.0] |
+| `load_mvar` | `load_mvar` | Hourly mean of source reactive demand |
+| `voltage_pu` | `voltage_pu` | Hourly mean of source synthetic voltage; independent of DSS outputs |
+| `power_factor` | `power_factor` | Hourly MW divided by hypot(MW, Mvar) |
 
 ### `load_customer_interval_data()`
 
 No renames needed — V2 columns already match guide expectations.
+The July 15–21, 2024 sample is rebuilt from the current V1 interval corpus by
+`convert_customer_intervals.py`; its customer hierarchy and classes match the registry.
 
 ### Unchanged Loaders (always read from V1)
 
@@ -117,7 +123,7 @@ These datasets were added to model distribution-level DER types that utilities d
 ```python
 from demo_data.load_demo_data import load_all, summary
 
-# Print dataset summary (23 datasets)
+# Print dataset summary (31 datasets)
 summary()
 
 # Load everything

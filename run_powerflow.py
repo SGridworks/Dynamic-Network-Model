@@ -158,8 +158,9 @@ def build_summary(voltages_df: pd.DataFrame) -> dict[str, Any]:
     tp = odd.Circuit.TotalPower()
     losses = odd.Circuit.Losses()
 
-    v_vals = voltages_df["voltage_pu"]
-    nonzero = v_vals[v_vals > 0.01]
+    # Extrema and violation counts must include every phase, not bus averages.
+    phase_values = np.asarray(odd.Circuit.AllBusMagPu())
+    nonzero = phase_values[phase_values > 0.01]
 
     total_kw = abs(tp[0])
     loss_kw = losses[0] / 1000.0
@@ -179,8 +180,11 @@ def build_summary(voltages_df: pd.DataFrame) -> dict[str, Any]:
         "v_min": round(float(nonzero.min()), 4) if len(nonzero) > 0 else 0.0,
         "v_max": round(float(nonzero.max()), 4) if len(nonzero) > 0 else 0.0,
         "v_mean": round(float(nonzero.mean()), 4) if len(nonzero) > 0 else 0.0,
-        "buses_under_095": int((nonzero < 0.95).sum()),
-        "buses_over_105": int((nonzero > 1.05).sum()),
+        "buses_under_095": int((voltages_df["v_min"] < 0.95).sum()),
+        "buses_over_105": int((voltages_df["v_max"] > 1.05).sum()),
+        "phases_under_095": int((nonzero < 0.95).sum()),
+        "phases_over_105": int((nonzero > 1.05).sum()),
+        "deenergized_phase_values": int((phase_values <= 0.01).sum()),
     }
 
 
@@ -204,6 +208,8 @@ def main() -> None:
     print("=" * 60)
 
     converged = compile_model(model_dir)
+    if not converged:
+        raise RuntimeError("Base power flow did not converge; results were not refreshed")
 
     print("\nExtracting bus voltages...")
     voltages = extract_bus_voltages()

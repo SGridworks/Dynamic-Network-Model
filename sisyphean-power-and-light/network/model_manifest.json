@@ -1,0 +1,5227 @@
+{
+  "synthetic": true,
+  "substation_id": "SUB-001",
+  "feeders": [
+    "FDR-0001",
+    "FDR-0002"
+  ],
+  "complete_feeders": true,
+  "line_count": 1064,
+  "transformer_count": 521,
+  "connections": {
+    "XFMR-000001": {
+      "bus": "bus_XFMR-000001_sec.2",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 167.5773181101062,
+      "load_kvar": 55.6499232952982,
+      "load_weight": 0.01755379648144411
+    },
+    "XFMR-000002": {
+      "bus": "bus_XFMR-000002_sec.1",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 5.10065514299866,
+      "load_kvar": 1.6938513556896773,
+      "load_weight": 0.0005342958301994092
+    },
+    "XFMR-000003": {
+      "bus": "bus_XFMR-000003_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 4.312571086569683,
+      "load_kvar": 1.432140416613161,
+      "load_weight": 0.000451743684760874
+    },
+    "XFMR-000004": {
+      "bus": "bus_XFMR-000004_sec.1.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 1.5761681128579552,
+      "load_kvar": 0.5234218781530334,
+      "load_weight": 0.00016510429087707068
+    },
+    "XFMR-000005": {
+      "bus": "bus_XFMR-000005_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 51.510049577149566,
+      "load_kvar": 17.105717767973438,
+      "load_weight": 0.005395699950468713
+    },
+    "XFMR-000006": {
+      "bus": "bus_XFMR-000006_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 7.837058116710388,
+      "load_kvar": 2.6025698941498048,
+      "load_weight": 0.0008209352240832124
+    },
+    "XFMR-000007": {
+      "bus": "bus_XFMR-000007_sec.1.2",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 24.452496973088,
+      "load_kvar": 8.1203088596797,
+      "load_weight": 0.002561409623745666
+    },
+    "XFMR-000008": {
+      "bus": "bus_XFMR-000008_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 57.59580979068445,
+      "load_kvar": 19.126707797508764,
+      "load_weight": 0.0060331859624662915
+    },
+    "XFMR-000009": {
+      "bus": "bus_XFMR-000009_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 17.710000045862305,
+      "load_kvar": 5.881226380913945,
+      "load_weight": 0.0018551301572159748
+    },
+    "XFMR-000010": {
+      "bus": "bus_XFMR-000010_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 4.903634128891416,
+      "load_kvar": 1.6284236209205483,
+      "load_weight": 0.0005136577938397754
+    },
+    "XFMR-000011": {
+      "bus": "bus_XFMR-000011_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 5.122546366788353,
+      "load_kvar": 1.7011211039973582,
+      "load_weight": 0.0005365889453504796
+    },
+    "XFMR-000012": {
+      "bus": "bus_XFMR-000012_sec.1",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 10.376440076314871,
+      "load_kvar": 3.445860697840803,
+      "load_weight": 0.001086936581607382
+    },
+    "XFMR-000013": {
+      "bus": "bus_XFMR-000013_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 6.436019794169984,
+      "load_kvar": 2.1373060024582196,
+      "load_weight": 0.0006741758544147053
+    },
+    "XFMR-000014": {
+      "bus": "bus_XFMR-000014_sec.1.2",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 57.79283080479169,
+      "load_kvar": 19.19213553227789,
+      "load_weight": 0.006053823998825925
+    },
+    "XFMR-000015": {
+      "bus": "bus_XFMR-000015_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 9.9167243767313,
+      "load_kvar": 3.2931959833795013,
+      "load_weight": 0.0010387811634349029
+    },
+    "XFMR-000016": {
+      "bus": "bus_XFMR-000016_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 103.457923630093,
+      "load_kvar": 34.3568305021005,
+      "load_weight": 0.010837262203958834
+    },
+    "XFMR-000017": {
+      "bus": "bus_XFMR-000017_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 56.45746615362036,
+      "load_kvar": 18.748680885509344,
+      "load_weight": 0.005913943974610628
+    },
+    "XFMR-000018": {
+      "bus": "bus_XFMR-000018_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 8.406229935242427,
+      "load_kvar": 2.7915833501495113,
+      "load_weight": 0.0008805562180110436
+    },
+    "XFMR-000019": {
+      "bus": "bus_XFMR-000019_sec.1",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 2.8677503164498903,
+      "load_kvar": 0.9523370283062135,
+      "load_weight": 0.0003003980847902258
+    },
+    "XFMR-000020": {
+      "bus": "bus_XFMR-000020_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 2.101557483810607,
+      "load_kvar": 0.6978958375373778,
+      "load_weight": 0.0002201390545027609
+    },
+    "XFMR-000021": {
+      "bus": "bus_XFMR-000021_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 6.69871447964631,
+      "load_kvar": 2.224542982150392,
+      "load_weight": 0.0007016932362275504
+    },
+    "XFMR-000022": {
+      "bus": "bus_XFMR-000022_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 52.954870347269356,
+      "load_kvar": 17.585521156280386,
+      "load_weight": 0.00554704555043936
+    },
+    "XFMR-000023": {
+      "bus": "bus_XFMR-000023_sec.1",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 16.418417842270365,
+      "load_kvar": 5.452311230760764,
+      "load_weight": 0.0017198363633028194
+    },
+    "XFMR-000024": {
+      "bus": "bus_XFMR-000024_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 32.83683568454073,
+      "load_kvar": 10.904622461521528,
+      "load_weight": 0.003439672726605639
+    },
+    "XFMR-000025": {
+      "bus": "bus_XFMR-000025_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 6.786279374805084,
+      "load_kvar": 2.2536219753811157,
+      "load_weight": 0.000710865696831832
+    },
+    "XFMR-000026": {
+      "bus": "bus_XFMR-000026_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 29.465587220927883,
+      "load_kvar": 9.78508122213865,
+      "load_weight": 0.003086532993340793
+    },
+    "XFMR-000027": {
+      "bus": "bus_XFMR-000027_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 45.44618058740438,
+      "load_kvar": 15.091997486745797,
+      "load_weight": 0.0047605070536222045
+    },
+    "XFMR-000028": {
+      "bus": "bus_XFMR-000028_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 2.6269468547632586,
+      "load_kvar": 0.8723697969217223,
+      "load_weight": 0.00027517381812845114
+    },
+    "XFMR-000029": {
+      "bus": "bus_XFMR-000029_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 164.6876765698666,
+      "load_kvar": 54.6903165186843,
+      "load_weight": 0.017251105281502813
+    },
+    "XFMR-000030": {
+      "bus": "bus_XFMR-000030_sec.2",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 7.596254655023756,
+      "load_kvar": 2.5226026627653138,
+      "load_weight": 0.0007957109574214378
+    },
+    "XFMR-000031": {
+      "bus": "bus_XFMR-000031_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 3.9623115059345815,
+      "load_kvar": 1.3158244436902644,
+      "load_weight": 0.0004150538423437471
+    },
+    "XFMR-000032": {
+      "bus": "bus_XFMR-000032_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 74.7585292418044,
+      "load_kvar": 24.82619047073068,
+      "load_weight": 0.007830988240905504
+    },
+    "XFMR-000033": {
+      "bus": "bus_XFMR-000033_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 2.8020766450808097,
+      "load_kvar": 0.9305277833831705,
+      "load_weight": 0.00029351873933701456
+    },
+    "XFMR-000034": {
+      "bus": "bus_XFMR-000034_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 53.305129927904446,
+      "load_kvar": 17.701837129203277,
+      "load_weight": 0.005583735392856486
+    },
+    "XFMR-000035": {
+      "bus": "bus_XFMR-000035_sec.2",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 6.282781227642127,
+      "load_kvar": 2.0864177643044526,
+      "load_weight": 0.0006581240483572123
+    },
+    "XFMR-000036": {
+      "bus": "bus_XFMR-000036_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 17.315958017647812,
+      "load_kvar": 5.750370911375686,
+      "load_weight": 0.0018138540844967069
+    },
+    "XFMR-000037": {
+      "bus": "bus_XFMR-000037_sec.2",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 9.435117453358037,
+      "load_kvar": 3.1332615206105197,
+      "load_weight": 0.0009883326301113537
+    },
+    "XFMR-000038": {
+      "bus": "bus_XFMR-000038_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 5.84495675184825,
+      "load_kvar": 1.9410227981508321,
+      "load_weight": 0.0006122617453358037
+    },
+    "XFMR-000039": {
+      "bus": "bus_XFMR-000039_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 5.5603708425822305,
+      "load_kvar": 1.8465160701509786,
+      "load_weight": 0.0005824512483718882
+    },
+    "XFMR-000040": {
+      "bus": "bus_XFMR-000040_sec.2",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 33.95328809781512,
+      "load_kvar": 11.27537962521326,
+      "load_weight": 0.0035566215993102306
+    },
+    "XFMR-000041": {
+      "bus": "bus_XFMR-000041_sec.2",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 5.319567380895599,
+      "load_kvar": 1.7665488387664878,
+      "load_weight": 0.0005572269817101136
+    },
+    "XFMR-000042": {
+      "bus": "bus_XFMR-000042_sec.2",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 42.33762680926785,
+      "load_kvar": 14.05969322705509,
+      "load_weight": 0.004434884702170204
+    },
+    "XFMR-000043": {
+      "bus": "bus_XFMR-000043_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 11.492892489589257,
+      "load_kvar": 3.816617861532535,
+      "load_weight": 0.0012038854543119737
+    },
+    "XFMR-000044": {
+      "bus": "bus_XFMR-000044_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 19.964796096200764,
+      "load_kvar": 6.630010456605089,
+      "load_weight": 0.0020913210177762286
+    },
+    "XFMR-000045": {
+      "bus": "bus_XFMR-000045_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 6.260890003852433,
+      "load_kvar": 2.0791480159967715,
+      "load_weight": 0.0006558309332061419
+    },
+    "XFMR-000046": {
+      "bus": "bus_XFMR-000046_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 5.144437590578049,
+      "load_kvar": 1.7083908523050395,
+      "load_weight": 0.0005388820605015501
+    },
+    "XFMR-000047": {
+      "bus": "bus_XFMR-000047_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 7.070865284071104,
+      "load_kvar": 2.348128703380969,
+      "load_weight": 0.0007406761937957476
+    },
+    "XFMR-000048": {
+      "bus": "bus_XFMR-000048_sec.2",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 21.9787886848526,
+      "load_kvar": 7.298827300911744,
+      "load_weight": 0.002302287611674708
+    },
+    "XFMR-000049": {
+      "bus": "bus_XFMR-000049_sec.2",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 10.77048210452936,
+      "load_kvar": 3.5767161673790615,
+      "load_weight": 0.0011282126543266497
+    },
+    "XFMR-000050": {
+      "bus": "bus_XFMR-000050_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 12.762583469391497,
+      "load_kvar": 4.238263263378034,
+      "load_weight": 0.0013368861330740583
+    },
+    "XFMR-000051": {
+      "bus": "bus_XFMR-000051_sec.2.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 33.975179321604806,
+      "load_kvar": 11.28264937352094,
+      "load_weight": 0.0035589147144613007
+    },
+    "XFMR-000052": {
+      "bus": "bus_XFMR-000052_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 19.74588385830383,
+      "load_kvar": 6.55731297352828,
+      "load_weight": 0.0020683898662655245
+    },
+    "XFMR-000053": {
+      "bus": "bus_XFMR-000053_sec.1.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 54.83751559318302,
+      "load_kvar": 18.21071951074095,
+      "load_weight": 0.005744253453431417
+    },
+    "XFMR-000054": {
+      "bus": "bus_XFMR-000054_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 16.15572315679404,
+      "load_kvar": 5.365074251068592,
+      "load_weight": 0.0016923189814899743
+    },
+    "XFMR-000055": {
+      "bus": "bus_XFMR-000055_sec.2.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 19.045364697033627,
+      "load_kvar": 6.324681027682487,
+      "load_weight": 0.001995010181431271
+    },
+    "XFMR-000056": {
+      "bus": "bus_XFMR-000056_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 5.429023499844068,
+      "load_kvar": 1.802897580304893,
+      "load_weight": 0.0005686925574654657
+    },
+    "XFMR-000057": {
+      "bus": "bus_XFMR-000057_sec.1.2",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 6.5016934655390655,
+      "load_kvar": 2.159115247381263,
+      "load_weight": 0.0006810551998679166
+    },
+    "XFMR-000058": {
+      "bus": "bus_XFMR-000058_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 27.9988752270184,
+      "load_kvar": 9.298008085524025,
+      "load_weight": 0.002932894278219075
+    },
+    "XFMR-000059": {
+      "bus": "bus_XFMR-000059_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 5.21011126194713,
+      "load_kvar": 1.7302000972280827,
+      "load_weight": 0.0005457614059547614
+    },
+    "XFMR-000060": {
+      "bus": "bus_XFMR-000060_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 2.0358838124415257,
+      "load_kvar": 0.6760865926143348,
+      "load_weight": 0.00021325970904954964
+    },
+    "XFMR-000061": {
+      "bus": "bus_XFMR-000061_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 3.2836835684540735,
+      "load_kvar": 1.090462246152153,
+      "load_weight": 0.0003439672726605639
+    },
+    "XFMR-000062": {
+      "bus": "bus_XFMR-000062_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 12.324758993597621,
+      "load_kvar": 4.092868297224413,
+      "load_weight": 0.0012910238300526497
+    },
+    "XFMR-000063": {
+      "bus": "bus_XFMR-000063_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 34.08463544055328,
+      "load_kvar": 11.318998115059346,
+      "load_weight": 0.003570380290216653
+    },
+    "XFMR-000064": {
+      "bus": "bus_XFMR-000064_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 18.125933297866485,
+      "load_kvar": 6.019351598759884,
+      "load_weight": 0.0018986993450863126
+    },
+    "XFMR-000065": {
+      "bus": "bus_XFMR-000065_sec.2",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 6.195216332483351,
+      "load_kvar": 2.0573387710737285,
+      "load_weight": 0.0006489515877529306
+    },
+    "XFMR-000066": {
+      "bus": "bus_XFMR-000066_sec.2",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 26.028665085945956,
+      "load_kvar": 8.643730737832733,
+      "load_weight": 0.0027265139146227368
+    },
+    "XFMR-000067": {
+      "bus": "bus_XFMR-000067_sec.2",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 7.705710773972226,
+      "load_kvar": 2.558951404303719,
+      "load_weight": 0.00080717653317679
+    },
+    "XFMR-000068": {
+      "bus": "bus_XFMR-000068_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 31.632818376107572,
+      "load_kvar": 10.504786304599072,
+      "load_weight": 0.0033135513932967655
+    },
+    "XFMR-000069": {
+      "bus": "bus_XFMR-000069_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 13.638232420979252,
+      "load_kvar": 4.529053195685275,
+      "load_weight": 0.0014286107391168754
+    },
+    "XFMR-000070": {
+      "bus": "bus_XFMR-000070_sec.2",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 7.530580983654675,
+      "load_kvar": 2.500793417842271,
+      "load_weight": 0.0007888316119682266
+    },
+    "XFMR-000071": {
+      "bus": "bus_XFMR-000071_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 8.668924620718753,
+      "load_kvar": 2.8788203298416835,
+      "load_weight": 0.0009080735998238887
+    },
+    "XFMR-000072": {
+      "bus": "bus_XFMR-000072_sec.2",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 5.4728059474234545,
+      "load_kvar": 1.8174370769202546,
+      "load_weight": 0.0005732787877676064
+    },
+    "XFMR-000073": {
+      "bus": "bus_XFMR-000073_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 0.8756489515877528,
+      "load_kvar": 0.29078993230724076,
+      "load_weight": 9.172460604281704e-05
+    },
+    "XFMR-000074": {
+      "bus": "bus_XFMR-000074_sec.1.2",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 8.165426473555796,
+      "load_kvar": 2.71161611876502,
+      "load_weight": 0.0008553319513492689
+    },
+    "XFMR-000075": {
+      "bus": "bus_XFMR-000075_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 9.829159481572525,
+      "load_kvar": 3.264116990148777,
+      "load_weight": 0.0010296087028306212
+    },
+    "XFMR-000076": {
+      "bus": "bus_XFMR-000076_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 9.128640320302324,
+      "load_kvar": 3.0314850443029853,
+      "load_weight": 0.0009562290179963677
+    },
+    "XFMR-000077": {
+      "bus": "bus_XFMR-000077_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 12.302867769807929,
+      "load_kvar": 4.085598548916733,
+      "load_weight": 0.0012887307149015794
+    },
+    "XFMR-000078": {
+      "bus": "bus_XFMR-000078_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 8.778380739667222,
+      "load_kvar": 2.9151690713800886,
+      "load_weight": 0.0009195391755792409
+    },
+    "XFMR-000079": {
+      "bus": "bus_XFMR-000079_sec.1",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 63.24374552842546,
+      "load_kvar": 21.002302860890467,
+      "load_weight": 0.006624809671442461
+    },
+    "XFMR-000080": {
+      "bus": "bus_XFMR-000080_sec.2.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 22.942002531599123,
+      "load_kvar": 7.618696226449708,
+      "load_weight": 0.0024031846783218063
+    },
+    "XFMR-000081": {
+      "bus": "bus_XFMR-000081_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 23.992781273504427,
+      "load_kvar": 7.967644145218396,
+      "load_weight": 0.002513254205573187
+    },
+    "XFMR-000082": {
+      "bus": "bus_XFMR-000082_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 9.325661334409567,
+      "load_kvar": 3.096912779072114,
+      "load_weight": 0.0009768670543560014
+    },
+    "XFMR-000083": {
+      "bus": "bus_XFMR-000083_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 109.65313996257635,
+      "load_kvar": 36.41416927317422,
+      "load_weight": 0.011486213791711762
+    },
+    "XFMR-000084": {
+      "bus": "bus_XFMR-000084_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 59.872497064812606,
+      "load_kvar": 19.882761621507587,
+      "load_weight": 0.006271669938177615
+    },
+    "XFMR-000085": {
+      "bus": "bus_XFMR-000085_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 56.87339940562455,
+      "load_kvar": 18.88680610335529,
+      "load_weight": 0.005957513162480967
+    },
+    "XFMR-000086": {
+      "bus": "bus_XFMR-000086_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 4.29067986277999,
+      "load_kvar": 1.42487066830548,
+      "load_weight": 0.00044945056960980355
+    },
+    "XFMR-000087": {
+      "bus": "bus_XFMR-000087_sec.2.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 121.1679236759553,
+      "load_kvar": 40.23805688301444,
+      "load_weight": 0.012692392361174807
+    },
+    "XFMR-000088": {
+      "bus": "bus_XFMR-000088_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 3.5901607015097863,
+      "load_kvar": 1.1922387224596869,
+      "load_weight": 0.0003760708847755498
+    },
+    "XFMR-000089": {
+      "bus": "bus_XFMR-000089_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 16.418417842270365,
+      "load_kvar": 5.452311230760764,
+      "load_weight": 0.0017198363633028194
+    },
+    "XFMR-000090": {
+      "bus": "bus_XFMR-000090_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 6.786279374805084,
+      "load_kvar": 2.2536219753811157,
+      "load_weight": 0.000710865696831832
+    },
+    "XFMR-000091": {
+      "bus": "bus_XFMR-000091_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 11.05506801379538,
+      "load_kvar": 3.6712228953789148,
+      "load_weight": 0.0011580231512905651
+    },
+    "XFMR-000092": {
+      "bus": "bus_XFMR-000092_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 26.663510575847074,
+      "load_kvar": 8.854553438755481,
+      "load_weight": 0.002793014254003779
+    },
+    "XFMR-000093": {
+      "bus": "bus_XFMR-000093_sec.2.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 5.669826961530699,
+      "load_kvar": 1.8828648116893838,
+      "load_weight": 0.0005939168241272403
+    },
+    "XFMR-000094": {
+      "bus": "bus_XFMR-000094_sec.2",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 11.405327594430481,
+      "load_kvar": 3.787538868301811,
+      "load_weight": 0.001194712993707692
+    },
+    "XFMR-000095": {
+      "bus": "bus_XFMR-000095_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 4.750395562363559,
+      "load_kvar": 1.577535382766781,
+      "load_weight": 0.0004976059877822824
+    },
+    "XFMR-000096": {
+      "bus": "bus_XFMR-000096_sec.2",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 55.36290496413567,
+      "load_kvar": 18.385193470125298,
+      "load_weight": 0.005799288217057107
+    },
+    "XFMR-000097": {
+      "bus": "bus_XFMR-000097_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 42.84112495643081,
+      "load_kvar": 14.226897438131754,
+      "load_weight": 0.004487626350644824
+    },
+    "XFMR-000098": {
+      "bus": "bus_XFMR-000098_sec.2",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 75.8749816550788,
+      "load_kvar": 25.196947634422415,
+      "load_weight": 0.007947937113610097
+    },
+    "XFMR-000099": {
+      "bus": "bus_XFMR-000099_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 82.46424001577662,
+      "load_kvar": 27.3851418750344,
+      "load_weight": 0.008638164774082295
+    },
+    "XFMR-000100": {
+      "bus": "bus_XFMR-000100_sec.1",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 35.11352295866889,
+      "load_kvar": 11.660676285520355,
+      "load_weight": 0.0036781567023169634
+    },
+    "XFMR-000101": {
+      "bus": "bus_XFMR-000101_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 3.0866625543468293,
+      "load_kvar": 1.025034511383024,
+      "load_weight": 0.0003233292363009301
+    },
+    "XFMR-000102": {
+      "bus": "bus_XFMR-000102_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 158.14220065674817,
+      "load_kvar": 52.51666177468768,
+      "load_weight": 0.016565463851332757
+    },
+    "XFMR-000103": {
+      "bus": "bus_XFMR-000103_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 2.298578497917851,
+      "load_kvar": 0.7633235723065069,
+      "load_weight": 0.00024077709086239472
+    },
+    "XFMR-000104": {
+      "bus": "bus_XFMR-000104_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 6.917626717543247,
+      "load_kvar": 2.297240465227202,
+      "load_weight": 0.0007246243877382546
+    },
+    "XFMR-000105": {
+      "bus": "bus_XFMR-000105_sec.1",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 5.932521647007025,
+      "load_kvar": 1.9701017913815562,
+      "load_weight": 0.0006214342059400854
+    },
+    "XFMR-000106": {
+      "bus": "bus_XFMR-000106_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 1.48860321769918,
+      "load_kvar": 0.49434288492230927,
+      "load_weight": 0.00015593183027278897
+    },
+    "XFMR-000107": {
+      "bus": "bus_XFMR-000107_sec.1.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 50.48116205903395,
+      "load_kvar": 16.76403959751243,
+      "load_weight": 0.005287923538368402
+    },
+    "XFMR-000108": {
+      "bus": "bus_XFMR-000108_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 33.99707054539451,
+      "load_kvar": 11.289919121828623,
+      "load_weight": 0.0035612078296123717
+    },
+    "XFMR-000109": {
+      "bus": "bus_XFMR-000109_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 16.308961723321897,
+      "load_kvar": 5.415962489222359,
+      "load_weight": 0.0017083707875474674
+    },
+    "XFMR-000110": {
+      "bus": "bus_XFMR-000110_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 9.500791124727119,
+      "load_kvar": 3.155070765533562,
+      "load_weight": 0.0009952119755645649
+    },
+    "XFMR-000111": {
+      "bus": "bus_XFMR-000111_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 56.698269615307,
+      "load_kvar": 18.828648116893838,
+      "load_weight": 0.005939168241272403
+    },
+    "XFMR-000112": {
+      "bus": "bus_XFMR-000112_sec.2",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 19.329950606299644,
+      "load_kvar": 6.41918775568234,
+      "load_weight": 0.002024820678395186
+    },
+    "XFMR-000113": {
+      "bus": "bus_XFMR-000113_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 83.84338711452733,
+      "load_kvar": 27.843136018418303,
+      "load_weight": 0.008782631028599731
+    },
+    "XFMR-000114": {
+      "bus": "bus_XFMR-000114_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 3.962311505934582,
+      "load_kvar": 1.3158244436902646,
+      "load_weight": 0.00041505384234374713
+    },
+    "XFMR-000115": {
+      "bus": "bus_XFMR-000115_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 13.484993854451393,
+      "load_kvar": 4.478164957531507,
+      "load_weight": 0.0014125589330593823
+    },
+    "XFMR-000116": {
+      "bus": "bus_XFMR-000116_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 6.895735493753554,
+      "load_kvar": 2.289970716919521,
+      "load_weight": 0.0007223312725871842
+    },
+    "XFMR-000117": {
+      "bus": "bus_XFMR-000117_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 25.503275714993304,
+      "load_kvar": 8.469256778448388,
+      "load_weight": 0.0026714791509970465
+    },
+    "XFMR-000118": {
+      "bus": "bus_XFMR-000118_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 1.0288875181156096,
+      "load_kvar": 0.3416781704610079,
+      "load_weight": 0.00010777641210031003
+    },
+    "XFMR-000119": {
+      "bus": "bus_XFMR-000119_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 14.929814624571186,
+      "load_kvar": 4.957968345838455,
+      "load_weight": 0.0015639045330300306
+    },
+    "XFMR-000120": {
+      "bus": "bus_XFMR-000120_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 36.53645250499899,
+      "load_kvar": 12.133209925519623,
+      "load_weight": 0.0038272091871365413
+    },
+    "XFMR-000121": {
+      "bus": "bus_XFMR-000121_sec.2",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 3.6339431490891747,
+      "load_kvar": 1.2067782190750493,
+      "load_weight": 0.00038065711507769077
+    },
+    "XFMR-000122": {
+      "bus": "bus_XFMR-000122_sec.2",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 110.76959237585073,
+      "load_kvar": 36.78492643686596,
+      "load_weight": 0.011603162664416355
+    },
+    "XFMR-000123": {
+      "bus": "bus_XFMR-000123_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 82.09208921135182,
+      "load_kvar": 27.26155615380382,
+      "load_weight": 0.008599181816514097
+    },
+    "XFMR-000124": {
+      "bus": "bus_XFMR-000124_sec.1.2",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 10.223201509787016,
+      "load_kvar": 3.3949724596870365,
+      "load_weight": 0.001070884775549889
+    },
+    "XFMR-000125": {
+      "bus": "bus_XFMR-000125_sec.2.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 7.421124864706206,
+      "load_kvar": 2.4644446763038657,
+      "load_weight": 0.0007773660362128744
+    },
+    "XFMR-000126": {
+      "bus": "bus_XFMR-000126_sec.2",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 58.01174304268863,
+      "load_kvar": 19.2648330153547,
+      "load_weight": 0.006076755150336629
+    },
+    "XFMR-000127": {
+      "bus": "bus_XFMR-000127_sec.2.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 3.962311505934582,
+      "load_kvar": 1.3158244436902646,
+      "load_weight": 0.00041505384234374713
+    },
+    "XFMR-000128": {
+      "bus": "bus_XFMR-000128_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 28.10833134596687,
+      "load_kvar": 9.334356827062429,
+      "load_weight": 0.0029443598539744273
+    },
+    "XFMR-000129": {
+      "bus": "bus_XFMR-000129_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 5.626044513951312,
+      "load_kvar": 1.8683253150740218,
+      "load_weight": 0.0005893305938250994
+    },
+    "XFMR-000130": {
+      "bus": "bus_XFMR-000130_sec.1.2",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 18.03836840270771,
+      "load_kvar": 5.99027260552916,
+      "load_weight": 0.0018895268844820311
+    },
+    "XFMR-000131": {
+      "bus": "bus_XFMR-000131_sec.3",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 11.886934517803743,
+      "load_kvar": 3.947473331070793,
+      "load_weight": 0.0012451615270312412
+    },
+    "XFMR-000132": {
+      "bus": "bus_XFMR-000132_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 10.617243538001503,
+      "load_kvar": 3.525827929225294,
+      "load_weight": 0.0011121608482691566
+    },
+    "XFMR-000133": {
+      "bus": "bus_XFMR-000133_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 15.586551338262002,
+      "load_kvar": 5.176060795068886,
+      "load_weight": 0.0016326979875621434
+    },
+    "XFMR-000134": {
+      "bus": "bus_XFMR-000134_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 10.179419062207627,
+      "load_kvar": 3.380432963071674,
+      "load_weight": 0.001066298545247748
+    },
+    "XFMR-000135": {
+      "bus": "bus_XFMR-000135_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 11.317762699271706,
+      "load_kvar": 3.758459875071087,
+      "load_weight": 0.0011855405331034103
+    },
+    "XFMR-000136": {
+      "bus": "bus_XFMR-000136_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 2.583164407183871,
+      "load_kvar": 0.8578303003063603,
+      "load_weight": 0.0002705875878263103
+    },
+    "XFMR-000137": {
+      "bus": "bus_XFMR-000137_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 3.3055747922437675,
+      "load_kvar": 1.097731994459834,
+      "load_weight": 0.00034626038781163435
+    },
+    "XFMR-000138": {
+      "bus": "bus_XFMR-000138_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 2.429925840656014,
+      "load_kvar": 0.8069420621525931,
+      "load_weight": 0.0002545357817688173
+    },
+    "XFMR-000139": {
+      "bus": "bus_XFMR-000139_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 15.389530324154757,
+      "load_kvar": 5.110633060299756,
+      "load_weight": 0.0016120599512025094
+    },
+    "XFMR-000140": {
+      "bus": "bus_XFMR-000140_sec.2",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 36.79914719047532,
+      "load_kvar": 12.220446905211793,
+      "load_weight": 0.003854726568949386
+    },
+    "XFMR-000141": {
+      "bus": "bus_XFMR-000141_sec.1.2",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 16.418417842270365,
+      "load_kvar": 5.452311230760764,
+      "load_weight": 0.0017198363633028194
+    },
+    "XFMR-000142": {
+      "bus": "bus_XFMR-000142_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 12.302867769807929,
+      "load_kvar": 4.085598548916733,
+      "load_weight": 0.0012887307149015794
+    },
+    "XFMR-000143": {
+      "bus": "bus_XFMR-000143_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 12.149629203280073,
+      "load_kvar": 4.034710310762966,
+      "load_weight": 0.0012726789088440865
+    },
+    "XFMR-000144": {
+      "bus": "bus_XFMR-000144_sec.1.2",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 31.545253480948798,
+      "load_kvar": 10.475707311368348,
+      "load_weight": 0.0033043789326924838
+    },
+    "XFMR-000145": {
+      "bus": "bus_XFMR-000145_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 19.63642773935536,
+      "load_kvar": 6.520964231989875,
+      "load_weight": 0.0020569242905101722
+    },
+    "XFMR-000146": {
+      "bus": "bus_XFMR-000146_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 17.03137210838179,
+      "load_kvar": 5.655864183375833,
+      "load_weight": 0.0017840435875327914
+    },
+    "XFMR-000147": {
+      "bus": "bus_XFMR-000147_sec.2.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 25.984882638366567,
+      "load_kvar": 8.62919124121737,
+      "load_weight": 0.0027219276843205957
+    },
+    "XFMR-000148": {
+      "bus": "bus_XFMR-000148_sec.1.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 112.43332538386748,
+      "load_kvar": 37.337427308249715,
+      "load_weight": 0.01177743941589771
+    },
+    "XFMR-000149": {
+      "bus": "bus_XFMR-000149_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 15.849246023738328,
+      "load_kvar": 5.2632977747610585,
+      "load_weight": 0.0016602153693749885
+    },
+    "XFMR-000150": {
+      "bus": "bus_XFMR-000150_sec.2",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 4.728504338573865,
+      "load_kvar": 1.5702656344591002,
+      "load_weight": 0.000495312872631212
+    },
+    "XFMR-000151": {
+      "bus": "bus_XFMR-000151_sec.2.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 25.76597040046963,
+      "load_kvar": 8.55649375814056,
+      "load_weight": 0.0026989965328098916
+    },
+    "XFMR-000152": {
+      "bus": "bus_XFMR-000152_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 100.23991373300802,
+      "load_kvar": 33.28817750087139,
+      "load_weight": 0.010500174276751482
+    },
+    "XFMR-000153": {
+      "bus": "bus_XFMR-000153_sec.1",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 165.89169387829978,
+      "load_kvar": 55.09015267560676,
+      "load_weight": 0.017377226614811687
+    },
+    "XFMR-000154": {
+      "bus": "bus_XFMR-000154_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 28.94019784997523,
+      "load_kvar": 9.610607262754307,
+      "load_weight": 0.003031498229715103
+    },
+    "XFMR-000155": {
+      "bus": "bus_XFMR-000155_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 10.026180495679771,
+      "load_kvar": 3.329544724917907,
+      "load_weight": 0.0010502467391902551
+    },
+    "XFMR-000156": {
+      "bus": "bus_XFMR-000156_sec.1",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 12.784474693181192,
+      "load_kvar": 4.2455330116857155,
+      "load_weight": 0.0013391792482251288
+    },
+    "XFMR-000157": {
+      "bus": "bus_XFMR-000157_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 12.850148364550273,
+      "load_kvar": 4.267342256608758,
+      "load_weight": 0.00134605859367834
+    },
+    "XFMR-000158": {
+      "bus": "bus_XFMR-000158_sec.1.2",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 128.17311528865733,
+      "load_kvar": 42.56437634147237,
+      "load_weight": 0.013426189209517344
+    },
+    "XFMR-000159": {
+      "bus": "bus_XFMR-000159_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 2.7364029737117272,
+      "load_kvar": 0.9087185384601273,
+      "load_weight": 0.0002866393938838032
+    },
+    "XFMR-000160": {
+      "bus": "bus_XFMR-000160_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 12.302867769807929,
+      "load_kvar": 4.085598548916733,
+      "load_weight": 0.0012887307149015794
+    },
+    "XFMR-000161": {
+      "bus": "bus_XFMR-000161_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 82.39856634440754,
+      "load_kvar": 27.36333263011135,
+      "load_weight": 0.008631285428629083
+    },
+    "XFMR-000162": {
+      "bus": "bus_XFMR-000162_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 28.436699702812277,
+      "load_kvar": 9.443403051677645,
+      "load_weight": 0.0029787565812404836
+    },
+    "XFMR-000163": {
+      "bus": "bus_XFMR-000163_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 6.392237346590596,
+      "load_kvar": 2.1227665058428578,
+      "load_weight": 0.0006695896241125644
+    },
+    "XFMR-000164": {
+      "bus": "bus_XFMR-000164_sec.1",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 11.558566160958337,
+      "load_kvar": 3.838427106455578,
+      "load_weight": 0.0012107647997651849
+    },
+    "XFMR-000165": {
+      "bus": "bus_XFMR-000165_sec.1",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 5.034981471629579,
+      "load_kvar": 1.6720421107666343,
+      "load_weight": 0.000527416484746198
+    },
+    "XFMR-000166": {
+      "bus": "bus_XFMR-000166_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 4.969307800260498,
+      "load_kvar": 1.6502328658435914,
+      "load_weight": 0.0005205371392929867
+    },
+    "XFMR-000167": {
+      "bus": "bus_XFMR-000167_sec.2",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 27.079443827851257,
+      "load_kvar": 8.99267865660142,
+      "load_weight": 0.002836583441874117
+    },
+    "XFMR-000168": {
+      "bus": "bus_XFMR-000168_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 5.735500632899781,
+      "load_kvar": 1.904674056612427,
+      "load_weight": 0.0006007961695804516
+    },
+    "XFMR-000169": {
+      "bus": "bus_XFMR-000169_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 35.617021105831846,
+      "load_kvar": 11.827880496597016,
+      "load_weight": 0.0037308983507915827
+    },
+    "XFMR-000170": {
+      "bus": "bus_XFMR-000170_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 3.5244870301407056,
+      "load_kvar": 1.1704294775366442,
+      "load_weight": 0.00036919153932233863
+    },
+    "XFMR-000171": {
+      "bus": "bus_XFMR-000171_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 17.3597404652272,
+      "load_kvar": 5.764910407991048,
+      "load_weight": 0.0018184403147988477
+    },
+    "XFMR-000172": {
+      "bus": "bus_XFMR-000172_sec.2",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 17.05326333217149,
+      "load_kvar": 5.6631339316835145,
+      "load_weight": 0.001786336702683862
+    },
+    "XFMR-000173": {
+      "bus": "bus_XFMR-000173_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 21.781767670745353,
+      "load_kvar": 7.233399566142614,
+      "load_weight": 0.002281649575315074
+    },
+    "XFMR-000174": {
+      "bus": "bus_XFMR-000174_sec.3",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 85.20064298948834,
+      "load_kvar": 28.293860413494524,
+      "load_weight": 0.008924804167966097
+    },
+    "XFMR-000175": {
+      "bus": "bus_XFMR-000175_sec.2",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 5.735500632899781,
+      "load_kvar": 1.904674056612427,
+      "load_weight": 0.0006007961695804516
+    },
+    "XFMR-000176": {
+      "bus": "bus_XFMR-000176_sec.2.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 18.257280640604648,
+      "load_kvar": 6.0629700886059705,
+      "load_weight": 0.0019124580359927354
+    },
+    "XFMR-000177": {
+      "bus": "bus_XFMR-000177_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 4.443918429307846,
+      "load_kvar": 1.475758906459247,
+      "load_weight": 0.0004655023756672965
+    },
+    "XFMR-000178": {
+      "bus": "bus_XFMR-000178_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 7.530580983654675,
+      "load_kvar": 2.500793417842271,
+      "load_weight": 0.0007888316119682266
+    },
+    "XFMR-000179": {
+      "bus": "bus_XFMR-000179_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 12.499888783915173,
+      "load_kvar": 4.151026283685862,
+      "load_weight": 0.0013093687512612134
+    },
+    "XFMR-000180": {
+      "bus": "bus_XFMR-000180_sec.1.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 12.302867769807929,
+      "load_kvar": 4.085598548916733,
+      "load_weight": 0.0012887307149015794
+    },
+    "XFMR-000181": {
+      "bus": "bus_XFMR-000181_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 6.436019794169983,
+      "load_kvar": 2.1373060024582196,
+      "load_weight": 0.0006741758544147052
+    },
+    "XFMR-000182": {
+      "bus": "bus_XFMR-000182_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 1.7512979031755056,
+      "load_kvar": 0.5815798646144815,
+      "load_weight": 0.00018344921208563407
+    },
+    "XFMR-000183": {
+      "bus": "bus_XFMR-000183_sec.2",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 36.38321393847113,
+      "load_kvar": 12.082321687365852,
+      "load_weight": 0.0038111573810790476
+    },
+    "XFMR-000184": {
+      "bus": "bus_XFMR-000184_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 5.538479618792538,
+      "load_kvar": 1.839246321843298,
+      "load_weight": 0.0005801581332208178
+    },
+    "XFMR-000185": {
+      "bus": "bus_XFMR-000185_sec.1.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 27.670506870172993,
+      "load_kvar": 9.188961860908808,
+      "load_weight": 0.0028984975509530188
+    },
+    "XFMR-000186": {
+      "bus": "bus_XFMR-000186_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 3.502595806351011,
+      "load_kvar": 1.163159729228963,
+      "load_weight": 0.00036689842417126815
+    },
+    "XFMR-000187": {
+      "bus": "bus_XFMR-000187_sec.1.2",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 27.23268239437911,
+      "load_kvar": 9.043566894755187,
+      "load_weight": 0.0028526352479316098
+    },
+    "XFMR-000188": {
+      "bus": "bus_XFMR-000188_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 35.74836844857001,
+      "load_kvar": 11.871498986443106,
+      "load_weight": 0.003744657041698006
+    },
+    "XFMR-000189": {
+      "bus": "bus_XFMR-000189_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 2.0358838124415257,
+      "load_kvar": 0.6760865926143348,
+      "load_weight": 0.00021325970904954964
+    },
+    "XFMR-000190": {
+      "bus": "bus_XFMR-000190_sec.1.2",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 5.275784933316212,
+      "load_kvar": 1.7520093421511258,
+      "load_weight": 0.0005526407514079727
+    },
+    "XFMR-000191": {
+      "bus": "bus_XFMR-000191_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 3.2836835684540735,
+      "load_kvar": 1.090462246152153,
+      "load_weight": 0.0003439672726605639
+    },
+    "XFMR-000192": {
+      "bus": "bus_XFMR-000192_sec.2.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 55.42857863550475,
+      "load_kvar": 18.40700271504834,
+      "load_weight": 0.005806167562510318
+    },
+    "XFMR-000193": {
+      "bus": "bus_XFMR-000193_sec.2",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 2.4080346168663205,
+      "load_kvar": 0.7996723138449121,
+      "load_weight": 0.00025224266661774686
+    },
+    "XFMR-000194": {
+      "bus": "bus_XFMR-000194_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 13.134734273816294,
+      "load_kvar": 4.361848984608612,
+      "load_weight": 0.0013758690906422557
+    },
+    "XFMR-000195": {
+      "bus": "bus_XFMR-000195_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 82.46424001577662,
+      "load_kvar": 27.3851418750344,
+      "load_weight": 0.008638164774082295
+    },
+    "XFMR-000196": {
+      "bus": "bus_XFMR-000196_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 18.125933297866485,
+      "load_kvar": 6.019351598759884,
+      "load_weight": 0.0018986993450863126
+    },
+    "XFMR-000197": {
+      "bus": "bus_XFMR-000197_sec.2",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 11.86504329401405,
+      "load_kvar": 3.9402035827631123,
+      "load_weight": 0.0012428684118801709
+    },
+    "XFMR-000198": {
+      "bus": "bus_XFMR-000198_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 4.312571086569683,
+      "load_kvar": 1.4321404166131608,
+      "load_weight": 0.00045174368476087393
+    },
+    "XFMR-000199": {
+      "bus": "bus_XFMR-000199_sec.3",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 13.528776302030781,
+      "load_kvar": 4.492704454146869,
+      "load_weight": 0.0014171451633615232
+    },
+    "XFMR-000200": {
+      "bus": "bus_XFMR-000200_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 3.2836835684540735,
+      "load_kvar": 1.090462246152153,
+      "load_weight": 0.0003439672726605639
+    },
+    "XFMR-000201": {
+      "bus": "bus_XFMR-000201_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 89.9729297756416,
+      "load_kvar": 29.878665544568985,
+      "load_weight": 0.00942470327089945
+    },
+    "XFMR-000202": {
+      "bus": "bus_XFMR-000202_sec.2",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 9.478899900937424,
+      "load_kvar": 3.147801017225881,
+      "load_weight": 0.0009929188604134943
+    },
+    "XFMR-000203": {
+      "bus": "bus_XFMR-000203_sec.2.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 12.302867769807929,
+      "load_kvar": 4.085598548916733,
+      "load_weight": 0.0012887307149015794
+    },
+    "XFMR-000204": {
+      "bus": "bus_XFMR-000204_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 7.464907312285593,
+      "load_kvar": 2.4789841729192275,
+      "load_weight": 0.0007819522665150153
+    },
+    "XFMR-000205": {
+      "bus": "bus_XFMR-000205_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 13.17851672139568,
+      "load_kvar": 4.376388481223973,
+      "load_weight": 0.0013804553209443963
+    },
+    "XFMR-000206": {
+      "bus": "bus_XFMR-000206_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 3.5901607015097863,
+      "load_kvar": 1.1922387224596869,
+      "load_weight": 0.0003760708847755498
+    },
+    "XFMR-000207": {
+      "bus": "bus_XFMR-000207_sec.2.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 4.772286786153253,
+      "load_kvar": 1.5848051310744622,
+      "load_weight": 0.0004998991029333529
+    },
+    "XFMR-000208": {
+      "bus": "bus_XFMR-000208_sec.2",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 59.237651574911474,
+      "load_kvar": 19.671938920584836,
+      "load_weight": 0.006205169598796572
+    },
+    "XFMR-000209": {
+      "bus": "bus_XFMR-000209_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 5.144437590578049,
+      "load_kvar": 1.7083908523050395,
+      "load_weight": 0.0005388820605015501
+    },
+    "XFMR-000210": {
+      "bus": "bus_XFMR-000210_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 7.50868975986498,
+      "load_kvar": 2.4935236695345893,
+      "load_weight": 0.000786538496817156
+    },
+    "XFMR-000211": {
+      "bus": "bus_XFMR-000211_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 15.389530324154757,
+      "load_kvar": 5.110633060299756,
+      "load_weight": 0.0016120599512025094
+    },
+    "XFMR-000212": {
+      "bus": "bus_XFMR-000212_sec.3",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 40.3674166681954,
+      "load_kvar": 13.405415879363797,
+      "load_weight": 0.004228504338573865
+    },
+    "XFMR-000213": {
+      "bus": "bus_XFMR-000213_sec.1",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 8.296773816293959,
+      "load_kvar": 2.755234608611106,
+      "load_weight": 0.0008690906422556914
+    },
+    "XFMR-000214": {
+      "bus": "bus_XFMR-000214_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 19.023473473243932,
+      "load_kvar": 6.317411279374806,
+      "load_weight": 0.0019927170662802003
+    },
+    "XFMR-000215": {
+      "bus": "bus_XFMR-000215_sec.3",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 14.535772596356695,
+      "load_kvar": 4.827112876300196,
+      "load_weight": 0.0015226284603107626
+    },
+    "XFMR-000216": {
+      "bus": "bus_XFMR-000216_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 17.16271945111996,
+      "load_kvar": 5.69948267322192,
+      "load_weight": 0.0017978022784392142
+    },
+    "XFMR-000217": {
+      "bus": "bus_XFMR-000217_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 32.83683568454073,
+      "load_kvar": 10.904622461521528,
+      "load_weight": 0.003439672726605639
+    },
+    "XFMR-000218": {
+      "bus": "bus_XFMR-000218_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 12.302867769807929,
+      "load_kvar": 4.085598548916733,
+      "load_weight": 0.0012887307149015794
+    },
+    "XFMR-000219": {
+      "bus": "bus_XFMR-000219_sec.2.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 17.928912283759242,
+      "load_kvar": 5.953923863990755,
+      "load_weight": 0.001878061308726679
+    },
+    "XFMR-000220": {
+      "bus": "bus_XFMR-000220_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 0.8975401753774466,
+      "load_kvar": 0.2980596806149217,
+      "load_weight": 9.401772119388745e-05
+    },
+    "XFMR-000221": {
+      "bus": "bus_XFMR-000221_sec.2.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 164.18417842270364,
+      "load_kvar": 54.52311230760764,
+      "load_weight": 0.017198363633028194
+    },
+    "XFMR-000222": {
+      "bus": "bus_XFMR-000222_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 9.78537703399314,
+      "load_kvar": 3.249577493533416,
+      "load_weight": 0.0010250224725284805
+    },
+    "XFMR-000223": {
+      "bus": "bus_XFMR-000223_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 74.0361188567445,
+      "load_kvar": 24.586288776577206,
+      "load_weight": 0.00775531544092018
+    },
+    "XFMR-000224": {
+      "bus": "bus_XFMR-000224_sec.2",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 2.079666260020913,
+      "load_kvar": 0.6906260892296968,
+      "load_weight": 0.00021784593935169047
+    },
+    "XFMR-000225": {
+      "bus": "bus_XFMR-000225_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 7.661928326392838,
+      "load_kvar": 2.5444119076883567,
+      "load_weight": 0.0008025903028746491
+    },
+    "XFMR-000226": {
+      "bus": "bus_XFMR-000226_sec.2",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 3.108553778136523,
+      "load_kvar": 1.0323042596907048,
+      "load_weight": 0.0003256223514520005
+    },
+    "XFMR-000227": {
+      "bus": "bus_XFMR-000227_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 2.670729302342646,
+      "load_kvar": 0.8869092935370843,
+      "load_weight": 0.00027976004843059194
+    },
+    "XFMR-000228": {
+      "bus": "bus_XFMR-000228_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 7.289777521968041,
+      "load_kvar": 2.420826186457779,
+      "load_weight": 0.0007636073453064517
+    },
+    "XFMR-000229": {
+      "bus": "bus_XFMR-000229_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 26.400815890370747,
+      "load_kvar": 8.76731645906331,
+      "load_weight": 0.0027654968721909337
+    },
+    "XFMR-000230": {
+      "bus": "bus_XFMR-000230_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 113.57166902093154,
+      "load_kvar": 37.71545422024912,
+      "load_weight": 0.011896681403753369
+    },
+    "XFMR-000231": {
+      "bus": "bus_XFMR-000231_sec.2",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 8.865945634825998,
+      "load_kvar": 2.9442480646108127,
+      "load_weight": 0.0009287116361835226
+    },
+    "XFMR-000232": {
+      "bus": "bus_XFMR-000232_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 10.792373328319053,
+      "load_kvar": 3.583985915686742,
+      "load_weight": 0.00113050576947772
+    },
+    "XFMR-000233": {
+      "bus": "bus_XFMR-000233_sec.3",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 8.209208921135183,
+      "load_kvar": 2.726155615380382,
+      "load_weight": 0.0008599181816514097
+    },
+    "XFMR-000234": {
+      "bus": "bus_XFMR-000234_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 3.1742274495056044,
+      "load_kvar": 1.0541135046137478,
+      "load_weight": 0.0003325016969052118
+    },
+    "XFMR-000235": {
+      "bus": "bus_XFMR-000235_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 0.853757727798059,
+      "load_kvar": 0.28352018399955975,
+      "load_weight": 8.943149089174661e-05
+    },
+    "XFMR-000236": {
+      "bus": "bus_XFMR-000236_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 16.83435109427455,
+      "load_kvar": 5.590436448606704,
+      "load_weight": 0.0017634055511731577
+    },
+    "XFMR-000237": {
+      "bus": "bus_XFMR-000237_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 5.363349828474987,
+      "load_kvar": 1.7810883353818499,
+      "load_weight": 0.0005618132120122544
+    },
+    "XFMR-000238": {
+      "bus": "bus_XFMR-000238_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 54.83751559318302,
+      "load_kvar": 18.21071951074095,
+      "load_weight": 0.005744253453431417
+    },
+    "XFMR-000239": {
+      "bus": "bus_XFMR-000239_sec.1.2",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 81.93885064482397,
+      "load_kvar": 27.210667915650053,
+      "load_weight": 0.008583130010456604
+    },
+    "XFMR-000240": {
+      "bus": "bus_XFMR-000240_sec.1",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 36.33943149089175,
+      "load_kvar": 12.067782190750492,
+      "load_weight": 0.0038065711507769074
+    },
+    "XFMR-000241": {
+      "bus": "bus_XFMR-000241_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 25.525166938783,
+      "load_kvar": 8.47652652675607,
+      "load_weight": 0.002673772266148117
+    },
+    "XFMR-000242": {
+      "bus": "bus_XFMR-000242_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 12.302867769807929,
+      "load_kvar": 4.085598548916733,
+      "load_weight": 0.0012887307149015794
+    },
+    "XFMR-000243": {
+      "bus": "bus_XFMR-000243_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 27.60483319880391,
+      "load_kvar": 9.167152615985765,
+      "load_weight": 0.002891618205499807
+    },
+    "XFMR-000244": {
+      "bus": "bus_XFMR-000244_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 8.800271963456916,
+      "load_kvar": 2.9224388196877698,
+      "load_weight": 0.0009218322907303113
+    },
+    "XFMR-000245": {
+      "bus": "bus_XFMR-000245_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 5.866847975637944,
+      "load_kvar": 1.948292546458513,
+      "load_weight": 0.0006145548604868741
+    },
+    "XFMR-000246": {
+      "bus": "bus_XFMR-000246_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 28.874524178606155,
+      "load_kvar": 9.588798017831266,
+      "load_weight": 0.003024618884261892
+    },
+    "XFMR-000247": {
+      "bus": "bus_XFMR-000247_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 58.66847975637944,
+      "load_kvar": 19.482925464585133,
+      "load_weight": 0.006145548604868742
+    },
+    "XFMR-000248": {
+      "bus": "bus_XFMR-000248_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 5.538479618792538,
+      "load_kvar": 1.839246321843298,
+      "load_weight": 0.0005801581332208178
+    },
+    "XFMR-000249": {
+      "bus": "bus_XFMR-000249_sec.2",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 43.01625474674836,
+      "load_kvar": 14.285055424593203,
+      "load_weight": 0.004505971271853387
+    },
+    "XFMR-000250": {
+      "bus": "bus_XFMR-000250_sec.2",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 102.64794834987433,
+      "load_kvar": 34.0878498147163,
+      "load_weight": 0.010752416943369227
+    },
+    "XFMR-000251": {
+      "bus": "bus_XFMR-000251_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 57.31122388141843,
+      "load_kvar": 19.032201069508908,
+      "load_weight": 0.006003375465502375
+    },
+    "XFMR-000252": {
+      "bus": "bus_XFMR-000252_sec.1",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 16.812459870484854,
+      "load_kvar": 5.583166700299023,
+      "load_weight": 0.0017611124360220871
+    },
+    "XFMR-000253": {
+      "bus": "bus_XFMR-000253_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 82.09208921135182,
+      "load_kvar": 27.26155615380382,
+      "load_weight": 0.008599181816514097
+    },
+    "XFMR-000254": {
+      "bus": "bus_XFMR-000254_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 24.56195309203647,
+      "load_kvar": 8.156657601218104,
+      "load_weight": 0.002572875199501018
+    },
+    "XFMR-000255": {
+      "bus": "bus_XFMR-000255_sec.2.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 109.34666282952062,
+      "load_kvar": 36.31239279686669,
+      "load_weight": 0.011454110179596777
+    },
+    "XFMR-000256": {
+      "bus": "bus_XFMR-000256_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 10.201310285997321,
+      "load_kvar": 3.387702711379355,
+      "load_weight": 0.0010685916603988186
+    },
+    "XFMR-000257": {
+      "bus": "bus_XFMR-000257_sec.2",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 33.25276893654492,
+      "load_kvar": 11.04274767936747,
+      "load_weight": 0.0034832419144759773
+    },
+    "XFMR-000258": {
+      "bus": "bus_XFMR-000258_sec.2",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 3.5901607015097863,
+      "load_kvar": 1.1922387224596869,
+      "load_weight": 0.0003760708847755498
+    },
+    "XFMR-000259": {
+      "bus": "bus_XFMR-000259_sec.1",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 26.9262052613234,
+      "load_kvar": 8.941790418447653,
+      "load_weight": 0.002820531635816624
+    },
+    "XFMR-000260": {
+      "bus": "bus_XFMR-000260_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 28.633720716919523,
+      "load_kvar": 9.508830786446774,
+      "load_weight": 0.0029993946176001176
+    },
+    "XFMR-000261": {
+      "bus": "bus_XFMR-000261_sec.1",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 93.58498170094109,
+      "load_kvar": 31.078174015336355,
+      "load_weight": 0.00980306727082607
+    },
+    "XFMR-000262": {
+      "bus": "bus_XFMR-000262_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 16.33085294711159,
+      "load_kvar": 5.42323223753004,
+      "load_weight": 0.0017106639026985377
+    },
+    "XFMR-000263": {
+      "bus": "bus_XFMR-000263_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 84.7409272899048,
+      "load_kvar": 28.14119569903323,
+      "load_weight": 0.00887664874979362
+    },
+    "XFMR-000264": {
+      "bus": "bus_XFMR-000264_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 14.776576058043329,
+      "load_kvar": 4.9070801076846875,
+      "load_weight": 0.0015478527269725375
+    },
+    "XFMR-000265": {
+      "bus": "bus_XFMR-000265_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 7.377342417126819,
+      "load_kvar": 2.449905179688504,
+      "load_weight": 0.0007727798059107337
+    },
+    "XFMR-000266": {
+      "bus": "bus_XFMR-000266_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 10.726699656949974,
+      "load_kvar": 3.5621766707636997,
+      "load_weight": 0.0011236264240245088
+    },
+    "XFMR-000267": {
+      "bus": "bus_XFMR-000267_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 109.34666282952064,
+      "load_kvar": 36.31239279686669,
+      "load_weight": 0.011454110179596778
+    },
+    "XFMR-000268": {
+      "bus": "bus_XFMR-000268_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 11.6899135036965,
+      "load_kvar": 3.8820455963016642,
+      "load_weight": 0.0012245234906716074
+    },
+    "XFMR-000269": {
+      "bus": "bus_XFMR-000269_sec.2",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 6.107651437324576,
+      "load_kvar": 2.0282597778430045,
+      "load_weight": 0.0006397791271486489
+    },
+    "XFMR-000270": {
+      "bus": "bus_XFMR-000270_sec.1.2",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 86.07629194107611,
+      "load_kvar": 28.58465034580177,
+      "load_weight": 0.009016528774008915
+    },
+    "XFMR-000271": {
+      "bus": "bus_XFMR-000271_sec.2.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 1.8388627983342811,
+      "load_kvar": 0.6106588578452056,
+      "load_weight": 0.00019262167268991579
+    },
+    "XFMR-000272": {
+      "bus": "bus_XFMR-000272_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 6.6330408082772285,
+      "load_kvar": 2.2027337372273488,
+      "load_weight": 0.0006948138907743391
+    },
+    "XFMR-000273": {
+      "bus": "bus_XFMR-000273_sec.1.2",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 12.302867769807929,
+      "load_kvar": 4.085598548916733,
+      "load_weight": 0.0012887307149015794
+    },
+    "XFMR-000274": {
+      "bus": "bus_XFMR-000274_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 38.06883817027756,
+      "load_kvar": 12.642092307057293,
+      "load_weight": 0.003987727247711471
+    },
+    "XFMR-000275": {
+      "bus": "bus_XFMR-000275_sec.1",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 6.786279374805084,
+      "load_kvar": 2.2536219753811157,
+      "load_weight": 0.000710865696831832
+    },
+    "XFMR-000276": {
+      "bus": "bus_XFMR-000276_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 13.28797284034415,
+      "load_kvar": 4.412737222762378,
+      "load_weight": 0.0013919208966997486
+    },
+    "XFMR-000277": {
+      "bus": "bus_XFMR-000277_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 27.035661380271872,
+      "load_kvar": 8.978139159986059,
+      "load_weight": 0.0028319972115719762
+    },
+    "XFMR-000278": {
+      "bus": "bus_XFMR-000278_sec.1.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 8.75648951587753,
+      "load_kvar": 2.9078993230724075,
+      "load_weight": 0.0009172460604281704
+    },
+    "XFMR-000279": {
+      "bus": "bus_XFMR-000279_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 6.436019794169983,
+      "load_kvar": 2.1373060024582196,
+      "load_weight": 0.0006741758544147052
+    },
+    "XFMR-000280": {
+      "bus": "bus_XFMR-000280_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 11.05506801379538,
+      "load_kvar": 3.6712228953789148,
+      "load_weight": 0.0011580231512905651
+    },
+    "XFMR-000281": {
+      "bus": "bus_XFMR-000281_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 24.62762676340555,
+      "load_kvar": 8.178466846141147,
+      "load_weight": 0.0025797545449542294
+    },
+    "XFMR-000282": {
+      "bus": "bus_XFMR-000282_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 165.32252205976775,
+      "load_kvar": 54.90113921960706,
+      "load_weight": 0.017317605620883858
+    },
+    "XFMR-000283": {
+      "bus": "bus_XFMR-000283_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 54.83751559318302,
+      "load_kvar": 18.21071951074095,
+      "load_weight": 0.005744253453431417
+    },
+    "XFMR-000284": {
+      "bus": "bus_XFMR-000284_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 12.302867769807929,
+      "load_kvar": 4.085598548916733,
+      "load_weight": 0.0012887307149015794
+    },
+    "XFMR-000285": {
+      "bus": "bus_XFMR-000285_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 28.414808479022582,
+      "load_kvar": 9.436133303369964,
+      "load_weight": 0.002976463466089413
+    },
+    "XFMR-000286": {
+      "bus": "bus_XFMR-000286_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 3.2836835684540735,
+      "load_kvar": 1.090462246152153,
+      "load_weight": 0.0003439672726605639
+    },
+    "XFMR-000287": {
+      "bus": "bus_XFMR-000287_sec.1.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 11.843152070224356,
+      "load_kvar": 3.9329338344554308,
+      "load_weight": 0.0012405752967291003
+    },
+    "XFMR-000288": {
+      "bus": "bus_XFMR-000288_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 2.1234487076003004,
+      "load_kvar": 0.7051655858450587,
+      "load_weight": 0.0002224321696538313
+    },
+    "XFMR-000289": {
+      "bus": "bus_XFMR-000289_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 25.809752848049015,
+      "load_kvar": 8.571033254755921,
+      "load_weight": 0.0027035827631120323
+    },
+    "XFMR-000290": {
+      "bus": "bus_XFMR-000290_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 10.135636614628238,
+      "load_kvar": 3.3658934664563116,
+      "load_weight": 0.0010617123149456072
+    },
+    "XFMR-000291": {
+      "bus": "bus_XFMR-000291_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 1.2477997560125478,
+      "load_kvar": 0.4143756535378181,
+      "load_weight": 0.00013070756361101428
+    },
+    "XFMR-000292": {
+      "bus": "bus_XFMR-000292_sec.3",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 5.779283080479169,
+      "load_kvar": 1.919213553227789,
+      "load_weight": 0.0006053823998825924
+    },
+    "XFMR-000293": {
+      "bus": "bus_XFMR-000293_sec.2.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 34.303547678450215,
+      "load_kvar": 11.391695598136156,
+      "load_weight": 0.0035933114417273575
+    },
+    "XFMR-000294": {
+      "bus": "bus_XFMR-000294_sec.2",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 5.232002485736824,
+      "load_kvar": 1.7374698455357636,
+      "load_weight": 0.0005480545211058318
+    },
+    "XFMR-000295": {
+      "bus": "bus_XFMR-000295_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 4.0279851773036635,
+      "load_kvar": 1.3376336886133073,
+      "load_weight": 0.00042193318779695836
+    },
+    "XFMR-000296": {
+      "bus": "bus_XFMR-000296_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 54.83751559318302,
+      "load_kvar": 18.21071951074095,
+      "load_weight": 0.005744253453431417
+    },
+    "XFMR-000297": {
+      "bus": "bus_XFMR-000297_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 7.048974060281411,
+      "load_kvar": 2.3408589550732883,
+      "load_weight": 0.0007383830786446773
+    },
+    "XFMR-000298": {
+      "bus": "bus_XFMR-000298_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 8.428121159032122,
+      "load_kvar": 2.7988530984571924,
+      "load_weight": 0.000882849333162114
+    },
+    "XFMR-000299": {
+      "bus": "bus_XFMR-000299_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 20.22749078167709,
+      "load_kvar": 6.717247436297262,
+      "load_weight": 0.0021188383995890737
+    },
+    "XFMR-000300": {
+      "bus": "bus_XFMR-000300_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 4.049876401093357,
+      "load_kvar": 1.3449034369209885,
+      "load_weight": 0.0004242263029480288
+    },
+    "XFMR-000301": {
+      "bus": "bus_XFMR-000301_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 7.399233640916511,
+      "load_kvar": 2.457174927996184,
+      "load_weight": 0.0007750729210618039
+    },
+    "XFMR-000302": {
+      "bus": "bus_XFMR-000302_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 12.302867769807929,
+      "load_kvar": 4.085598548916733,
+      "load_weight": 0.0012887307149015794
+    },
+    "XFMR-000303": {
+      "bus": "bus_XFMR-000303_sec.2",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 8.209208921135183,
+      "load_kvar": 2.726155615380382,
+      "load_weight": 0.0008599181816514097
+    },
+    "XFMR-000304": {
+      "bus": "bus_XFMR-000304_sec.1",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 11.580457384748032,
+      "load_kvar": 3.845696854763259,
+      "load_weight": 0.0012130579149162554
+    },
+    "XFMR-000305": {
+      "bus": "bus_XFMR-000305_sec.2",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 16.68111252774669,
+      "load_kvar": 5.539548210452937,
+      "load_weight": 0.0017473537451156646
+    },
+    "XFMR-000306": {
+      "bus": "bus_XFMR-000306_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 82.8801732677808,
+      "load_kvar": 27.52326709288034,
+      "load_weight": 0.008681733961952633
+    },
+    "XFMR-000307": {
+      "bus": "bus_XFMR-000307_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 0.8975401753774466,
+      "load_kvar": 0.2980596806149217,
+      "load_weight": 9.401772119388745e-05
+    },
+    "XFMR-000308": {
+      "bus": "bus_XFMR-000308_sec.2",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 4.92552535268111,
+      "load_kvar": 1.6356933692282294,
+      "load_weight": 0.0005159509089908459
+    },
+    "XFMR-000309": {
+      "bus": "bus_XFMR-000309_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 2.0358838124415257,
+      "load_kvar": 0.6760865926143348,
+      "load_weight": 0.00021325970904954964
+    },
+    "XFMR-000310": {
+      "bus": "bus_XFMR-000310_sec.2.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 5.297676157105904,
+      "load_kvar": 1.7592790904588065,
+      "load_weight": 0.000554933866559043
+    },
+    "XFMR-000311": {
+      "bus": "bus_XFMR-000311_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 37.149406771110414,
+      "load_kvar": 12.336762878134689,
+      "load_weight": 0.003891416411366513
+    },
+    "XFMR-000312": {
+      "bus": "bus_XFMR-000312_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 26.729184247216157,
+      "load_kvar": 8.876362683678524,
+      "load_weight": 0.00279989359945699
+    },
+    "XFMR-000313": {
+      "bus": "bus_XFMR-000313_sec.1",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 7.33355996954743,
+      "load_kvar": 2.4353656830731416,
+      "load_weight": 0.0007681935756085927
+    },
+    "XFMR-000314": {
+      "bus": "bus_XFMR-000314_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 12.302867769807929,
+      "load_kvar": 4.085598548916733,
+      "load_weight": 0.0012887307149015794
+    },
+    "XFMR-000315": {
+      "bus": "bus_XFMR-000315_sec.1",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 109.89394342426299,
+      "load_kvar": 36.49413650455872,
+      "load_weight": 0.01151143805837354
+    },
+    "XFMR-000316": {
+      "bus": "bus_XFMR-000316_sec.2.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 34.588133587716236,
+      "load_kvar": 11.486202326136011,
+      "load_weight": 0.003623121938691273
+    },
+    "XFMR-000317": {
+      "bus": "bus_XFMR-000317_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 8.668924620718753,
+      "load_kvar": 2.8788203298416835,
+      "load_weight": 0.0009080735998238887
+    },
+    "XFMR-000318": {
+      "bus": "bus_XFMR-000318_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 9.78537703399314,
+      "load_kvar": 3.249577493533416,
+      "load_weight": 0.0010250224725284805
+    },
+    "XFMR-000319": {
+      "bus": "bus_XFMR-000319_sec.1.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 127.2099014419108,
+      "load_kvar": 42.2445074159344,
+      "load_weight": 0.013325292142870246
+    },
+    "XFMR-000320": {
+      "bus": "bus_XFMR-000320_sec.2",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 7.530580983654675,
+      "load_kvar": 2.500793417842271,
+      "load_weight": 0.0007888316119682266
+    },
+    "XFMR-000321": {
+      "bus": "bus_XFMR-000321_sec.1",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 5.341458604685292,
+      "load_kvar": 1.7738185870741685,
+      "load_weight": 0.0005595200968611839
+    },
+    "XFMR-000322": {
+      "bus": "bus_XFMR-000322_sec.1",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 6.195216332483351,
+      "load_kvar": 2.0573387710737285,
+      "load_weight": 0.0006489515877529306
+    },
+    "XFMR-000323": {
+      "bus": "bus_XFMR-000323_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 19.1329295921924,
+      "load_kvar": 6.353760020913211,
+      "load_weight": 0.0020041826420355525
+    },
+    "XFMR-000324": {
+      "bus": "bus_XFMR-000324_sec.1.2",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 6.260890003852433,
+      "load_kvar": 2.0791480159967715,
+      "load_weight": 0.0006558309332061419
+    },
+    "XFMR-000325": {
+      "bus": "bus_XFMR-000325_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 13.178516721395681,
+      "load_kvar": 4.376388481223974,
+      "load_weight": 0.0013804553209443965
+    },
+    "XFMR-000326": {
+      "bus": "bus_XFMR-000326_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 55.341013740345986,
+      "load_kvar": 18.377923721817616,
+      "load_weight": 0.0057969951019060375
+    },
+    "XFMR-000327": {
+      "bus": "bus_XFMR-000327_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 5.713609409110088,
+      "load_kvar": 1.8974043083047463,
+      "load_weight": 0.0005985030544293813
+    },
+    "XFMR-000328": {
+      "bus": "bus_XFMR-000328_sec.2",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 109.34666282952064,
+      "load_kvar": 36.31239279686669,
+      "load_weight": 0.011454110179596778
+    },
+    "XFMR-000329": {
+      "bus": "bus_XFMR-000329_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 12.302867769807927,
+      "load_kvar": 4.085598548916732,
+      "load_weight": 0.0012887307149015792
+    },
+    "XFMR-000330": {
+      "bus": "bus_XFMR-000330_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 64.90747853644218,
+      "load_kvar": 21.554803732274223,
+      "load_weight": 0.006799086422923813
+    },
+    "XFMR-000331": {
+      "bus": "bus_XFMR-000331_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 250.0,
+      "load_kw": 71.78132280640604,
+      "load_kvar": 23.83750470088606,
+      "load_weight": 0.007519124580359926
+    },
+    "XFMR-000332": {
+      "bus": "bus_XFMR-000332_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 3.2836835684540735,
+      "load_kvar": 1.090462246152153,
+      "load_weight": 0.0003439672726605639
+    },
+    "XFMR-000333": {
+      "bus": "bus_XFMR-000333_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 28.96208907376493,
+      "load_kvar": 9.617877011061989,
+      "load_weight": 0.003033791344866174
+    },
+    "XFMR-000334": {
+      "bus": "bus_XFMR-000334_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 2.473708288235402,
+      "load_kvar": 0.8214815587679551,
+      "load_weight": 0.00025912201207095814
+    },
+    "XFMR-000335": {
+      "bus": "bus_XFMR-000335_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 28.283461136284416,
+      "load_kvar": 9.392514813523876,
+      "load_weight": 0.0029627047751829903
+    },
+    "XFMR-000336": {
+      "bus": "bus_XFMR-000336_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 168.05892503347948,
+      "load_kvar": 55.80985775806718,
+      "load_weight": 0.01760424501476766
+    },
+    "XFMR-000337": {
+      "bus": "bus_XFMR-000337_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 13.791470987507108,
+      "load_kvar": 4.579941433839042,
+      "load_weight": 0.0014446625451743683
+    },
+    "XFMR-000338": {
+      "bus": "bus_XFMR-000338_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 2.23290482654877,
+      "load_kvar": 0.7415143273834639,
+      "load_weight": 0.00023389774540918343
+    },
+    "XFMR-000339": {
+      "bus": "bus_XFMR-000339_sec.2.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 69.74543899396453,
+      "load_kvar": 23.16141810827173,
+      "load_weight": 0.007305864871310378
+    },
+    "XFMR-000340": {
+      "bus": "bus_XFMR-000340_sec.2",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 25.284363477096363,
+      "load_kvar": 8.396559295371578,
+      "load_weight": 0.002648547999486342
+    },
+    "XFMR-000341": {
+      "bus": "bus_XFMR-000341_sec.2",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 17.294066793858118,
+      "load_kvar": 5.7431011630680056,
+      "load_weight": 0.0018115609693456366
+    },
+    "XFMR-000342": {
+      "bus": "bus_XFMR-000342_sec.1.2",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 6.041977765955495,
+      "load_kvar": 2.006450532919961,
+      "load_weight": 0.0006328997816954376
+    },
+    "XFMR-000343": {
+      "bus": "bus_XFMR-000343_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 24.62762676340555,
+      "load_kvar": 8.178466846141147,
+      "load_weight": 0.0025797545449542294
+    },
+    "XFMR-000344": {
+      "bus": "bus_XFMR-000344_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 9.172422767881711,
+      "load_kvar": 3.0460245409183466,
+      "load_weight": 0.0009608152482985084
+    },
+    "XFMR-000345": {
+      "bus": "bus_XFMR-000345_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 5.95441287079672,
+      "load_kvar": 1.977371539689237,
+      "load_weight": 0.0006237273210911559
+    },
+    "XFMR-000346": {
+      "bus": "bus_XFMR-000346_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 75.0,
+      "load_kw": 2.583164407183871,
+      "load_kvar": 0.8578303003063603,
+      "load_weight": 0.0002705875878263103
+    },
+    "XFMR-000347": {
+      "bus": "bus_XFMR-000347_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 8.209208921135183,
+      "load_kvar": 2.726155615380382,
+      "load_weight": 0.0008599181816514097
+    },
+    "XFMR-000348": {
+      "bus": "bus_XFMR-000348_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 500.0,
+      "load_kw": 34.785154601823486,
+      "load_kvar": 11.55163006090514,
+      "load_weight": 0.003643759975050907
+    },
+    "XFMR-000349": {
+      "bus": "bus_XFMR-000349_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 10.792373328319053,
+      "load_kvar": 3.583985915686742,
+      "load_weight": 0.00113050576947772
+    },
+    "XFMR-000350": {
+      "bus": "bus_XFMR-000350_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 37.5,
+      "load_kw": 12.302867769807929,
+      "load_kvar": 4.085598548916733,
+      "load_weight": 0.0012887307149015794
+    },
+    "XFMR-000351": {
+      "bus": "bus_XFMR-000351_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 5.516588395002843,
+      "load_kvar": 1.831976573535617,
+      "load_weight": 0.0005778650180697474
+    },
+    "XFMR-000352": {
+      "bus": "bus_XFMR-000352_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 13.047169378657518,
+      "load_kvar": 4.332769991377887,
+      "load_weight": 0.001366696630037974
+    },
+    "XFMR-000353": {
+      "bus": "bus_XFMR-000353_sec.2",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 17.03137210838179,
+      "load_kvar": 5.655864183375833,
+      "load_weight": 0.0017840435875327914
+    },
+    "XFMR-000354": {
+      "bus": "bus_XFMR-000354_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 8.034079130817632,
+      "load_kvar": 2.667997628918934,
+      "load_weight": 0.0008415732604428464
+    },
+    "XFMR-000355": {
+      "bus": "bus_XFMR-000355_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 33.86572320265634,
+      "load_kvar": 11.246300631982535,
+      "load_weight": 0.003547449138705949
+    },
+    "XFMR-000356": {
+      "bus": "bus_XFMR-000356_sec.3",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 167.0,
+      "load_kw": 5.888739199427638,
+      "load_kvar": 1.9555622947661941,
+      "load_weight": 0.0006168479756379446
+    },
+    "XFMR-000357": {
+      "bus": "bus_XFMR-000357_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 8.340556263873346,
+      "load_kvar": 2.7697741052264684,
+      "load_weight": 0.0008736768725578323
+    },
+    "XFMR-000358": {
+      "bus": "bus_XFMR-000358_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 10.0,
+      "load_kw": 2.0358838124415257,
+      "load_kvar": 0.6760865926143348,
+      "load_weight": 0.00021325970904954964
+    },
+    "XFMR-000359": {
+      "bus": "bus_XFMR-000359_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0001",
+      "kva": 333.0,
+      "load_kw": 110.50689769037442,
+      "load_kvar": 36.69768945717379,
+      "load_weight": 0.01157564528260351
+    },
+    "XFMR-000360": {
+      "bus": "bus_XFMR-000360_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 50.0,
+      "load_kw": 11.711804727486195,
+      "load_kvar": 3.8893153446093454,
+      "load_weight": 0.001226816605822678
+    },
+    "XFMR-000361": {
+      "bus": "bus_XFMR-000361_sec.1.2",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 7.858949340500081,
+      "load_kvar": 2.6098396424574855,
+      "load_weight": 0.0008232283392342829
+    },
+    "XFMR-000362": {
+      "bus": "bus_XFMR-000362_sec.2.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0001",
+      "kva": 15.0,
+      "load_kw": 7.158430179229881,
+      "load_kvar": 2.3772076966116935,
+      "load_weight": 0.0007498486544000294
+    },
+    "XFMR-000363": {
+      "bus": "bus_XFMR-000363_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 100.0,
+      "load_kw": 2.823967868870503,
+      "load_kvar": 0.9377975316908516,
+      "load_weight": 0.000295811854488085
+    },
+    "XFMR-000364": {
+      "bus": "bus_XFMR-000364_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0001",
+      "kva": 25.0,
+      "load_kw": 8.209208921135183,
+      "load_kvar": 2.726155615380382,
+      "load_weight": 0.0008599181816514097
+    },
+    "XFMR-000365": {
+      "bus": "bus_XFMR-000365_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 120.1322742978046,
+      "load_kvar": 57.185528563386846,
+      "load_weight": 0.012277500630859717
+    },
+    "XFMR-000366": {
+      "bus": "bus_XFMR-000366_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 7.074983743230389,
+      "load_kvar": 3.3678433817963,
+      "load_weight": 0.0007230622901178252
+    },
+    "XFMR-000367": {
+      "bus": "bus_XFMR-000367_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 43.779429605761194,
+      "load_kvar": 20.839943610846905,
+      "load_weight": 0.004474251218044529
+    },
+    "XFMR-000368": {
+      "bus": "bus_XFMR-000368_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 119.70492628646852,
+      "load_kvar": 56.98210178193606,
+      "load_weight": 0.01223382572742978
+    },
+    "XFMR-000369": {
+      "bus": "bus_XFMR-000369_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 25.0,
+      "load_kw": 19.23066051012287,
+      "load_kvar": 9.154205165285246,
+      "load_weight": 0.0019653706543471088
+    },
+    "XFMR-000370": {
+      "bus": "bus_XFMR-000370_sec.1",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 37.5,
+      "load_kw": 18.613380049304112,
+      "load_kvar": 8.860366480967448,
+      "load_weight": 0.0019022846827260907
+    },
+    "XFMR-000371": {
+      "bus": "bus_XFMR-000371_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 250.0,
+      "load_kw": 5.603007259739503,
+      "load_kvar": 2.667151134576936,
+      "load_weight": 0.0005726265116369354
+    },
+    "XFMR-000372": {
+      "bus": "bus_XFMR-000372_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 25.0,
+      "load_kw": 21.699782353397907,
+      "load_kvar": 10.32955990255644,
+      "load_weight": 0.0022177145408311823
+    },
+    "XFMR-000373": {
+      "bus": "bus_XFMR-000373_sec.3",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 15.0,
+      "load_kw": 16.286707543141095,
+      "load_kvar": 7.752820670846516,
+      "load_weight": 0.001664499097385329
+    },
+    "XFMR-000374": {
+      "bus": "bus_XFMR-000374_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 37.5,
+      "load_kw": 26.68550915231865,
+      "load_kvar": 12.702872352815577,
+      "load_weight": 0.0027272550808470995
+    },
+    "XFMR-000375": {
+      "bus": "bus_XFMR-000375_sec.1",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 58.64164377778208,
+      "load_kvar": 27.914675010190813,
+      "load_weight": 0.005993167303996739
+    },
+    "XFMR-000376": {
+      "bus": "bus_XFMR-000376_sec.2.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 24.073937971931596,
+      "load_kvar": 11.459708688394123,
+      "load_weight": 0.002460352893219714
+    },
+    "XFMR-000377": {
+      "bus": "bus_XFMR-000377_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 118.94519648853775,
+      "load_kvar": 56.62045417046801,
+      "load_weight": 0.012156181454665451
+    },
+    "XFMR-000378": {
+      "bus": "bus_XFMR-000378_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 333.0,
+      "load_kw": 91.68988998777101,
+      "load_kvar": 43.64634610905138,
+      "load_weight": 0.009370693169245103
+    },
+    "XFMR-000379": {
+      "bus": "bus_XFMR-000379_sec.1.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 10.968598957625638,
+      "load_kvar": 5.221287390570104,
+      "load_weight": 0.0011209891880350176
+    },
+    "XFMR-000380": {
+      "bus": "bus_XFMR-000380_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 19.325626734864215,
+      "load_kvar": 9.199411116718753,
+      "load_weight": 0.00197507618844265
+    },
+    "XFMR-000381": {
+      "bus": "bus_XFMR-000381_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 333.0,
+      "load_kw": 8.072129103014538,
+      "load_kvar": 3.842505871848128,
+      "load_weight": 0.0008249703981210087
+    },
+    "XFMR-000382": {
+      "bus": "bus_XFMR-000382_sec.1.2",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 35.612334278005314,
+      "load_kvar": 16.95223178756527,
+      "load_weight": 0.0036395752858279793
+    },
+    "XFMR-000383": {
+      "bus": "bus_XFMR-000383_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 75.0,
+      "load_kw": 55.03292723761088,
+      "load_kvar": 26.19684885571753,
+      "load_weight": 0.005624357008366171
+    },
+    "XFMR-000384": {
+      "bus": "bus_XFMR-000384_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 250.0,
+      "load_kw": 18.47093071219209,
+      "load_kvar": 8.792557553817186,
+      "load_weight": 0.0018877263815827786
+    },
+    "XFMR-000385": {
+      "bus": "bus_XFMR-000385_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 21.604816128656555,
+      "load_kvar": 10.284353951122931,
+      "load_weight": 0.0022080090067356406
+    },
+    "XFMR-000386": {
+      "bus": "bus_XFMR-000386_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 35.612334278005314,
+      "load_kvar": 16.95223178756527,
+      "load_weight": 0.0036395752858279793
+    },
+    "XFMR-000387": {
+      "bus": "bus_XFMR-000387_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 18.518413824562764,
+      "load_kvar": 8.81516052953394,
+      "load_weight": 0.0018925791486305492
+    },
+    "XFMR-000388": {
+      "bus": "bus_XFMR-000388_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 250.0,
+      "load_kw": 184.09202666110215,
+      "load_kvar": 87.63173685385408,
+      "load_weight": 0.01881417784420677
+    },
+    "XFMR-000389": {
+      "bus": "bus_XFMR-000389_sec.1.2",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 333.0,
+      "load_kw": 89.1732850321253,
+      "load_kvar": 42.44838839606344,
+      "load_weight": 0.00911349651571326
+    },
+    "XFMR-000390": {
+      "bus": "bus_XFMR-000390_sec.2",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 133.759927548188,
+      "load_kvar": 63.67258259409516,
+      "load_weight": 0.013670244773569892
+    },
+    "XFMR-000391": {
+      "bus": "bus_XFMR-000391_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 333.0,
+      "load_kw": 147.48254702331266,
+      "load_kvar": 70.20484257623696,
+      "load_weight": 0.015072694450375602
+    },
+    "XFMR-000392": {
+      "bus": "bus_XFMR-000392_sec.1.2",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 100.0,
+      "load_kw": 81.86088572704155,
+      "load_kvar": 38.96753013568337,
+      "load_weight": 0.008366170390356581
+    },
+    "XFMR-000393": {
+      "bus": "bus_XFMR-000393_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 10.0,
+      "load_kw": 7.929679765902516,
+      "load_kvar": 3.7746969446978667,
+      "load_weight": 0.0008104120969776966
+    },
+    "XFMR-000394": {
+      "bus": "bus_XFMR-000394_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 75.0,
+      "load_kw": 21.082501892579145,
+      "load_kvar": 10.03572121823864,
+      "load_weight": 0.002154628569210164
+    },
+    "XFMR-000395": {
+      "bus": "bus_XFMR-000395_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 10.0,
+      "load_kw": 10.11390293495351,
+      "load_kvar": 4.8144338276685374,
+      "load_weight": 0.0010336393811751462
+    },
+    "XFMR-000396": {
+      "bus": "bus_XFMR-000396_sec.2",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 360.8241709047498,
+      "load_kvar": 171.7600124716113,
+      "load_weight": 0.03687617679600908
+    },
+    "XFMR-000397": {
+      "bus": "bus_XFMR-000397_sec.2",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 10.0,
+      "load_kw": 8.546960226721275,
+      "load_kvar": 4.068535629015665,
+      "load_weight": 0.000873498068598715
+    },
+    "XFMR-000398": {
+      "bus": "bus_XFMR-000398_sec.3",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 15.0,
+      "load_kw": 16.19174131839975,
+      "load_kvar": 7.70761471941301,
+      "load_weight": 0.001654793563289788
+    },
+    "XFMR-000399": {
+      "bus": "bus_XFMR-000399_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 333.0,
+      "load_kw": 17.71120091426131,
+      "load_kvar": 8.430909942349126,
+      "load_weight": 0.0018100821088184481
+    },
+    "XFMR-000400": {
+      "bus": "bus_XFMR-000400_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 100.0,
+      "load_kw": 24.92863399460372,
+      "load_kvar": 11.86656225129569,
+      "load_weight": 0.0025477027000795857
+    },
+    "XFMR-000401": {
+      "bus": "bus_XFMR-000401_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 37.74907433468563,
+      "load_kvar": 17.96936569481919,
+      "load_weight": 0.003857949802977658
+    },
+    "XFMR-000402": {
+      "bus": "bus_XFMR-000402_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 100.0,
+      "load_kw": 71.74698279208803,
+      "load_kvar": 34.15309630801483,
+      "load_weight": 0.007332531009181435
+    },
+    "XFMR-000403": {
+      "bus": "bus_XFMR-000403_sec.2",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 119.94234184832189,
+      "load_kvar": 57.09511666051983,
+      "load_weight": 0.012258089562668634
+    },
+    "XFMR-000404": {
+      "bus": "bus_XFMR-000404_sec.2",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 37.51165877283226,
+      "load_kvar": 17.85635081623542,
+      "load_weight": 0.0038336859677388048
+    },
+    "XFMR-000405": {
+      "bus": "bus_XFMR-000405_sec.2",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 75.0,
+      "load_kw": 33.14321243473027,
+      "load_kvar": 15.776877050294077,
+      "load_weight": 0.0033872313993439057
+    },
+    "XFMR-000406": {
+      "bus": "bus_XFMR-000406_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 25.0,
+      "load_kw": 22.12713036473397,
+      "load_kvar": 10.532986684007222,
+      "load_weight": 0.002261389444261118
+    },
+    "XFMR-000407": {
+      "bus": "bus_XFMR-000407_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 6.410220170040956,
+      "load_kvar": 3.0514017217617484,
+      "load_weight": 0.0006551235514490363
+    },
+    "XFMR-000408": {
+      "bus": "bus_XFMR-000408_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 2.3741556185336874,
+      "load_kvar": 1.1301487858376846,
+      "load_weight": 0.00024263835238853195
+    },
+    "XFMR-000409": {
+      "bus": "bus_XFMR-000409_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 25.0,
+      "load_kw": 24.31135353378496,
+      "load_kvar": 11.572723566977892,
+      "load_weight": 0.002484616728458567
+    },
+    "XFMR-000410": {
+      "bus": "bus_XFMR-000410_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 15.0,
+      "load_kw": 8.262061552497231,
+      "load_kvar": 3.9329177747151425,
+      "load_weight": 0.0008443814663120911
+    },
+    "XFMR-000411": {
+      "bus": "bus_XFMR-000411_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 100.0,
+      "load_kw": 79.72414567036124,
+      "load_kvar": 37.950396228429454,
+      "load_weight": 0.008147795873206904
+    },
+    "XFMR-000412": {
+      "bus": "bus_XFMR-000412_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 10.0,
+      "load_kw": 7.122466855601062,
+      "load_kvar": 3.3904463575130537,
+      "load_weight": 0.0007279150571655958
+    },
+    "XFMR-000413": {
+      "bus": "bus_XFMR-000413_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 25.0,
+      "load_kw": 22.50699526369936,
+      "load_kvar": 10.71381048974125,
+      "load_weight": 0.002300211580643283
+    },
+    "XFMR-000414": {
+      "bus": "bus_XFMR-000414_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 13.010372789564608,
+      "load_kvar": 6.193215346390512,
+      "load_weight": 0.001329658171089155
+    },
+    "XFMR-000415": {
+      "bus": "bus_XFMR-000415_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 10.0,
+      "load_kw": 8.97430823805734,
+      "load_kvar": 4.271962410466449,
+      "load_weight": 0.0009171729720286509
+    },
+    "XFMR-000416": {
+      "bus": "bus_XFMR-000416_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 100.0,
+      "load_kw": 72.03188146631207,
+      "load_kvar": 34.28871416231535,
+      "load_weight": 0.007361647611468059
+    },
+    "XFMR-000417": {
+      "bus": "bus_XFMR-000417_sec.2.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 250.0,
+      "load_kw": 73.74127351165633,
+      "load_kvar": 35.10242128811848,
+      "load_weight": 0.007536347225187801
+    },
+    "XFMR-000418": {
+      "bus": "bus_XFMR-000418_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 119.98982496069256,
+      "load_kvar": 57.11771963623658,
+      "load_weight": 0.012262942329716404
+    },
+    "XFMR-000419": {
+      "bus": "bus_XFMR-000419_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 10.0,
+      "load_kw": 17.473785352407937,
+      "load_kvar": 8.31789506376536,
+      "load_weight": 0.001785818273579595
+    },
+    "XFMR-000420": {
+      "bus": "bus_XFMR-000420_sec.1.2",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 15.764393307063687,
+      "load_kvar": 7.504187937962227,
+      "load_weight": 0.0016111186598598522
+    },
+    "XFMR-000421": {
+      "bus": "bus_XFMR-000421_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 240.88182905642793,
+      "load_kvar": 114.66489581109148,
+      "load_weight": 0.02461808723334045
+    },
+    "XFMR-000422": {
+      "bus": "bus_XFMR-000422_sec.2.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 333.0,
+      "load_kw": 11.823294980297764,
+      "load_kvar": 5.62814095347167,
+      "load_weight": 0.0012083389948948891
+    },
+    "XFMR-000423": {
+      "bus": "bus_XFMR-000423_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 75.0,
+      "load_kw": 36.22961473882407,
+      "load_kvar": 17.24607047188307,
+      "load_weight": 0.0037026612574489973
+    },
+    "XFMR-000424": {
+      "bus": "bus_XFMR-000424_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 293.16073577653975,
+      "load_kvar": 139.55077207523732,
+      "load_weight": 0.029960983752935925
+    },
+    "XFMR-000425": {
+      "bus": "bus_XFMR-000425_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 75.0,
+      "load_kw": 20.65515388124308,
+      "load_kvar": 9.832294436787857,
+      "load_weight": 0.002110953665780228
+    },
+    "XFMR-000426": {
+      "bus": "bus_XFMR-000426_sec.2",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 47.67304482015645,
+      "load_kvar": 22.693387619620708,
+      "load_weight": 0.004872178115961722
+    },
+    "XFMR-000427": {
+      "bus": "bus_XFMR-000427_sec.1.2",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 37.5,
+      "load_kw": 3.8936152143952474,
+      "load_kvar": 1.8534440087738027,
+      "load_weight": 0.00039792689791719237
+    },
+    "XFMR-000428": {
+      "bus": "bus_XFMR-000428_sec.1.2",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 91.92730554962438,
+      "load_kvar": 43.759360987635155,
+      "load_weight": 0.009394957004483957
+    },
+    "XFMR-000429": {
+      "bus": "bus_XFMR-000429_sec.1.2",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 333.0,
+      "load_kw": 237.1781462915154,
+      "load_kvar": 112.9018637051847,
+      "load_weight": 0.02423957140361434
+    },
+    "XFMR-000430": {
+      "bus": "bus_XFMR-000430_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 100.0,
+      "load_kw": 71.69949967971736,
+      "load_kvar": 34.13049333229807,
+      "load_weight": 0.0073276782421336645
+    },
+    "XFMR-000431": {
+      "bus": "bus_XFMR-000431_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 41.07289220063279,
+      "load_kvar": 19.551573994991944,
+      "load_weight": 0.004197643496321603
+    },
+    "XFMR-000432": {
+      "bus": "bus_XFMR-000432_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 250.0,
+      "load_kw": 77.3974731641982,
+      "load_kvar": 36.842850418308515,
+      "load_weight": 0.007910010287866141
+    },
+    "XFMR-000433": {
+      "bus": "bus_XFMR-000433_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 10.25635227206553,
+      "load_kvar": 4.882242754818798,
+      "load_weight": 0.001048197682318458
+    },
+    "XFMR-000434": {
+      "bus": "bus_XFMR-000434_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 15.0,
+      "load_kw": 17.09392045344255,
+      "load_kvar": 8.13707125803133,
+      "load_weight": 0.00174699613719743
+    },
+    "XFMR-000435": {
+      "bus": "bus_XFMR-000435_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 29.771911456412443,
+      "load_kvar": 14.172065774404565,
+      "load_weight": 0.0030426849389521907
+    },
+    "XFMR-000436": {
+      "bus": "bus_XFMR-000436_sec.1.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 10.0,
+      "load_kw": 12.867923452452587,
+      "load_kvar": 6.125406419240251,
+      "load_weight": 0.0013150998699458431
+    },
+    "XFMR-000437": {
+      "bus": "bus_XFMR-000437_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 98.9548061804841,
+      "load_kvar": 47.1046013937147,
+      "load_weight": 0.010113166527554012
+    },
+    "XFMR-000438": {
+      "bus": "bus_XFMR-000438_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 75.0,
+      "load_kw": 53.41850141700797,
+      "load_kvar": 25.428347681347905,
+      "load_weight": 0.0054593629287419685
+    },
+    "XFMR-000439": {
+      "bus": "bus_XFMR-000439_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 13.722619475124713,
+      "load_kvar": 6.5322599821418175,
+      "load_weight": 0.0014024496768057146
+    },
+    "XFMR-000440": {
+      "bus": "bus_XFMR-000440_sec.1",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 213.2941407690665,
+      "load_kvar": 101.5325669196576,
+      "load_weight": 0.02179862957858571
+    },
+    "XFMR-000441": {
+      "bus": "bus_XFMR-000441_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 250.0,
+      "load_kw": 180.24589455907756,
+      "load_kvar": 85.80089582079702,
+      "load_weight": 0.018421103713337345
+    },
+    "XFMR-000442": {
+      "bus": "bus_XFMR-000442_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 37.5,
+      "load_kw": 28.157485635809536,
+      "load_kvar": 13.40356460003494,
+      "load_weight": 0.002877690859327989
+    },
+    "XFMR-000443": {
+      "bus": "bus_XFMR-000443_sec.1.2",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 26.49557670283595,
+      "load_kvar": 12.61246044994856,
+      "load_weight": 0.0027078440126560165
+    },
+    "XFMR-000444": {
+      "bus": "bus_XFMR-000444_sec.1",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 100.0,
+      "load_kw": 3.3238178659471624,
+      "load_kvar": 1.5822083001727585,
+      "load_weight": 0.0003396936933439447
+    },
+    "XFMR-000445": {
+      "bus": "bus_XFMR-000445_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 10.0,
+      "load_kw": 12.630507890599217,
+      "load_kvar": 6.012391540656482,
+      "load_weight": 0.00129083603470699
+    },
+    "XFMR-000446": {
+      "bus": "bus_XFMR-000446_sec.2.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 266.332777287109,
+      "load_kvar": 126.78009079527145,
+      "load_weight": 0.02721917037094551
+    },
+    "XFMR-000447": {
+      "bus": "bus_XFMR-000447_sec.2",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 250.0,
+      "load_kw": 147.2451314614593,
+      "load_kvar": 70.0918276976532,
+      "load_weight": 0.01504843061513675
+    },
+    "XFMR-000448": {
+      "bus": "bus_XFMR-000448_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 15.0,
+      "load_kw": 20.27528898227769,
+      "load_kvar": 9.651470631053828,
+      "load_weight": 0.0020721315293980628
+    },
+    "XFMR-000449": {
+      "bus": "bus_XFMR-000449_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 333.0,
+      "load_kw": 8.689409563833296,
+      "load_kvar": 4.136344556165925,
+      "load_weight": 0.0008880563697420268
+    },
+    "XFMR-000450": {
+      "bus": "bus_XFMR-000450_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 37.5,
+      "load_kw": 26.68550915231865,
+      "load_kvar": 12.702872352815577,
+      "load_weight": 0.0027272550808470995
+    },
+    "XFMR-000451": {
+      "bus": "bus_XFMR-000451_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 100.0,
+      "load_kw": 22.744410825552727,
+      "load_kvar": 10.826825368325018,
+      "load_weight": 0.002324475415882136
+    },
+    "XFMR-000452": {
+      "bus": "bus_XFMR-000452_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 39.74336505425393,
+      "load_kvar": 18.918690674922843,
+      "load_weight": 0.004061766018984025
+    },
+    "XFMR-000453": {
+      "bus": "bus_XFMR-000453_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 25.0,
+      "load_kw": 23.6940730729662,
+      "load_kvar": 11.278884882660092,
+      "load_weight": 0.0024215307568375487
+    },
+    "XFMR-000454": {
+      "bus": "bus_XFMR-000454_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 356.59817390375986,
+      "load_kvar": 169.74834763282024,
+      "load_weight": 0.0364442805287575
+    },
+    "XFMR-000455": {
+      "bus": "bus_XFMR-000455_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 107.26435084535201,
+      "load_kvar": 51.0601221441466,
+      "load_weight": 0.010962400760913874
+    },
+    "XFMR-000456": {
+      "bus": "bus_XFMR-000456_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 15.0,
+      "load_kw": 12.725474115340566,
+      "load_kvar": 6.0575974920899895,
+      "load_weight": 0.0013005415688025312
+    },
+    "XFMR-000457": {
+      "bus": "bus_XFMR-000457_sec.1.2",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 36.98934453675486,
+      "load_kvar": 17.607718083351127,
+      "load_weight": 0.003780305530213328
+    },
+    "XFMR-000458": {
+      "bus": "bus_XFMR-000458_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 356.1233427800531,
+      "load_kvar": 169.5223178756527,
+      "load_weight": 0.03639575285827979
+    },
+    "XFMR-000459": {
+      "bus": "bus_XFMR-000459_sec.3",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 15.0,
+      "load_kw": 6.505186394782304,
+      "load_kvar": 3.096607673195256,
+      "load_weight": 0.0006648290855445775
+    },
+    "XFMR-000460": {
+      "bus": "bus_XFMR-000460_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 100.0,
+      "load_kw": 79.81911189510258,
+      "load_kvar": 37.99560217986296,
+      "load_weight": 0.008157501407302445
+    },
+    "XFMR-000461": {
+      "bus": "bus_XFMR-000461_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 250.0,
+      "load_kw": 4.748311237067375,
+      "load_kvar": 2.2602975716753693,
+      "load_weight": 0.0004852767047770639
+    },
+    "XFMR-000462": {
+      "bus": "bus_XFMR-000462_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 10.0,
+      "load_kw": 7.122466855601062,
+      "load_kvar": 3.3904463575130537,
+      "load_weight": 0.0007279150571655958
+    },
+    "XFMR-000463": {
+      "bus": "bus_XFMR-000463_sec.2",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 37.7965574470563,
+      "load_kvar": 17.99196867053594,
+      "load_weight": 0.003862802570025428
+    },
+    "XFMR-000464": {
+      "bus": "bus_XFMR-000464_sec.2",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 25.0,
+      "load_kw": 3.561233427800531,
+      "load_kvar": 1.6952231787565268,
+      "load_weight": 0.0003639575285827979
+    },
+    "XFMR-000465": {
+      "bus": "bus_XFMR-000465_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 250.0,
+      "load_kw": 7.739747316419822,
+      "load_kvar": 3.684285041830852,
+      "load_weight": 0.0007910010287866142
+    },
+    "XFMR-000466": {
+      "bus": "bus_XFMR-000466_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 75.0,
+      "load_kw": 57.35959974377389,
+      "load_kvar": 27.304394665838462,
+      "load_weight": 0.005862142593706932
+    },
+    "XFMR-000467": {
+      "bus": "bus_XFMR-000467_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 37.5,
+      "load_kw": 26.68550915231865,
+      "load_kvar": 12.702872352815577,
+      "load_weight": 0.0027272550808470995
+    },
+    "XFMR-000468": {
+      "bus": "bus_XFMR-000468_sec.2.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 333.0,
+      "load_kw": 17.046437341071876,
+      "load_kvar": 8.114468282314576,
+      "load_weight": 0.0017421433701496592
+    },
+    "XFMR-000469": {
+      "bus": "bus_XFMR-000469_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 151.99344269852665,
+      "load_kvar": 72.35212526932857,
+      "load_weight": 0.015533707319913813
+    },
+    "XFMR-000470": {
+      "bus": "bus_XFMR-000470_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 127.58712294000036,
+      "load_kvar": 60.73419575091717,
+      "load_weight": 0.013039385057359706
+    },
+    "XFMR-000471": {
+      "bus": "bus_XFMR-000471_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 35.612334278005314,
+      "load_kvar": 16.95223178756527,
+      "load_weight": 0.0036395752858279793
+    },
+    "XFMR-000472": {
+      "bus": "bus_XFMR-000472_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 15.0,
+      "load_kw": 15.052146621503578,
+      "load_kvar": 7.165143302210921,
+      "load_weight": 0.0015383271541432925
+    },
+    "XFMR-000473": {
+      "bus": "bus_XFMR-000473_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 250.0,
+      "load_kw": 180.10344522196556,
+      "load_kvar": 85.73308689364677,
+      "load_weight": 0.018406545412194036
+    },
+    "XFMR-000474": {
+      "bus": "bus_XFMR-000474_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 25.0,
+      "load_kw": 23.456657511112834,
+      "load_kvar": 11.165870004076325,
+      "load_weight": 0.0023972669215986957
+    },
+    "XFMR-000475": {
+      "bus": "bus_XFMR-000475_sec.2",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 250.0,
+      "load_kw": 26.35312736572393,
+      "load_kvar": 12.5446515227983,
+      "load_weight": 0.0026932857115127048
+    },
+    "XFMR-000476": {
+      "bus": "bus_XFMR-000476_sec.3",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 126.58997758021623,
+      "load_kvar": 60.25953326086535,
+      "load_weight": 0.012937476949356524
+    },
+    "XFMR-000477": {
+      "bus": "bus_XFMR-000477_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 10.0,
+      "load_kw": 11.443430081332375,
+      "load_kvar": 5.44731714773764,
+      "load_weight": 0.001169516858512724
+    },
+    "XFMR-000478": {
+      "bus": "bus_XFMR-000478_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 10.0,
+      "load_kw": 8.024645990643863,
+      "load_kvar": 3.819902896131374,
+      "load_weight": 0.0008201176310732379
+    },
+    "XFMR-000479": {
+      "bus": "bus_XFMR-000479_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 38.55628724498709,
+      "load_kvar": 18.353616282004,
+      "load_weight": 0.003940446842789759
+    },
+    "XFMR-000480": {
+      "bus": "bus_XFMR-000480_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 250.0,
+      "load_kw": 186.0863173806704,
+      "load_kvar": 88.58106183395772,
+      "load_weight": 0.019017994060213133
+    },
+    "XFMR-000481": {
+      "bus": "bus_XFMR-000481_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 125.07051798435465,
+      "load_kvar": 59.53623803792922,
+      "load_weight": 0.012782188403827862
+    },
+    "XFMR-000482": {
+      "bus": "bus_XFMR-000482_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 37.5,
+      "load_kw": 33.190695547100944,
+      "load_kvar": 15.79948002601083,
+      "load_weight": 0.003392084166391676
+    },
+    "XFMR-000483": {
+      "bus": "bus_XFMR-000483_sec.2",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 20.845086330725774,
+      "load_kvar": 9.922706339654871,
+      "load_weight": 0.0021303647339713104
+    },
+    "XFMR-000484": {
+      "bus": "bus_XFMR-000484_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 37.5,
+      "load_kw": 34.61518891822116,
+      "load_kvar": 16.47756929751344,
+      "load_weight": 0.0035376671778247952
+    },
+    "XFMR-000485": {
+      "bus": "bus_XFMR-000485_sec.1.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 25.0,
+      "load_kw": 26.068228691499886,
+      "load_kvar": 12.409033668497777,
+      "load_weight": 0.0026641691092260805
+    },
+    "XFMR-000486": {
+      "bus": "bus_XFMR-000486_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 250.0,
+      "load_kw": 186.7035978414892,
+      "load_kvar": 88.87490051827552,
+      "load_weight": 0.019081080031834154
+    },
+    "XFMR-000487": {
+      "bus": "bus_XFMR-000487_sec.2",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 122.22153124211422,
+      "load_kvar": 58.180059494924,
+      "load_weight": 0.012491022380961624
+    },
+    "XFMR-000488": {
+      "bus": "bus_XFMR-000488_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 333.0,
+      "load_kw": 121.98411568026089,
+      "load_kvar": 58.06704461634025,
+      "load_weight": 0.012466758545722774
+    },
+    "XFMR-000489": {
+      "bus": "bus_XFMR-000489_sec.1.2",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 37.5,
+      "load_kw": 26.68550915231865,
+      "load_kvar": 12.702872352815577,
+      "load_weight": 0.0027272550808470995
+    },
+    "XFMR-000490": {
+      "bus": "bus_XFMR-000490_sec.2.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 25.0,
+      "load_kw": 18.280998262709396,
+      "load_kvar": 8.702145650950172,
+      "load_weight": 0.001868315313391696
+    },
+    "XFMR-000491": {
+      "bus": "bus_XFMR-000491_sec.1.2",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 15.0,
+      "load_kw": 11.823294980297764,
+      "load_kvar": 5.62814095347167,
+      "load_weight": 0.0012083389948948891
+    },
+    "XFMR-000492": {
+      "bus": "bus_XFMR-000492_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 250.0,
+      "load_kw": 62.72519144166003,
+      "load_kvar": 29.85853092183163,
+      "load_weight": 0.006410505270105014
+    },
+    "XFMR-000493": {
+      "bus": "bus_XFMR-000493_sec.3",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 100.0,
+      "load_kw": 76.49529402915542,
+      "load_kvar": 36.413393879690204,
+      "load_weight": 0.0078178077139585
+    },
+    "XFMR-000494": {
+      "bus": "bus_XFMR-000494_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 41.69017266145155,
+      "load_kvar": 19.845412679309742,
+      "load_weight": 0.004260729467942621
+    },
+    "XFMR-000495": {
+      "bus": "bus_XFMR-000495_sec.2.3",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 333.0,
+      "load_kw": 237.1781462915154,
+      "load_kvar": 112.9018637051847,
+      "load_weight": 0.02423957140361434
+    },
+    "XFMR-000496": {
+      "bus": "bus_XFMR-000496_sec.3",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 100.0,
+      "load_kw": 74.69093575906982,
+      "load_kvar": 35.55448080245356,
+      "load_weight": 0.007633402566143216
+    },
+    "XFMR-000497": {
+      "bus": "bus_XFMR-000497_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 333.0,
+      "load_kw": 37.0843107614962,
+      "load_kvar": 17.652924034784633,
+      "load_weight": 0.003790011064308869
+    },
+    "XFMR-000498": {
+      "bus": "bus_XFMR-000498_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 25.0,
+      "load_kw": 21.79474857813925,
+      "load_kvar": 10.374765853989945,
+      "load_weight": 0.002227420074926723
+    },
+    "XFMR-000499": {
+      "bus": "bus_XFMR-000499_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 25.0,
+      "load_kw": 26.68550915231865,
+      "load_kvar": 12.702872352815577,
+      "load_weight": 0.0027272550808470995
+    },
+    "XFMR-000500": {
+      "bus": "bus_XFMR-000500_sec.2.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 37.5,
+      "load_kw": 26.68550915231865,
+      "load_kvar": 12.702872352815577,
+      "load_weight": 0.0027272550808470995
+    },
+    "XFMR-000501": {
+      "bus": "bus_XFMR-000501_sec.1.2",
+      "phases": 2,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 25.0,
+      "load_kw": 20.085356532794997,
+      "load_kvar": 9.561058728186811,
+      "load_weight": 0.0020527204612069802
+    },
+    "XFMR-000502": {
+      "bus": "bus_XFMR-000502_sec.3",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 15.0,
+      "load_kw": 12.820440340081912,
+      "load_kvar": 6.102803443523497,
+      "load_weight": 0.0013102471028980725
+    },
+    "XFMR-000503": {
+      "bus": "bus_XFMR-000503_sec.1.3",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 333.0,
+      "load_kw": 237.1781462915154,
+      "load_kvar": 112.9018637051847,
+      "load_weight": 0.02423957140361434
+    },
+    "XFMR-000504": {
+      "bus": "bus_XFMR-000504_sec.1",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 15.954325756546382,
+      "load_kvar": 7.594599840829241,
+      "load_weight": 0.0016305297280509348
+    },
+    "XFMR-000505": {
+      "bus": "bus_XFMR-000505_sec.2",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 333.0,
+      "load_kw": 238.2227747636702,
+      "load_kvar": 113.39912917095327,
+      "load_weight": 0.024346332278665294
+    },
+    "XFMR-000506": {
+      "bus": "bus_XFMR-000506_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 45.86868655007084,
+      "load_kvar": 21.834474542384065,
+      "load_weight": 0.004687772968146437
+    },
+    "XFMR-000507": {
+      "bus": "bus_XFMR-000507_sec.1",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 15.0,
+      "load_kw": 13.105339014305954,
+      "load_kvar": 6.238421297824019,
+      "load_weight": 0.0013393637051846963
+    },
+    "XFMR-000508": {
+      "bus": "bus_XFMR-000508_sec.2.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 37.5,
+      "load_kw": 26.68550915231865,
+      "load_kvar": 12.702872352815577,
+      "load_weight": 0.0027272550808470995
+    },
+    "XFMR-000509": {
+      "bus": "bus_XFMR-000509_sec.1",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 250.0,
+      "load_kw": 8.641926451462624,
+      "load_kvar": 4.113741580449172,
+      "load_weight": 0.0008832036026942563
+    },
+    "XFMR-000510": {
+      "bus": "bus_XFMR-000510_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 250.0,
+      "load_kw": 29.297080332705704,
+      "load_kvar": 13.946036017237029,
+      "load_weight": 0.0029941572684744843
+    },
+    "XFMR-000511": {
+      "bus": "bus_XFMR-000511_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 75.0,
+      "load_kw": 16.429156880253117,
+      "load_kvar": 7.820629597996779,
+      "load_weight": 0.0016790573985286412
+    },
+    "XFMR-000512": {
+      "bus": "bus_XFMR-000512_sec.3",
+      "phases": 1,
+      "kv": 0.12,
+      "feeder_id": "FDR-0002",
+      "kva": 15.0,
+      "load_kw": 16.049291981287727,
+      "load_kvar": 7.639805792262748,
+      "load_weight": 0.0016402352621464758
+    },
+    "XFMR-000513": {
+      "bus": "bus_XFMR-000513_sec.1.2",
+      "phases": 2,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 75.0,
+      "load_kw": 18.85079561115748,
+      "load_kvar": 8.973381359551217,
+      "load_weight": 0.0019265485179649439
+    },
+    "XFMR-000514": {
+      "bus": "bus_XFMR-000514_sec.1",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 50.0,
+      "load_kw": 36.98934453675486,
+      "load_kvar": 17.607718083351127,
+      "load_weight": 0.003780305530213328
+    },
+    "XFMR-000515": {
+      "bus": "bus_XFMR-000515_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 118.94519648853775,
+      "load_kvar": 56.62045417046801,
+      "load_weight": 0.012156181454665451
+    },
+    "XFMR-000516": {
+      "bus": "bus_XFMR-000516_sec.1.3",
+      "phases": 2,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 121.50928455655414,
+      "load_kvar": 57.84101485917271,
+      "load_weight": 0.012418230875245066
+    },
+    "XFMR-000517": {
+      "bus": "bus_XFMR-000517_sec.1.2.3",
+      "phases": 3,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 37.5,
+      "load_kw": 26.68550915231865,
+      "load_kvar": 12.702872352815577,
+      "load_weight": 0.0027272550808470995
+    },
+    "XFMR-000518": {
+      "bus": "bus_XFMR-000518_sec.1.3",
+      "phases": 2,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 500.0,
+      "load_kw": 12.203159879263156,
+      "load_kvar": 5.8089647592057005,
+      "load_weight": 0.0012471611312770544
+    },
+    "XFMR-000519": {
+      "bus": "bus_XFMR-000519_sec.3",
+      "phases": 1,
+      "kv": 0.208,
+      "feeder_id": "FDR-0002",
+      "kva": 167.0,
+      "load_kw": 127.63460605237105,
+      "load_kvar": 60.75679872663393,
+      "load_weight": 0.013044237824407478
+    },
+    "XFMR-000520": {
+      "bus": "bus_XFMR-000520_sec.2",
+      "phases": 1,
+      "kv": 0.24,
+      "feeder_id": "FDR-0002",
+      "kva": 100.0,
+      "load_kw": 10.066419822582835,
+      "load_kvar": 4.791830851951784,
+      "load_weight": 0.0010287866141273755
+    },
+    "XFMR-000521": {
+      "bus": "bus_XFMR-000521_sec.3",
+      "phases": 1,
+      "kv": 0.48,
+      "feeder_id": "FDR-0002",
+      "kva": 250.0,
+      "load_kw": 7.834713541161169,
+      "load_kvar": 3.72949099326436,
+      "load_weight": 0.0008007065628821555
+    }
+  },
+  "reference_hour": "2024-01-15 12:00:00",
+  "load_basis": "Source hourly feeder MW/Mvar allocated by customer contracted demand; modeled as gross load before DER",
+  "secondary_voltage_basis": "Single-phase actual winding kV; multiphase line-line kV",
+  "tie_policy": "Inter-feeder ties excluded (normally open radial snapshot)"
+}

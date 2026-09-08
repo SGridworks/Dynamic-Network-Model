@@ -47,11 +47,6 @@ except ImportError:
         "Install it with: pip install pandas"
     )
 
-try:
-    import numpy as np
-except ImportError:
-    np = None
-
 V1_DIR = os.path.dirname(os.path.abspath(__file__))
 V2_DIR = os.path.join(os.path.dirname(V1_DIR), "sisyphean-power-and-light")
 USE_V2 = os.path.isdir(V2_DIR)
@@ -73,35 +68,25 @@ def _csv_path(filename: str) -> str:
     return path
 
 
+def _substations_for_feeders(feeder_ids: pd.Series) -> pd.Series:
+    """Resolve actual registry relationships; IDs do not encode membership."""
+    registry = load_feeders()
+    if not registry.index.is_unique:
+        raise ValueError("Duplicate feeder IDs in registry")
+    result = feeder_ids.map(registry["substation_id"])
+    if result.isna().any():
+        unknown = feeder_ids[result.isna()].unique().tolist()
+        raise ValueError(f"Unknown feeder IDs: {unknown[:5]}")
+    return result
+
+
 def _feeder_to_substation(feeder_id: str) -> str:
-    """Derive substation_id from feeder_id (FDR-00XX -> SUB-0XX)."""
-    try:
-        num = int(feeder_id.split("-")[1])
-        sub_num = ((num - 1) // 5) + 1
-        return f"SUB-{sub_num:03d}"
-    except (IndexError, ValueError):
-        return "SUB-001"
+    """Resolve a single feeder using the canonical registry."""
+    return str(_substations_for_feeders(pd.Series([feeder_id])).iloc[0])
 
 
-def _load_bus_voltages() -> "float | None":
-    """Return mean bus voltage from power flow results, or None if unavailable."""
-    try:
-        vpath = (
-            Path(__file__).resolve().parent.parent
-            / "sisyphean-power-and-light"
-            / "network"
-            / "results"
-            / "bus_voltages.parquet"
-        )
-        if not vpath.exists():
-            return None
-        vdf = pd.read_parquet(vpath, columns=["voltage_pu"])
-        mean_v = float(vdf["voltage_pu"].mean())
-        if 0.9 <= mean_v <= 1.1:
-            return mean_v
-        return None
-    except Exception:
-        return None
+def _wildfire_path(filename: str) -> Path:
+    return Path(V2_DIR) / "wildfire" / filename
 
 
 # ---------------------------------------------------------------------------
@@ -112,7 +97,7 @@ def _load_bus_voltages() -> "float | None":
 def load_substations() -> pd.DataFrame:
     """Load the substations dataset.
 
-    Contains 15 substations with capacity, voltage levels, and location data.
+    Contains 23 substations with capacity, voltage levels, and location data.
     Coordinates are placed at real Phoenix, AZ street intersections.
     """
     df = pd.read_csv(_csv_path("substations.csv"))
@@ -120,10 +105,74 @@ def load_substations() -> pd.DataFrame:
     return df
 
 
+def load_fuel_models() -> pd.DataFrame:
+    """Load the synthetic wildfire fuel-model raster."""
+    path = _wildfire_path("fuel_models.parquet")
+    if not path.exists():
+        raise FileNotFoundError(f"fuel_models.parquet not found at {path}")
+    return pd.read_parquet(path)
+
+
+def load_terrain() -> pd.DataFrame:
+    """Load synthetic wildfire terrain cells."""
+    path = _wildfire_path("terrain.parquet")
+    if not path.exists():
+        raise FileNotFoundError(f"terrain.parquet not found at {path}")
+    return pd.read_parquet(path)
+
+
+def load_fuel_moisture() -> pd.DataFrame:
+    """Load synthetic daily fuel-moisture records."""
+    path = _wildfire_path("fuel_moisture_daily.parquet")
+    if not path.exists():
+        raise FileNotFoundError(f"fuel_moisture_daily.parquet not found at {path}")
+    return pd.read_parquet(path)
+
+
+def load_wind_direction() -> pd.DataFrame:
+    """Load synthetic hourly wind direction and gust records."""
+    path = _wildfire_path("wind_direction_hourly.parquet")
+    if not path.exists():
+        raise FileNotFoundError(f"wind_direction_hourly.parquet not found at {path}")
+    return pd.read_parquet(path)
+
+
+def load_fire_history() -> pd.DataFrame:
+    """Load synthetic wildfire ignition history."""
+    path = _wildfire_path("fire_history.parquet")
+    if not path.exists():
+        raise FileNotFoundError(f"fire_history.parquet not found at {path}")
+    return pd.read_parquet(path)
+
+
+def load_asset_vegetation_proximity() -> pd.DataFrame:
+    """Load synthetic grid-asset vegetation proximity records."""
+    path = _wildfire_path("asset_vegetation_proximity.parquet")
+    if not path.exists():
+        raise FileNotFoundError(f"asset_vegetation_proximity.parquet not found at {path}")
+    return pd.read_parquet(path)
+
+
+def load_fire_weather_indices() -> pd.DataFrame:
+    """Load synthetic hourly fire-weather index records."""
+    path = _wildfire_path("fire_weather_indices_hourly.parquet")
+    if not path.exists():
+        raise FileNotFoundError(f"fire_weather_indices_hourly.parquet not found at {path}")
+    return pd.read_parquet(path)
+
+
+def load_psps_events() -> pd.DataFrame:
+    """Load synthetic PSPS event records."""
+    path = _wildfire_path("psps_events.parquet")
+    if not path.exists():
+        raise FileNotFoundError(f"psps_events.parquet not found at {path}")
+    return pd.read_parquet(path)
+
+
 def load_feeders() -> pd.DataFrame:
     """Load the feeders (distribution lines) dataset.
 
-    Contains ~65 feeders linked to substations with head/tail coordinates,
+    Contains 104 feeders linked to substations with head/tail coordinates,
     direction (N/S/E/W along the Phoenix street grid), conductor specs,
     capacity, and customer counts.
     """
@@ -138,7 +187,7 @@ def load_transformers() -> pd.DataFrame:
     Source: sisyphean-power-and-light/assets/transformers.csv (V2)
     Falls back to demo_data/transformers.csv (V1) if V2 not found.
 
-    Contains ~21,000 transformers placed at intervals along feeder routes
+    Contains 36,668 transformers placed at intervals along feeder routes
     with ratings, phase configuration, and manufacturer info.
     """
     if USE_V2:
@@ -150,36 +199,17 @@ def load_transformers() -> pd.DataFrame:
             "kva_rating": "rated_kva",
         })
 
-        # Derive substation_id from feeder_id
-        if "substation_id" not in df.columns:
-            df["substation_id"] = df["feeder_id"].apply(_feeder_to_substation)
-
-        # Derive columns present in V1 but not in V2
-        if "status" not in df.columns:
-            df["status"] = "active"
-        if "phase" not in df.columns:
-            phases = ["A", "B", "C", "AB", "BC", "AC", "ABC"]
-            rng = np.random.RandomState(42) if np is not None else None
-            if rng is not None:
-                df["phase"] = rng.choice(phases, size=len(df))
-            else:
-                df["phase"] = "ABC"
-        if "primary_voltage_kv" not in df.columns:
-            df["primary_voltage_kv"] = 12.47
-        if "secondary_voltage_v" not in df.columns:
-            df["secondary_voltage_v"] = df["rated_kva"].apply(
-                lambda kva: 480 if kva >= 500 else (208 if kva >= 50 else 240)
-            )
-        if "latitude" not in df.columns:
-            rng = np.random.RandomState(99) if np is not None else None
-            if rng is not None:
-                df["latitude"] = 33.45 + rng.normal(0, 0.05, size=len(df))
-                df["longitude"] = -112.07 + rng.normal(0, 0.05, size=len(df))
-            else:
-                df["latitude"] = 33.45
-                df["longitude"] = -112.07
-
         df.set_index("transformer_id", inplace=True)
+        original = pd.read_csv(_csv_path("transformers.csv")).set_index("transformer_id")
+        if not df.index.is_unique or not original.index.is_unique:
+            raise ValueError("Duplicate transformer IDs")
+        if not df.index.isin(original.index).all():
+            raise ValueError("V2 transformer IDs missing from V1 registry")
+        # V2 enriches health; the original registry owns topology and geometry.
+        for column in ("feeder_id", "status", "phase", "primary_voltage_kv",
+                       "secondary_voltage_v", "latitude", "longitude"):
+            df[column] = original[column].reindex(df.index)
+        df["substation_id"] = _substations_for_feeders(df["feeder_id"])
         return df
     else:
         df = pd.read_csv(_csv_path("transformers.csv"))
@@ -192,7 +222,7 @@ def load_transformers() -> pd.DataFrame:
 def load_customers() -> pd.DataFrame:
     """Load the customers dataset.
 
-    Contains ~141,000 customers clustered around their service transformers
+    Contains 237,713 customers clustered around their service transformers
     with type classifications and DER adoption flags.
     """
     df = pd.read_csv(_csv_path("customers.csv"))
@@ -209,8 +239,8 @@ def load_load_profiles() -> pd.DataFrame:
     Source: sisyphean-power-and-light/timeseries/substation_load_hourly.parquet (V2)
     Falls back to demo_data/load_profiles.csv (V1) if V2 not found.
 
-    Contains hourly load data per feeder with derived reactive power,
-    voltage, and power factor columns.
+    Contains 349,440 sampled hourly feeder records with source reactive power
+    and voltage means and power factor derived from hourly MW/Mvar.
     """
     if USE_V2:
         v2_path = os.path.join(V2_DIR, "timeseries", "substation_load_hourly.parquet")
@@ -221,23 +251,10 @@ def load_load_profiles() -> pd.DataFrame:
             "total_load_mw": "load_mw",
         })
 
-        # Derive substation_id from feeder_id
-        if "substation_id" not in df.columns:
-            df["substation_id"] = df["feeder_id"].apply(_feeder_to_substation)
-
-        # Derive additional columns
-        df["load_mvar"] = df["load_mw"] * 0.3
-
-        base_v = _load_bus_voltages() or 1.0
-        if np is not None:
-            rng = np.random.RandomState(42)
-            df["voltage_pu"] = base_v + rng.normal(0, 0.01, size=len(df))
-            pf_noise = rng.normal(0, 0.02, size=len(df))
-            df["power_factor"] = (0.95 + pf_noise).clip(0.85, 1.0)
-        else:
-            df["voltage_pu"] = base_v
-            df["power_factor"] = 0.95
-
+        required = ["load_mw", "load_mvar", "voltage_pu", "power_factor", "customer_count"]
+        if not set(required).issubset(df.columns) or df[required].isna().any().any():
+            raise ValueError("Incomplete V2 load profiles; run convert_load_profiles.py")
+        df["substation_id"] = _substations_for_feeders(df["feeder_id"])
         return df
     else:
         df = pd.read_csv(_csv_path("load_profiles.csv"), parse_dates=["timestamp"])
@@ -250,7 +267,8 @@ def load_customer_interval_data() -> pd.DataFrame:
     Source: sisyphean-power-and-light/timeseries/ami_15min_sample.parquet (V2)
     Falls back to demo_data/customer_interval_data.csv (V1) if V2 not found.
 
-    Contains one representative week per season per year for ~500 sampled
+    V2 contains July 15-21, 2024 for 500 sampled customers. V1 contains
+    one representative week per season per year for ~500 sampled
     customers stratified by type (residential, commercial, industrial,
     municipal). Each record includes demand_kw, energy_kwh, voltage, and
     power factor.
@@ -268,7 +286,7 @@ def load_customer_interval_data() -> pd.DataFrame:
 def load_solar_installations() -> pd.DataFrame:
     """Load the solar PV installation registry.
 
-    Contains ~17,000 solar installations linked through the full hierarchy:
+    Contains 28,660 solar installations linked through the full hierarchy:
     customer -> transformer -> feeder -> substation.
     """
     df = pd.read_csv(_csv_path("solar_installations.csv"),
@@ -290,7 +308,7 @@ def load_solar_profiles() -> pd.DataFrame:
 def load_ev_chargers() -> pd.DataFrame:
     """Load the EV charger registry.
 
-    Contains ~11,000 EV chargers linked through the full hierarchy:
+    Contains 19,015 EV chargers linked through the full hierarchy:
     customer -> transformer -> feeder -> substation.
     """
     df = pd.read_csv(_csv_path("ev_chargers.csv"),
@@ -407,18 +425,7 @@ def load_outage_history() -> pd.DataFrame:
         # Compute weather_related
         df["weather_related"] = (df["cause"] == "weather")
 
-        # Derive substation_id from feeder_id
-        # Try to join from feeder_summary if available
-        feeder_summary_path = os.path.join(V2_DIR, "network", "feeder_summary.csv")
-        if os.path.exists(feeder_summary_path):
-            fs = pd.read_csv(feeder_summary_path)
-            if "substation_id" in fs.columns:
-                feeder_sub_map = fs.set_index("feeder_id")["substation_id"].to_dict()
-                df["substation_id"] = df["feeder_id"].map(feeder_sub_map)
-            else:
-                df["substation_id"] = df["feeder_id"].apply(_feeder_to_substation)
-        else:
-            df["substation_id"] = df["feeder_id"].apply(_feeder_to_substation)
+        df["substation_id"] = _substations_for_feeders(df["feeder_id"])
 
         # Generate sequential outage_id index
         df["outage_id"] = [f"OUT-{i+1:05d}" for i in range(len(df))]
@@ -445,7 +452,7 @@ def load_network_nodes() -> pd.DataFrame:
     Follows ESRI geodatabase / GIS conventions — pair with
     load_network_edges() for the full topology.
     """
-    df = pd.read_csv(_csv_path("network_nodes.csv"))
+    df = pd.read_csv(_csv_path("network_nodes.csv"), low_memory=False)
     df.set_index("node_id", inplace=True)
     return df
 
@@ -525,8 +532,8 @@ def load_interconnection_queue() -> pd.DataFrame:
 def load_hosting_capacity() -> pd.DataFrame:
     """Load the pre-computed hosting capacity per distribution transformer.
 
-    Contains thermal and voltage hosting capacity limits for every
-    transformer, accounting for existing DER penetration.
+    Contains synthetic screening proxies for every transformer, accounting
+    for existing DER penetration. These are not OpenDSS-certified limits.
     """
     df = pd.read_csv(_csv_path("hosting_capacity_by_transformer.csv"))
     df.set_index("transformer_id", inplace=True)
@@ -564,7 +571,10 @@ def load_all(datasets: Optional[list] = None) -> Dict[str, pd.DataFrame]:
             Valid names: substations, feeders, transformers, customers,
             load_profiles, customer_interval_data, solar_installations,
             solar_profiles, ev_chargers, ev_charging_profiles, weather_data,
-            growth_scenarios, outage_history, network_nodes, network_edges
+            growth_scenarios, outage_history, network_nodes, network_edges,
+            and wildfire datasets such as fuel_models, terrain,
+            fuel_moisture, wind_direction, fire_weather_indices,
+            fire_history, asset_vegetation_proximity, psps_events
 
     Returns:
         Dictionary mapping dataset name to DataFrame.
@@ -598,6 +608,14 @@ def load_all(datasets: Optional[list] = None) -> Dict[str, pd.DataFrame]:
         "commercial_bess": load_commercial_bess,
         "interconnection_queue": load_interconnection_queue,
         "hosting_capacity": load_hosting_capacity,
+        "fuel_models": load_fuel_models,
+        "terrain": load_terrain,
+        "fuel_moisture": load_fuel_moisture,
+        "wind_direction": load_wind_direction,
+        "fire_weather_indices": load_fire_weather_indices,
+        "fire_history": load_fire_history,
+        "asset_vegetation_proximity": load_asset_vegetation_proximity,
+        "psps_events": load_psps_events,
     }
 
     if datasets is not None:

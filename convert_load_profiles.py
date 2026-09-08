@@ -1,127 +1,61 @@
 #!/usr/bin/env python3
-"""Convert demo_data/load_profiles.csv to timeseries/substation_load_hourly.parquet"""
+"""Convert sampled 15-minute demand to observed hourly means, without filling gaps."""
 
-import pandas as pd
+from pathlib import Path
+
 import numpy as np
+import pandas as pd
 
-# Set random seed
-np.random.seed(42)
+ROOT = Path(__file__).resolve().parent
 
-# Read source data
-print("Reading load_profiles.csv...")
-df = pd.read_csv("demo_data/load_profiles.csv.gz", parse_dates=["timestamp"])
 
-print(f"Original data: {len(df)} load profile records")
-print(f"Date range: {df['timestamp'].min()} to {df['timestamp'].max()}")
+def convert_profiles(source: pd.DataFrame, feeders: pd.DataFrame) -> pd.DataFrame:
+    """Preserve sampled hours, energy, electrical quantities, and registry links."""
+    source = source.copy()
+    source["timestamp"] = pd.to_datetime(source["timestamp"])
+    keys = ["feeder_id", "timestamp"]
+    values = ["load_mw", "load_mvar", "voltage_pu"]
+    if source.duplicated(keys).any() or not np.isfinite(source[values]).all().all():
+        raise ValueError("Duplicate intervals or non-finite source electrical values")
+    if not source.timestamp.eq(source.timestamp.dt.floor("15min")).all():
+        raise ValueError("Source timestamps must align to 15-minute boundaries")
+    source["timestamp"] = source.timestamp.dt.floor("h")
+    grouped = source.groupby(keys, sort=True)
+    if not grouped.size().eq(4).all():
+        raise ValueError("Each sampled hour must contain four 15-minute readings")
+    hourly = grouped[values].mean().reset_index()
+    hourly = hourly.rename(columns={"load_mw": "total_load_mw"})
+    registry = feeders[["feeder_id", "substation_id", "num_customers"]].rename(
+        columns={"num_customers": "customer_count"}
+    )
+    hourly = hourly.merge(registry, on="feeder_id", how="left", validate="many_to_one")
+    if hourly[["substation_id", "customer_count"]].isna().any().any():
+        raise ValueError("Unknown feeder in source load profiles")
+    hourly["customer_count"] = hourly.customer_count.astype(int)
+    # Synthetic class allocation retained from the original conversion.
+    hour = hourly.timestamp.dt.hour
+    conditions = [hour.between(6, 8), hour.between(9, 16), hour.between(17, 21)]
+    residential = np.select(conditions, [0.75, 0.60, 0.85], default=0.70)
+    commercial = np.select(conditions, [0.18, 0.30, 0.10], default=0.20)
+    hourly["residential_mw"] = hourly.total_load_mw * residential
+    hourly["commercial_mw"] = hourly.total_load_mw * commercial
+    hourly["industrial_mw"] = hourly.total_load_mw * (1 - residential - commercial)
+    apparent = np.hypot(hourly.total_load_mw, hourly.load_mvar)
+    hourly["power_factor"] = np.divide(
+        hourly.total_load_mw, apparent, out=np.ones(len(hourly)), where=apparent != 0
+    )
+    return hourly
 
-# Rename columns to match guide expectations
-df = df.rename(columns={
-    "load_mw": "total_load_mw"
-})
 
-# ADD MISSING COLUMNS: Customer class breakdowns
-# Typical distribution for Phoenix-area utility:
-# Residential: 82%
-# Commercial: 13%
-# Industrial: 5%
+def main() -> None:
+    source = pd.read_csv(ROOT / "demo_data/load_profiles.csv.gz", parse_dates=["timestamp"])
+    feeders = pd.read_csv(ROOT / "demo_data/feeders.csv")
+    hourly = convert_profiles(source, feeders)
+    output = ROOT / "sisyphean-power-and-light/timeseries/substation_load_hourly.parquet"
+    hourly.to_parquet(output, index=False)
+    pd.testing.assert_frame_equal(pd.read_parquet(output), hourly)
+    print(f"Saved {len(hourly):,} observed hourly rows across {hourly.feeder_id.nunique()} feeders")
 
-# BUT: these percentages vary by hour of day
-# Residential peaks in evening, Commercial peaks midday, Industrial is steady
 
-df["hour"] = df["timestamp"].dt.hour
-
-def allocate_load_by_class(row):
-    """Allocate total load to customer classes based on hour of day"""
-    total = row["total_load_mw"]
-    hour = row["hour"]
-
-    # Time-of-day load shapes (as % of total)
-    if 6 <= hour < 9:  # Morning
-        residential_pct = 0.75
-        commercial_pct = 0.18
-        industrial_pct = 0.07
-    elif 9 <= hour < 17:  # Business hours
-        residential_pct = 0.60
-        commercial_pct = 0.30
-        industrial_pct = 0.10
-    elif 17 <= hour < 22:  # Evening peak
-        residential_pct = 0.85
-        commercial_pct = 0.10
-        industrial_pct = 0.05
-    else:  # Night/early morning
-        residential_pct = 0.70
-        commercial_pct = 0.20
-        industrial_pct = 0.10
-
-    return pd.Series({
-        "residential_mw": total * residential_pct,
-        "commercial_mw": total * commercial_pct,
-        "industrial_mw": total * industrial_pct
-    })
-
-print("\nAllocating load by customer class...")
-class_loads = df.apply(allocate_load_by_class, axis=1)
-df = pd.concat([df, class_loads], axis=1)
-
-# ADD customer_count (from feeders.csv)
-feeders = pd.read_csv("demo_data/feeders.csv")
-feeder_customers = feeders[["feeder_id", "num_customers"]].rename(columns={"num_customers": "customer_count"})
-
-df = df.merge(feeder_customers, on="feeder_id", how="left")
-
-# Fill missing customer_count with median
-median_customers = df["customer_count"].median()
-df["customer_count"] = df["customer_count"].fillna(median_customers).astype(int)
-
-# Select only required columns for guides
-output_columns = [
-    "timestamp",
-    "feeder_id",
-    "total_load_mw",
-    "residential_mw",
-    "commercial_mw",
-    "industrial_mw",
-    "customer_count"
-]
-
-df_output = df[output_columns]
-
-# Sort by timestamp and feeder_id
-df_output = df_output.sort_values(["timestamp", "feeder_id"]).reset_index(drop=True)
-
-# Resample to hourly (source load_profiles.csv is 15-minute AMI data)
-# Aggregate: sum for MW columns, first for customer_count (static per feeder)
-print("\nResampling to hourly...")
-df_output["timestamp"] = pd.to_datetime(df_output["timestamp"])
-df_hourly = (
-    df_output
-    .set_index("timestamp")
-    .groupby("feeder_id")
-    .resample("1h")
-    .agg({
-        "feeder_id": "first",
-        "total_load_mw": "mean",
-        "residential_mw": "mean",
-        "commercial_mw": "mean",
-        "industrial_mw": "mean",
-        "customer_count": "first",
-    })
-    .drop(columns=["feeder_id"])
-    .reset_index()
-)
-df_output = df_hourly
-
-# Save as Parquet
-output_path = "sisyphean-power-and-light/timeseries/substation_load_hourly.parquet"
-df_output.to_parquet(output_path, index=False)
-
-print(f"\n✅ Saved {len(df_output)} load records to {output_path}")
-print(f"\nDate range: {df_output['timestamp'].min()} to {df_output['timestamp'].max()}")
-print(f"Feeders: {df_output['feeder_id'].nunique()}")
-print(f"\nLoad summary by class (MW):")
-print(df_output[["total_load_mw", "residential_mw", "commercial_mw", "industrial_mw"]].describe())
-
-# Verify file can be read
-print("\nVerifying Parquet file...")
-test_df = pd.read_parquet(output_path)
-print(f"✅ Parquet file readable: {len(test_df)} rows")
+if __name__ == "__main__":
+    main()

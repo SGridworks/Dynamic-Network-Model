@@ -9,7 +9,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import pandas as pd
 import networkx as nx
-from demo_data.load_demo_data import load_all
+import numpy as np
+from demo_data.load_demo_data import load_all  # noqa: E402
 
 
 class Report:
@@ -47,7 +48,50 @@ class Report:
         print(f"{'='*70}\n")
 
 
-def main():
+def validate_data_contract(d: dict[str, pd.DataFrame], r: Report) -> None:
+    """Check semantic relationships and missing values, not just row counts."""
+    category = "Data contract"
+    feeders = d["feeders"]
+    transformers = d["transformers"]
+    for name, frame in d.items():
+        if frame.index.name is not None and not frame.index.is_unique:
+            r.fail(category, f"{name}: unique primary key", "duplicate IDs")
+        if "feeder_id" in frame and "substation_id" in frame:
+            assigned = frame["feeder_id"].notna() & frame["feeder_id"].astype(str).str.strip().ne("")
+            expected = frame.loc[assigned, "feeder_id"].map(feeders["substation_id"])
+            bad = expected.isna() | frame.loc[assigned, "substation_id"].ne(expected)
+            if bad.any():
+                r.fail(category, f"{name}: feeder/substation hierarchy", f"{bad.sum()} mismatches")
+            else:
+                r.ok(category, f"{name}: feeder/substation hierarchy")
+        if "transformer_id" in frame and "feeder_id" in frame:
+            assigned = frame["transformer_id"].notna() & frame["transformer_id"].astype(str).str.strip().ne("")
+            expected = frame.loc[assigned, "transformer_id"].map(transformers["feeder_id"])
+            bad = expected.isna() | frame.loc[assigned, "feeder_id"].ne(expected)
+            if bad.any():
+                r.fail(category, f"{name}: transformer/feeder hierarchy", f"{bad.sum()} mismatches")
+            else:
+                r.ok(category, f"{name}: transformer/feeder hierarchy")
+
+    lp = d["load_profiles"]
+    columns = ["load_mw", "load_mvar", "voltage_pu", "power_factor"]
+    if not np.isfinite(lp[columns]).all().all():
+        r.fail(category, "load profiles: finite electrical values", "missing or infinite values")
+    else:
+        r.ok(category, "load profiles: finite electrical values")
+    if lp.duplicated(["feeder_id", "timestamp"]).any():
+        r.fail(category, "load profiles: unique intervals", "duplicate feeder/timestamp")
+    else:
+        r.ok(category, "load profiles: unique intervals")
+    if {"residential_mw", "commercial_mw", "industrial_mw"}.issubset(lp.columns):
+        classes = lp[["residential_mw", "commercial_mw", "industrial_mw"]]
+        if not np.isfinite(classes).all().all() or not np.allclose(classes.sum(axis=1), lp.load_mw):
+            r.fail(category, "load profiles: class balance", "classes must sum to total MW")
+        else:
+            r.ok(category, "load profiles: class balance")
+
+
+def main() -> int:
     print("Loading all datasets...")
     d = load_all()
     subs = d["substations"]
@@ -74,6 +118,7 @@ def main():
     iq = d["interconnection_queue"]
     hc = d["hosting_capacity"]
     r = Report()
+    validate_data_contract(d, r)
 
     # ── Category 0: Row Counts ──
     C = "0. Row Counts"
@@ -640,8 +685,9 @@ def main():
     # Edge length consistency
     len_diff = (edges["length_ft"] - edges["length_miles"] * 5280).abs()
     max_len_diff = len_diff.max()
-    if max_len_diff < 1.0:
-        r.ok(C, f"edge length_ft = length_miles*5280 (max diff={max_len_diff:.2f} ft)")
+    # Source lengths are rounded independently to 0.001 mi and 0.1 ft.
+    if max_len_diff <= 0.0005 * 5280 + 0.05 + 1e-9:
+        r.ok(C, f"edge lengths agree within source rounding (max diff={max_len_diff:.2f} ft)")
     else:
         r.warn(C, "edge length unit mismatch", f"max diff={max_len_diff:.1f} ft")
 
@@ -741,7 +787,6 @@ def main():
 
     # Nighttime gen = 0
     night = sp[sp["generation_pct_of_capacity"] == 0]
-    night_ghi = sp[sp["ghi_w_per_m2"] == 0]
     if len(night) > 0:
         r.ok(C, f"solar profiles: {len(night)}/288 records have zero generation (nighttime)")
     else:
@@ -928,7 +973,8 @@ def main():
 
     # Print report
     r.summary()
+    return int(any(status == "FAIL" for _, _, status, _ in r.results))
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

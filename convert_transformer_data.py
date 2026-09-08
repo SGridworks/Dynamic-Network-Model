@@ -83,7 +83,14 @@ output_columns = [
     "type",
     "health_index",
     "condition_score",
-    "age_years"
+    "age_years",
+    "substation_id",
+    "latitude",
+    "longitude",
+    "phase",
+    "primary_voltage_kv",
+    "secondary_voltage_v",
+    "status",
 ]
 
 df_output = df[output_columns]
@@ -93,11 +100,11 @@ output_path = "sisyphean-power-and-light/assets/transformers.csv"
 df_output.to_csv(output_path, index=False)
 
 print(f"\n✅ Saved {len(df_output)} transformers to {output_path}")
-print(f"\nHealth index distribution:")
+print("\nHealth index distribution:")
 print(df_output["health_index"].value_counts().sort_index())
-print(f"\nType distribution:")
+print("\nType distribution:")
 print(df_output["type"].value_counts())
-print(f"\nCondition score summary:")
+print("\nCondition score summary:")
 print(df_output["condition_score"].describe())
 print(f"\nAge range: {df_output['age_years'].min()} - {df_output['age_years'].max()} years")
 print(f"Install year range: {df_output['install_year'].min()} - {df_output['install_year'].max()}")

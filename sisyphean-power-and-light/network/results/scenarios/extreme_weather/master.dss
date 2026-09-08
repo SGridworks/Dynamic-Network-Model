@@ -1,28 +1,27 @@
 ! SP&L Scenario: Extreme Weather
+! Sisyphean Power & Light Distribution System Model
 
 Clear
 
-New Circuit.SPL bus1=sourcebus basekV=69 pu=1.04 phases=3 MVAsc3=2000 MVAsc1=2100
-New Transformer.sub_xfmr phases=3 windings=2 buses=[sourcebus bus_SUB-001] conns=[delta wye] kvs=[69 12.47] kvas=[20000 20000] XHL=7
+! Synthetic source; voltage and capacity follow the substation registry.
+New Circuit.SPL bus1=sourcebus basekV=230.0 pu=1.04 phases=3 MVAsc3=2000 MVAsc1=2100
+New Transformer.sub_xfmr phases=3 windings=2 buses=[sourcebus bus_SUB-001] conns=[delta wye] kvs=[230.0 12.47] kvas=[20000.0 20000.0] XHL=7
 
-Redirect /Users/2agents/Projects/Dynamic-Network-Model/sisyphean-power-and-light/network/lines.dss
-Redirect /Users/2agents/Projects/Dynamic-Network-Model/sisyphean-power-and-light/network/transformers.dss
-Redirect /Users/2agents/Projects/Dynamic-Network-Model/sisyphean-power-and-light/network/loads.dss
+Redirect "../../../lines.dss"
+Redirect "../../../transformers.dss"
+Redirect "../../../loads.dss"
+Redirect "pvsystems.dss"
+Redirect "storage.dss"
+Redirect "../../../capacitors.dss"
 
-! Scenario DER (replaces base PV/storage)
-Redirect /Users/2agents/Projects/Dynamic-Network-Model/sisyphean-power-and-light/network/results/scenarios/extreme_weather/pvsystems.dss
-Redirect /Users/2agents/Projects/Dynamic-Network-Model/sisyphean-power-and-light/network/results/scenarios/extreme_weather/ev_loads.dss
-Redirect /Users/2agents/Projects/Dynamic-Network-Model/sisyphean-power-and-light/network/results/scenarios/extreme_weather/storage.dss
-
-Redirect /Users/2agents/Projects/Dynamic-Network-Model/sisyphean-power-and-light/network/capacitors.dss
-
-Set voltagebases=[69, 12.47, 0.24]
+Set voltagebases=[0.12, 0.20784609690826525, 0.208, 0.24, 0.36026656797432643, 0.4156921938165305, 0.48, 0.831384387633061, 12.47, 230.0]
 Calcvoltagebases
 
-Redirect /Users/2agents/Projects/Dynamic-Network-Model/sisyphean-power-and-light/network/coordinates.dss
+Redirect "../../../coordinates.dss"
 
-Set loadmult=1.18
 Set tolerance=0.0001
 Set maxiterations=100
 
+Redirect "ev_loads.dss"
+Set loadmult=1.18
 Solve

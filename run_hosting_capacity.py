@@ -59,83 +59,77 @@ def get_existing_pv() -> dict[str, float]:
     return pv_map
 
 
+def operating_limits() -> tuple[bool, float, float]:
+    """Check phase voltage and absolute line/transformer thermal limits."""
+    volts = np.asarray(odd.Circuit.AllBusMagPu())
+    voltage_ok = bool(len(volts) and np.isfinite(volts).all()
+                      and (volts >= 0.95).all() and (volts <= 1.05).all())
+    loading = get_max_line_loading()
+    idx = odd.Transformers.First()
+    while idx:
+        odd.Circuit.SetActiveElement(f"Transformer.{odd.Transformers.Name()}")
+        powers = np.asarray(odd.CktElement.Powers())
+        phases = odd.CktElement.NumPhases()
+        # Check each winding phase as well as aggregate apparent power.
+        per_phase = np.hypot(powers[:2 * phases:2], powers[1:2 * phases:2])
+        rating = odd.Transformers.kVA()
+        loading = max(loading, float(per_phase.max()) / (rating / phases) * 100)
+        idx = odd.Transformers.Next()
+    return voltage_ok and loading <= 100 and odd.Solution.Converged(), float(volts.max()), loading
+
+
 def sweep_transformer(
     master: Path, xid: str, kva_rated: float
 ) -> tuple[dict[str, Any], list[dict[str, Any]]]:
-    """Run hosting capacity sweep for one transformer."""
-    max_kw = kva_rated * 1.2
-    step_kws = [max_kw * i / (STEPS - 1) for i in range(STEPS)]
-    bus_sec = f"bus_{xid}_sec".lower()
+    """Return the last feasible tested injection; never grant HC on an invalid base."""
+    import json
 
-    # Compile fresh for clean state
     compile_model(master)
-    base_v = get_bus_voltage(bus_sec)
-    base_loading = get_max_line_loading()
+    connection = json.loads((master.parent / "model_manifest.json").read_text())["connections"][xid]
+    bus_sec = connection["bus"]
+    base_v = get_bus_voltage(bus_sec.split(".")[0])
+    base_ok, _, base_loading = operating_limits()
+    if not base_ok:
+        return {
+            "transformer_id": xid, "kva_rated": kva_rated,
+            "thermal_hc_kw": 0.0, "voltage_hc_kw": 0.0, "hc_kw": 0.0,
+            "limiting_factor": "base_case_infeasible", "base_case_feasible": False,
+            "base_voltage_pu": base_v, "worst_voltage_pu": base_v,
+        }, [{
+            "transformer_id": xid, "pv_kw": 0.0, "voltage_pu": base_v,
+            "max_loading_pct": base_loading, "converged": odd.Solution.Converged(),
+            "feasible": False,
+        }]
 
-    # Add temporary PV (kV=0.24 required for secondary bus injection)
     odd.Text.Command(
-        f"New PVSystem.temp_hc bus1={bus_sec} phases=1 kV=0.24 "
-        f"kVA=0.01 Pmpp=0.01 irradiance=1 pf=1"
+        f"New PVSystem.temp_hc bus1={bus_sec} phases={connection['phases']} "
+        f"kV={connection['kv']} kVA=0.01 Pmpp=0 irradiance=1 pf=1"
     )
-
-    curve_points: list[dict[str, Any]] = []
-    voltage_hc = max_kw
-    thermal_hc = max_kw
-    voltage_hit = False
-    thermal_hit = False
+    curve_points = []
+    last_feasible = 0.0
     worst_v = base_v
-
-    # Thermal limit: 15% increase over base loading (incremental impact)
-    thermal_threshold = base_loading + 15.0
-
-    for step_kw in step_kws:
-        pmpp = max(step_kw, 0.01)
-        odd.Text.Command(f"Edit PVSystem.temp_hc Pmpp={pmpp:.2f} kVA={pmpp:.2f}")
-        odd.Text.Command("Solve")
-        converged = odd.Solution.Converged()
-
-        v = get_bus_voltage(bus_sec)
-        loading = get_max_line_loading()
-
-        curve_points.append({
-            "transformer_id": xid,
-            "pv_kw": round(step_kw, 2),
-            "voltage_pu": round(v, 4),
-            "max_loading_pct": round(loading, 2),
-            "converged": converged,
-        })
-
-        if v > 1.05 and not voltage_hit:
-            voltage_hc = step_kw
-            voltage_hit = True
-
-        if loading > thermal_threshold and not thermal_hit:
-            thermal_hc = step_kw
-            thermal_hit = True
-
+    limiting = "search_limit"
+    for step_kw in np.linspace(0, kva_rated * 1.2, STEPS):
+        odd.Text.Command(f"Edit PVSystem.temp_hc Pmpp={step_kw:.8f} kVA={max(step_kw, 0.01):.8f}")
+        odd.Solution.Solve()
+        feasible, max_voltage, loading = operating_limits()
+        v = get_bus_voltage(bus_sec.split(".")[0])
         worst_v = max(worst_v, v)
-
-    hc = min(voltage_hc, thermal_hc)
-    if not voltage_hit and not thermal_hit:
-        limiting = "none"
-    elif voltage_hc <= thermal_hc:
-        limiting = "voltage"
-    else:
-        limiting = "thermal"
-
-    summary = {
-        "transformer_id": xid,
-        "kva_rated": kva_rated,
-        "thermal_hc_kw": round(thermal_hc, 2),
-        "voltage_hc_kw": round(voltage_hc, 2),
-        "hc_kw": round(hc, 2),
-        "limiting_factor": limiting,
-        "base_voltage_pu": round(base_v, 4),
-        "worst_voltage_pu": round(worst_v, 4),
-    }
-
-    return summary, curve_points
-
+        curve_points.append({
+            "transformer_id": xid, "pv_kw": float(step_kw), "voltage_pu": v,
+            "max_loading_pct": loading, "converged": odd.Solution.Converged(),
+            "feasible": feasible,
+        })
+        if not feasible:
+            limiting = "voltage" if max_voltage > 1.05 else "thermal_or_voltage"
+            break
+        last_feasible = float(step_kw)
+    return {
+        "transformer_id": xid, "kva_rated": kva_rated,
+        "thermal_hc_kw": last_feasible, "voltage_hc_kw": last_feasible,
+        "hc_kw": last_feasible, "limiting_factor": limiting,
+        "base_case_feasible": True, "base_voltage_pu": base_v, "worst_voltage_pu": worst_v,
+    }, curve_points
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="SP&L Hosting Capacity Analysis")

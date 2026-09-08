@@ -10,16 +10,17 @@ import numpy as np
 import opendssdirect as odd
 import pandas as pd
 
-NETWORK_DIR = Path("sisyphean-power-and-light/network")
-TS_DIR = Path("sisyphean-power-and-light/timeseries")
-DATA_DIR = Path("demo_data")
+ROOT = Path(__file__).resolve().parent
+NETWORK_DIR = ROOT / "sisyphean-power-and-light/network"
+TS_DIR = ROOT / "sisyphean-power-and-light/timeseries"
+DATA_DIR = ROOT / "demo_data"
 
 # Representative weeks: mid-month of each season
 SEASON_WEEKS = {
     "winter": ("2024-01-15", 168),
     "spring": ("2024-04-15", 168),
     "summer": ("2024-07-15", 168),
-    "fall": ("2024-10-14", 168),
+    "fall": ("2024-10-15", 168),
 }
 
 
@@ -40,22 +41,22 @@ def load_feeder_profiles(feeders: list[str]) -> pd.DataFrame:
 
 
 def load_solar_profile() -> np.ndarray:
-    """Load solar generation profile as hourly multipliers (0-1) for a year.
+    """Load solar generation profile as hourly multipliers (0-1) for leap year 2024.
 
     Solar profiles CSV has 12 months x 24 hours = 288 rows.
-    Expand to 8760 by repeating each month's daily pattern.
+    Expand to 8,784 hours by repeating each month's daily pattern.
     """
     sp = pd.read_csv(DATA_DIR / "solar_profiles.csv")
     sp["generation_pct_of_capacity"] /= 100.0
 
-    # Build 8760 array: each month's 24-hour pattern repeated for days in month
+    # Each month's 24-hour pattern repeated for days in month.
     days_per_month = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]  # 2024 leap
     yearly = []
     for m in range(12):
         month_data = sp.iloc[m * 24 : (m + 1) * 24]["generation_pct_of_capacity"].values
         for _ in range(days_per_month[m]):
             yearly.extend(month_data)
-    return np.array(yearly[:8760])
+    return np.array(yearly)
 
 
 def get_season_hours(
@@ -73,7 +74,7 @@ def compile_base(model_dir: Path) -> None:
     odd.Basic.Start(0)
     odd.Text.Command(f"compile {model_dir / 'master.dss'}")
     if not odd.Solution.Converged():
-        print("WARNING: Base case did not converge")
+        raise RuntimeError("Base power flow did not converge")
 
 
 def extract_hourly_snapshot() -> dict[str, Any]:
@@ -90,18 +91,26 @@ def extract_hourly_snapshot() -> dict[str, Any]:
     while idx != 0:
         gross_kw += odd.Loads.kW()
         idx = odd.Loads.Next()
+    buses_under = buses_over = 0
+    for name in odd.Circuit.AllBusNames():
+        odd.Circuit.SetActiveBus(name)
+        values = odd.Bus.puVmagAngle()[::2]
+        buses_under += int(min(values) < 0.95)
+        buses_over += int(max(values) > 1.05)
 
     return {
-        "source_kw": abs(tp[0]),
-        "source_kvar": abs(tp[1]),
+        "source_kw": -tp[0],
+        "source_kvar": -tp[1],
         "gross_load_kw": gross_kw,
         "loss_kw": losses[0] / 1000.0,
         "loss_kvar": losses[1] / 1000.0,
         "v_min": float(nonzero.min()) if len(nonzero) > 0 else 0.0,
         "v_max": float(nonzero.max()) if len(nonzero) > 0 else 0.0,
         "v_mean": float(nonzero.mean()) if len(nonzero) > 0 else 0.0,
-        "buses_under_095": int((nonzero < 0.95).sum()),
-        "buses_over_105": int((nonzero > 1.05).sum()),
+        "phases_under_095": int((vmag < 0.95).sum()),
+        "phases_over_105": int((vmag > 1.05).sum()),
+        "buses_under_095": buses_under,
+        "buses_over_105": buses_over,
         "converged": odd.Solution.Converged(),
     }
 
@@ -121,7 +130,16 @@ def run_qsts_season(
     # Hour-of-year for solar profile indexing
     start_hoy = int((start_ts - pd.Timestamp("2024-01-01")).total_seconds() / 3600)
 
-    feeders = feeder_hours["feeder_id"].unique()
+    manifest = json.loads((model_dir / "model_manifest.json").read_text())
+    expected = pd.MultiIndex.from_product([
+        manifest["feeders"], pd.date_range(start_ts, periods=n_hours, freq="h")
+    ], names=["feeder_id", "timestamp"])
+    profiles = feeder_hours.set_index(["feeder_id", "timestamp"])
+    if not profiles.index.is_unique:
+        raise ValueError("Duplicate feeder hours in QSTS input")
+    profiles = profiles.reindex(expected)
+    if profiles[["total_load_mw", "load_mvar"]].isna().any().any():
+        raise ValueError("Missing feeder hours in QSTS input; no fabricated fallback allowed")
     results: list[dict[str, Any]] = []
 
     for h in range(n_hours):
@@ -129,15 +147,14 @@ def run_qsts_season(
         hoy = start_hoy + h
         solar_mult = solar_year[hoy] if hoy < len(solar_year) else 0.0
 
-        # Set load multiplier — use average across feeders for this hour
-        hour_data = feeder_hours[feeder_hours["timestamp"] == ts]
-        if len(hour_data) > 0:
-            load_mult = hour_data["load_mult"].mean()
-        else:
-            load_mult = 0.5  # fallback
-
-        # Apply load multiplier
-        odd.Text.Command(f"Set loadmult={load_mult:.4f}")
+        # Allocate each feeder's actual MW and Mvar independently.
+        hour_data = profiles.xs(ts, level="timestamp")
+        load_mult = float(hour_data["load_mult"].mean())  # descriptive only
+        for xid, connection in manifest["connections"].items():
+            feeder = hour_data.loc[connection["feeder_id"]]
+            kw = feeder["total_load_mw"] * 1000 * connection["load_weight"]
+            kvar = feeder["load_mvar"] * 1000 * connection["load_weight"]
+            odd.Text.Command(f"Edit Load.load_{xid} kW={kw:.8f} kvar={kvar:.8f}")
 
         # Update PV output via irradiance
         odd.Text.Command(f"BatchEdit PVSystem..* irradiance={solar_mult:.4f}")
@@ -177,8 +194,7 @@ def main() -> None:
     print("=" * 60)
 
     # Load data
-    edges = pd.read_csv(DATA_DIR / "network_edges.csv")
-    feeders = list(edges["feeder_id"].unique()[:12])
+    feeders = json.loads((model_dir / "model_manifest.json").read_text())["feeders"]
 
     print("Loading feeder profiles...")
     feeder_profiles = load_feeder_profiles(feeders)
@@ -242,7 +258,7 @@ def main() -> None:
 
     # Hours with violations
     violation_hours = ts_df[
-        (ts_df["buses_under_095"] > 0) | (ts_df["buses_over_105"] > 0)
+        (ts_df["phases_under_095"] > 0) | (ts_df["phases_over_105"] > 0)
     ]
     print(f"  Hours with violations: {len(violation_hours)}/{len(ts_df)}")
 

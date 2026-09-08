@@ -1,0 +1,36 @@
+name: SP&L dataset integrity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "*.py"
+      - "requirements-data.txt"
+      - "demo_data/**"
+      - "sisyphean-power-and-light/**"
+      - "tests/**"
+      - ".github/workflows/dataset-tests.yml"
+  pull_request:
+    paths:
+      - "*.py"
+      - "requirements-data.txt"
+      - "demo_data/**"
+      - "sisyphean-power-and-light/**"
+      - "tests/**"
+      - ".github/workflows/dataset-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -r requirements-data.txt
+      - run: python validate_demo_data.py
+      - run: python -m pytest tests/ -q

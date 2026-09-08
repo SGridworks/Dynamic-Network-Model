@@ -62,6 +62,12 @@ Bedrock-over-VPC is available behind a compliance gate. Read the narrative on
 
 ## Quick Start
 
+For the repaired dataset, coverage limits, and reproducible validation commands,
+start with [DATA-QUALITY.md](DATA-QUALITY.md). The current loader exposes **31
+datasets**. Load profiles contain sampled seasonal weeks; AMI covers one summer
+week. The OpenDSS demo exports **two complete feeders**, with existing electrical
+constraints reported explicitly.
+
 ```bash
 git clone https://github.com/SGridworks/Dynamic-Network-Model.git
 cd Dynamic-Network-Model
@@ -109,7 +115,7 @@ Dynamic-Network-Model/
 ├── validate_bfp_data.py               # BFP dataset validation suite
 ├── demo_data/                         # V1.0 dataset (original)
 │   ├── generate_demo_data.py          # Deterministic data generator (seed=42)
-│   ├── load_demo_data.py              # Combined data loader (23 datasets, pandas)
+│   ├── load_demo_data.py              # Combined data loader (31 datasets, pandas)
 │   ├── __init__.py
 │   ├── substations.csv                # 23 substations
 │   ├── feeders.csv                    # 104 feeders
