@@ -99,6 +99,12 @@ walkthrough, dataset schemas, and example analyses.
 See [`DATASETS.md`](DATASETS.md) for documentation on the V1/V2 dataset
 versions and the adapter column mapping.
 
+To inspect how the asset hierarchy becomes a feeder graph, open the
+[feeder generation notebook](notebooks/00-feeder-generation.ipynb). It runs the
+infrastructure generator in a temporary directory and checks the resulting tables.
+The [companion walkthrough](examples/feeder-generation/README.md) checks the
+published feeder data and documents the boundary for adapting it to actual streets.
+
 ## Repository Structure
 
 ```
